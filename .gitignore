@@ -11,3 +11,5 @@
 *.o
 
 *prerun.sh
+compile.sh
+run.sh

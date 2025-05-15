@@ -1,9 +1,8 @@
 include Makefile.inc
 
 KERNEL=kernel.bin
-SOURCES=$(wildcard *.c)
+SOURCES=$(wildcard *.c) $(wildcard drivers/*.c) $(wildcard interruptions/*.c)
 SOURCES_ASM=$(wildcard asm/*.asm)
-SOURCES=$(wildcard *.c) $(wildcard drivers/*.c)
 OBJECTS=$(SOURCES:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)
 LOADERSRC=loader.asm
@@ -19,6 +18,12 @@ $(KERNEL): $(LOADEROBJECT) $(OBJECTS) $(STATICLIBS) $(OBJECTS_ASM)
 %.o: %.c
 	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
 
+drivers/%.o: drivers/%.c
+	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
+
+interruptions/%.o: interruptions/%.c
+	$(GCC) $(GCCFLAGS) -I./include -c $< -o $@
+
 %.o : %.asm
 	$(ASM) $(ASMFLAGS) $< -o $@
 
@@ -26,6 +31,6 @@ $(LOADEROBJECT):
 	$(ASM) $(ASMFLAGS) $(LOADERSRC) -o $(LOADEROBJECT)
 
 clean:
-	rm -rf asm/*.o *.o *.bin
+	rm -rf asm/*.o drivers/*.o interruptions/*.o *.o *.bin
 
 .PHONY: all clean

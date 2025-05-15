@@ -2,13 +2,14 @@
 
 struct vbe_mode_info_structure {
 	uint16_t attributes;		
-	uint8_t window_a;		
+	uint8_t window_a;			
 	uint8_t window_b;			
 	uint16_t granularity;		
+	uint16_t window_size;
 	uint16_t segment_a;
 	uint16_t segment_b;
 	uint32_t win_func_ptr;		
-	uint16_t pitch;			
+	uint16_t pitch;			 
 	uint16_t width;			
 	uint16_t height;			
 	uint8_t w_char;			

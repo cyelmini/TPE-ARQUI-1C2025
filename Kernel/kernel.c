@@ -100,6 +100,5 @@ int main(){
 	ncNewline();
 
 	ncPrint("[Finished]");
-
 	return 0;
 }

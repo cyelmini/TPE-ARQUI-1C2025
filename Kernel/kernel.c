@@ -4,6 +4,7 @@
 #include <moduleLoader.h>
 #include <naiveConsole.h>
 #include "videoDriver.h"
+#include "keyboardDriver.h"
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -100,5 +101,10 @@ int main(){
 	ncNewline();
 
 	ncPrint("[Finished]");
+
+	loadBuffer();
+	char * buffer = getBuffer;
+	ncPrint(buffer);
+	
 	return 0;
 }

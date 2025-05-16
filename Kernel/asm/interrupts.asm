@@ -1,4 +1,3 @@
-
 GLOBAL _cli
 GLOBAL _sti
 GLOBAL picMasterMask
@@ -56,10 +55,48 @@ SECTION .text
 	pop rax
 %endmacro
 
+%macro saveRegs 0
+	mov [registers+8*0],	rax
+	mov [registers+8*1],	rbx
+	mov [registers+8*2],	rcx
+	mov [registers+8*3],	rdx
+	mov [registers+8*4],	rsi
+	mov [registers+8*5],	rdi
+	mov [registers+8*6],	rbp
+	mov [registers+8*7], 	r8
+	mov [registers+8*8], 	r9
+	mov [registers+8*9], 	r10
+	mov [registers+8*10], 	r11
+	mov [registers+8*11], 	r12
+	mov [registers+8*12], 	r13
+	mov [registers+8*13], 	r14
+	mov [registers+8*14], 	r15
+
+	mov rax, rsp
+
+	add rax, 160  
+
+	mov [registers+8*15], 	rax 
+	mov rax, [rsp+15*8] 
+	mov [registers+8*16], 	rax 
+	mov rax, [rsp+17*8]
+	mov [registers+8*17], 	rax
+
+%endmacro
+
+
 %macro irqHandlerMaster 1
 	pushState
 
-	mov rdi, %1 ; pasaje de parametro
+	mov rdi, %1 	; interruption number(1 = keyboard)
+	cmp rdi, 1
+	jne .noSave
+
+	saveRegs
+
+	.noSave:
+	mov rsi, rsp
+	mov rdi, %1
 	call irqDispatcher
 
 	; signal pic EOI (End of Interrupt)
@@ -70,8 +107,6 @@ SECTION .text
 	iretq
 %endmacro
 
-
-
 %macro exceptionHandler 1
 	pushState
 
@@ -81,7 +116,6 @@ SECTION .text
 	popState
 	iretq
 %endmacro
-
 
 _hlt:
 	sti
@@ -112,7 +146,6 @@ picSlaveMask:
     out	0A1h,al
     pop     rbp
     retn
-
 
 ;8254 Timer (Timer Tick)
 _irq00Handler:
@@ -148,7 +181,6 @@ haltcpu:
 	hlt
 	ret
 
-
-
 SECTION .bss
 	aux resq 1
+	registers dq 18

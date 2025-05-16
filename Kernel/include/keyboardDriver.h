@@ -3,4 +3,8 @@
 
 extern char getKey();
 
+void loadBuffer();
+
+char * getBuffer();
+
 #endif // KEYBOARDDRIVER_H

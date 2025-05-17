@@ -82,29 +82,20 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-int main(){	
-	ncPrint("[Kernel Main]");
-	ncNewline();
-	ncPrint("  Sample code module at 0x");
-	ncPrintHex((uint64_t)sampleCodeModuleAddress);
-	ncNewline();
-	ncPrint("  Calling the sample code module returned: ");
-	ncPrintHex(((EntryPoint)sampleCodeModuleAddress)());
-	ncNewline();
-	ncNewline();
+// PRUEBA DRIVER DE TECLADO 
 
-	ncPrint("  Sample data module at 0x");
-	ncPrintHex((uint64_t)sampleDataModuleAddress);
-	ncNewline();
-	ncPrint("  Sample data module contents: ");
-	ncPrint((char*)sampleDataModuleAddress);
-	ncNewline();
+int main() {
+    ncPrint("[Kernel Main]");
+    ncNewline();
 
-	ncPrint("[Finished]");
+    load_idt();
 
-	loadBuffer();
-	char * buffer = getBuffer;
-	ncPrint(buffer);
-	
-	return 0;
+    while (1) {
+        char c = nextChar();
+        if (c != -1) {
+            ncPrintChar(c);
+        }
+    }
+
+    return 0;
 }

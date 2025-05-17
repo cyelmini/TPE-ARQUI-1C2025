@@ -1,10 +1,12 @@
 #ifndef KEYBOARDDRIVER_H
 #define KEYBOARDDRIVER_H
 
-extern char getKey();
+#include <stdint.h>
 
-void loadBuffer();
+extern uint8_t getKey();
 
+void keyboardHandler();
+char nextChar();
 char * getBuffer();
 
-#endif // KEYBOARDDRIVER_H
+#endif

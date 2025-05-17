@@ -26,6 +26,7 @@ cpuVendor:
 	pop rbp
 	ret
 
+
 ;getHours:
 				; use instruction "cli" to disable interruptions 
 ;	push rbp
@@ -51,19 +52,17 @@ cpuVendor:
 ;	pop rbp
 ;	ret
 
+
 ;getSeconds:
 
 
 getKey:
-    push rbp
-    mov rbp, rsp
-    mov rax, 0  
     in al, 64h
-    mov cl, al
-    and al, 0x01
-    jz .end
+    test al, 1
+    jz .no_key
     in al, 60h
-.end:   
-    mov rsp, rbp
-    pop rbp
+    movzx rax, al
+    ret
+.no_key:
+    xor rax, rax
     ret

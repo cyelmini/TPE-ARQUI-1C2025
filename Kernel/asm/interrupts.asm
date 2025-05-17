@@ -55,8 +55,30 @@ SECTION .text
 	pop rax
 %endmacro
 
+%macro irqHandlerMaster 1
+	pushState
+
+	mov rdi, %1 	; interruption number(1 = keyboard)
+	cmp rdi, 1
+	jne .next
+
+	saveRegs
+
+	.next:
+	mov rsi, rsp
+	mov rdi, %1
+	call irqDispatcher
+
+	; signal pic EOI (End of Interrupt)
+	mov al, 20h
+	out 20h, al
+
+	popState
+	iretq
+%endmacro
+
 %macro saveRegs 0
-	mov [registers+8*0],	rax
+	mov [registers+8*0], 	rax
 	mov [registers+8*1],	rbx
 	mov [registers+8*2],	rcx
 	mov [registers+8*3],	rdx
@@ -82,29 +104,6 @@ SECTION .text
 	mov rax, [rsp+17*8]
 	mov [registers+8*17], 	rax
 
-%endmacro
-
-
-%macro irqHandlerMaster 1
-	pushState
-
-	mov rdi, %1 	; interruption number(1 = keyboard)
-	cmp rdi, 1
-	jne .noSave
-
-	saveRegs
-
-	.noSave:
-	mov rsi, rsp
-	mov rdi, %1
-	call irqDispatcher
-
-	; signal pic EOI (End of Interrupt)
-	mov al, 20h
-	out 20h, al
-
-	popState
-	iretq
 %endmacro
 
 %macro exceptionHandler 1
@@ -183,4 +182,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
-	registers dq 18
+	registers resq 18

@@ -7,6 +7,5 @@ extern uint8_t getKey();
 
 void keyboardHandler();
 char nextChar();
-char * getBuffer();
 
 #endif

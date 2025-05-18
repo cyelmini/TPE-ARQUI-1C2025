@@ -21,5 +21,10 @@
 #define ACS_DATA        (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 #define ACS_STACK       (ACS_PRESENT | ACS_DSEG | ACS_WRITE)
 
+// colors hexcode
+#define WHITE 0x00FFFFFF
+#define BLACK 0x00000000
+#define GREEN 0x0065adc9
+#define RED 0x00FF0000
 
 #endif

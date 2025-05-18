@@ -82,20 +82,9 @@ void * initializeKernelBinary()
 	return getStackBase();
 }
 
-// PRUEBA DRIVER DE TECLADO 
-
 int main() {
-    ncPrint("[Kernel Main]");
-    ncNewline();
 
     load_idt();
-
-    while (1) {
-        char c = nextChar();
-        if (c != -1) {
-            ncPrintChar(c);
-        }
-    }
 
     return 0;
 }

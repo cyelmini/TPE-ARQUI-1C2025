@@ -11,11 +11,13 @@ GLOBAL _irq02Handler
 GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
+GLOBAL _sysCallsHandler
 
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
+EXTERN sysCallsDispatcher		// falta cambiar el makefile para que tome el syscall.c (q todavia no existe)
 
 SECTION .text
 
@@ -116,6 +118,28 @@ SECTION .text
 	iretq
 %endmacro
 
+%macro sysCallsHandlerMaster 0
+	pushState
+
+	mov rsi, rdi  ; 2 param tabla syscall 
+	mov rcx, rdx   ;  4 param tabla syscall 
+	mov rdx, rsi   ; 3 param tabla syscall
+	mov rdi, rax   ;  1 param tabla syscall (numero de syscall)
+	push r8
+	mov r8, r10		; 6 param tabla syscall
+	mov r10, r9 	; 5 param tabla syscall 
+	pop r8
+	mov r9, r8		; 7 param tabla syscall
+
+	call sysCallDispatcher
+
+	mov al, 20h 	; avisa al pic que termino la interrupcion 
+	out 20h, al
+
+	popState
+	iretq
+%endmacro
+
 _hlt:
 	sti
 	hlt
@@ -174,6 +198,10 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;SysCalls Interruptions Handler
+_sysCallsHandler:
+	sysCallsHandlerMaster 0
 
 haltcpu:
 	cli

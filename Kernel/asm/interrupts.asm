@@ -17,7 +17,7 @@ GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
-EXTERN sysCallsDispatcher		// falta cambiar el makefile para que tome el syscall.c (q todavia no existe)
+EXTERN sysCallsDispatcher		
 
 SECTION .text
 
@@ -118,11 +118,16 @@ SECTION .text
 	iretq
 %endmacro
 
+; cuando se hace una int80h (interrupcion de software), la interruption table lo manda a la funcion sysCallsHandler (en este archivo), la cual ejecuta 
+; esta macro. La misma setea en los registros requeridos los parametros de la syscall para llamar a la funcion en C "sysCallDispatcher", la cual decide, 
+; segun lo que hay en rdi, qué syscall ejecutar. Los parámetros se pasan asi en lugar de en orden (primero a ultimo) porque para pasar los parametros 
+; se pisa donde hay otros parametros, y este es el unico orden donde no se pisan :3
+
 %macro sysCallsHandlerMaster 0
 	pushState
 
 	mov rsi, rdi  ; 2 param tabla syscall 
-	mov rcx, rdx   ;  4 param tabla syscall 
+	mov rcx, rdx   ; 4 param tabla syscall 
 	mov rdx, rsi   ; 3 param tabla syscall
 	mov rdi, rax   ;  1 param tabla syscall (numero de syscall)
 	push r8

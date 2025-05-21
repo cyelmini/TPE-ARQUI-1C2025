@@ -1,7 +1,7 @@
 include Makefile.inc
 
 KERNEL=kernel.bin
-SOURCES=$(wildcard *.c) $(wildcard drivers/*.c) $(wildcard interruptions/*.c)
+SOURCES=$(wildcard *.c) $(wildcard drivers/*.c) $(wildcard interruptions/*.c) $(wildcard syscalls/*.c)
 SOURCES_ASM=$(wildcard asm/*.asm)
 OBJECTS=$(SOURCES:.c=.o)
 OBJECTS_ASM=$(SOURCES_ASM:.asm=.o)

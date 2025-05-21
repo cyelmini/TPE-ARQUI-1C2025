@@ -3,8 +3,9 @@
 #include <lib.h>
 #include <moduleLoader.h>
 #include <naiveConsole.h>
-#include "videoDriver.h"
-#include "keyboardDriver.h"
+#include <idtLoader.h>
+#include <videoDriver.h>
+#include <keyboardDriver.h>
 
 extern uint8_t text;
 extern uint8_t rodata;
@@ -76,6 +77,8 @@ void * initializeKernelBinary()
 	ncPrintHex((uint64_t)&bss);
 	ncNewline();
 
+	load_idt();
+
 	ncPrint("[Done]");
 	ncNewline();
 	ncNewline();
@@ -84,7 +87,6 @@ void * initializeKernelBinary()
 
 int main() {
 
-    load_idt();
 
     return 0;
 }

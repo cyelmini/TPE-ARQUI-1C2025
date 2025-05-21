@@ -6,6 +6,13 @@
 void * memset(void * destination, int32_t character, uint64_t length);
 void * memcpy(void * destination, const void * source, uint64_t length);
 
-char *cpuVendor(char *result);
+char * cpuVendor(char *result);
+
+extern int getSec();
+extern int getMin();
+extern int getHour();
+
+extern void makeSound(uint16_t frequency);
+extern void stopSound();
 
 #endif

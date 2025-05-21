@@ -2,19 +2,8 @@
 #include <stdint.h>
 #include <keyboardDriver.h>
 #include <videoDriver.h>
-
-#define STDIN 0
-#define STDOUT 1
-#define STERR 2
-
-#define READ 0
-#define WRITE 1
-#define OPEN 2
-#define CLOSE 3
-#define SOUND 4
-#define SECONDS 5
-#define MINUTES 6
-#define HOURS 7
+#include <lib.h>
+#include <syscalls.h>
 
 
 uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6){
@@ -26,14 +15,8 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
     case WRITE:
         sys_write(arg1, (char*)arg2, arg3);     // fd, buffer and count
         return 0;
-    case OPEN:
-        sys_open((char *)arg1, arg2, arg3);     // filename, flags, mode 
-        return 0;
-    case CLOSE: 
-        sys_close(arg1);        // fd
-        return 0;
     case SOUND:
-        sys_sound(arg1, arg2);      // time, frequency
+        sys_sound(arg1, arg2);       // time, frequency
     case SECONDS:
         sys_seconds(arg1);          // seconds
         return 0;
@@ -50,13 +33,14 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
 
 void sys_read(uint64_t fd, char * buffer, uint64_t count){
     if(fd == STDIN){
-        for(int i; i < count; i++){ // mejor q sea un while
+        while(count > 0){
             char caracter = nextChar();
             if (caracter == -1){
                 return;
             }
             *buffer = caracter;
             buffer++;
+            count--;
         }
     } else{
         //print("ERROR DE FD")
@@ -64,5 +48,30 @@ void sys_read(uint64_t fd, char * buffer, uint64_t count){
 }
 
 void sys_write(uint64_t fd, char * buffer, uint64_t count){
+    if(fd==STDOUT){
     putChar(*buffer, WHITE);
+    }else {
+        //print("ERROR DE FD")
+    }
+}
+
+void sys_seconds(uint64_t *seconds){
+    *seconds = getSec();
+}
+
+void sys_minutes(uint64_t *minutes){
+    *minutes = getMin();
+}
+
+void sys_hours(uint64_t *hours){
+    *hours = getHour();
+}
+
+void sys_sound(uint64_t time, uint64_t frequency){
+    if (frequency <= 0 || time < 0)
+        return;
+    
+    makeSound(frequency);
+    sleep(time);
+    stopSound();
 }

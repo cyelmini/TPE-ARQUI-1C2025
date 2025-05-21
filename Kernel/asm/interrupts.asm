@@ -17,7 +17,7 @@ GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
-EXTERN sysCallsDispatcher		
+EXTERN sysCallDispatcher		
 
 SECTION .text
 
@@ -206,7 +206,7 @@ _exception0Handler:
 
 ;SysCalls Interruptions Handler
 _sysCallsHandler:
-	sysCallsHandlerMaster 0
+	sysCallsHandlerMaster
 
 haltcpu:
 	cli

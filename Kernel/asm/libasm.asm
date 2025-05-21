@@ -3,6 +3,8 @@ GLOBAL getKey
 GLOBAL getHours
 GLOBAL getMinutes
 GLOBAL getSeconds
+GLOBAL stopSound
+GLOBAL makeSound
 
 section .text
 	

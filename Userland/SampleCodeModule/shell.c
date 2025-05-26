@@ -1,5 +1,5 @@
+#include "include/libC.h"
 
-
-void welcome(){
+void welcomeMessage(){
     printf("hola chinchulin");
 }

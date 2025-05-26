@@ -7,12 +7,12 @@ GLOBAL sys_sound
 
 section.text
 
-sys_read:
+sys_call_read:
     mov rax, 0x00
     int 80h
     ret
 
-sys_write:
+sys_call_write:
     mov rax, 0x01
     int 80h
     ret

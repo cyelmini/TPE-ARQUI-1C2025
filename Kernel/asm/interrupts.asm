@@ -126,16 +126,16 @@ SECTION .text
 %macro sysCallsHandlerMaster 0
 	pushState
 
-	// organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
-	mov rcx, rdx   
+	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
+	mov rcx, rdx  
 	mov rdx, rsi   
 	mov rsi, rdi  
 	mov rdi, rax   
 	push r8
-	mov r8, r10		
-	mov r10, r9 	
+	mov r8, r10		; 6 param tabla syscall
+	mov r10, r9 	; 5 param tabla syscall 
 	pop r8
-	mov r9, r8		
+	mov r9, r8		; 7 param tabla syscall
 
 	call sysCallDispatcher
 

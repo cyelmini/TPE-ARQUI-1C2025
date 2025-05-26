@@ -1,7 +1,7 @@
 #include <stdint.h>
-#include <idtLoader.h>
+#include <interruptions/idtLoader.h>
 #include <defs.h>
-#include <interrupts.h>
+#include <interruptions/interrupts.h>
 
 #pragma pack(push)		
 #pragma pack (1) 	

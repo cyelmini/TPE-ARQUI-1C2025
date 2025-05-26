@@ -1,5 +1,5 @@
 #include <stdint.h>
-#include <keyboardDriver.h>
+#include <drivers/keyboardDriver.h>
 
 #define KEYS 58
 #define BUFFER_SIZE 512 
@@ -100,4 +100,8 @@ char nextChar(){
     }
     remaining_chars--;
     return buffer[current++];
+}
+
+char * getBuffer(){
+    return buffer;
 }

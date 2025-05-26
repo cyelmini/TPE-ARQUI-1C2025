@@ -1,6 +1,7 @@
 #include <defs.h>
 #include <font.h>
-#include <videoDriver.h>
+#include <drivers/videoDriver.h>
+#include <drivers/keyboardDriver.h>
 
 #define DEFAULT_HEIGHT 20
 #define DEFAULT_WIDTH 10
@@ -82,7 +83,7 @@ void setCursor(uint64_t x, uint64_t y){
 
 
 void putChar(char c, int hexcode){
-	char * buffer = getBuffer();
+//	char * buffer = getBuffer();
 	switch(c){
 		case '\b':
 			putBackspace();

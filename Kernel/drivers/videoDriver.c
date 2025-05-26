@@ -3,10 +3,10 @@
 #include <drivers/videoDriver.h>
 #include <drivers/keyboardDriver.h>
 
-#define DEFAULT_HEIGHT 20
+#define DEFAULT_HEIGHT 32
 #define DEFAULT_WIDTH 10
 
-#define FIRST_CHAR 32
+#define FIRST_CHAR 33
 #define LAST_CHAR 126
 
 #define TAB 4

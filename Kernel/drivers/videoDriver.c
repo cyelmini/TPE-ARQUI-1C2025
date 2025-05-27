@@ -76,6 +76,20 @@ uint64_t getCursorY(){
 	return cursor_y;
 }
 
+void setCursorX(uint64_t x){
+	if(x >= VBE_mode_info->width || x < 0){
+		return; // cursor is out of screen bounds
+	}
+	cursor_x = x;
+}
+
+void setCursorY(uint64_t y){
+	if(y >= VBE_mode_info->height || y < 0){
+		return; // cursor is out of screen bounds
+	}
+	cursor_y = y;
+}
+
 void setCursor(uint64_t x, uint64_t y){
 	cursor_x = x;
 	cursor_y = y;
@@ -97,6 +111,14 @@ void putChar(char c, int hexcode){
 		default:
 			drawChar(c, hexcode);
 		return;
+	}
+}
+
+void printf(char * str, uint32_t hexcode) {
+	int i = 0;
+	while(str[i] != '\0'){
+		putChar(str[i], hexcode);
+		i++;
 	}
 }
 

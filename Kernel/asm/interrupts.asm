@@ -127,6 +127,9 @@ SECTION .text
 	pushState
 
 	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
+
+	; pasaje: izquierda argumentos segun c convencion C, derecha segun tabla syscall 
+	
 	mov rcx, rdx  
 	mov rdx, rsi   
 	mov rsi, rdi  

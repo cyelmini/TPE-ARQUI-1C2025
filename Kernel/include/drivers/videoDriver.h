@@ -25,5 +25,10 @@ uint64_t getCursorY();
 
 void setCursor(uint64_t x, uint64_t y);
 
+void printf(char * str, uint32_t hexcode);
+
+void setCursorX(uint64_t x);
+
+void setCursorY(uint64_t y);
 
 #endif // VIDEODRIVER_H

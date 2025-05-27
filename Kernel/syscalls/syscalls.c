@@ -15,8 +15,6 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
     case WRITE:
         sys_write(arg1, (char*)arg2, arg3);     // fd, buffer and count
         return 0;
-    case SOUND:
-        sys_sound(arg1, arg2);       // time, frequency
     case SECONDS:
         sys_seconds(arg1);          // seconds
         return 0;
@@ -26,6 +24,15 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
     case HOURS:
         sys_hours(arg1);       // hours
         return 0;
+    case SOUND:
+        sys_sound(arg1, arg2);       // time, frequency
+        return 0;
+    case SET_CURSOR_X:
+        setCursorX(arg1);       // x
+        return 1;
+    case SET_CURSOR_Y:
+        setCursorY(arg1);       // y
+        return 1;
     default:
         return -1; 
     }
@@ -43,15 +50,15 @@ void sys_read(uint64_t fd, char * buffer, uint64_t count){
             count--;
         }
     } else{
-        //print("ERROR DE FD")
+       printf("File Descriptor Error", WHITE);
     }
 }
 
 void sys_write(uint64_t fd, char * buffer, uint64_t count){
     if(fd==STDOUT){
     putChar(*buffer, WHITE);
-    }else {
-        //print("ERROR DE FD")
+    } else {
+        printf("File Descriptor Error", WHITE);
     }
 }
 
@@ -74,4 +81,12 @@ void sys_sound(uint64_t time, uint64_t frequency){
     makeSound(frequency);
     sleep(time);
     stopSound();
+}
+
+void sys_setCursorX(uint64_t x){
+    setCursorX(x);
+}
+
+void sys_setCursorY(uint64_t y){
+    setCursorY(y);
 }

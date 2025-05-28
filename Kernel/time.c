@@ -1,5 +1,6 @@
 #include <time.h>
 #include <interruptions/lib.h>
+#include <interruptions/interrupts.h>
 
 static unsigned long ticks = 0;
 

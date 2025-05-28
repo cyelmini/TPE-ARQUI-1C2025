@@ -1,12 +1,13 @@
 #include <defs.h>
 #include <font.h>
+#include <stdarg.h>
 #include <drivers/videoDriver.h>
 #include <drivers/keyboardDriver.h>
 
 #define DEFAULT_HEIGHT 32
 #define DEFAULT_WIDTH 10
 
-#define FIRST_CHAR 33
+#define FIRST_CHAR 32
 #define LAST_CHAR 126
 
 #define TAB 4
@@ -113,14 +114,14 @@ void putChar(char c, int hexcode){
 		return;
 	}
 }
-
+/*
 void printf(char * str, uint32_t hexcode) {
 	int i = 0;
 	while(str[i] != '\0'){
 		putChar(str[i], hexcode);
 		i++;
 	}
-}
+}*/
 
 void putBackspace() {
 	// if the cursor is on the first position of the screen (top left corner)
@@ -184,6 +185,79 @@ void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 			putPixel(hexColor, x + i, y + j);
 		}
 	}
+}
+
+
+char * numToString(int num) {
+    static char buffer[21]; 
+    char *ptr = buffer + sizeof(buffer) - 1;
+    unsigned long long n;
+    int isNegative = 0;
+
+    *ptr = '\0';
+
+    if (num == 0) {
+        *(--ptr) = '0';
+        return ptr;
+    }
+
+    if (num < 0) {
+        isNegative = 1;
+        n = (unsigned long long)(-(long long)num);
+    } else {
+        n = (unsigned long long)num;
+    }
+
+    while (n != 0) {
+        *(--ptr) = (n % 10) + '0';
+        n /= 10;
+    }
+
+    if (isNegative)
+        *(--ptr) = '-';
+
+    return ptr;
+}
+
+void puts(char * string){
+    for(int i = 0 ; string[i] != 0 ; i++){
+        putChar(string[i], WHITE);
+    }
+    putChar('\n', WHITE);
+}
+
+void print(const char * string, va_list list);
+void print(const char * string, va_list list){
+    for(int i = 0; string[i] != 0 ; i++){
+        if(string[i] == '%' && string[i + 1] != 0){
+            switch (string[i+1]){
+                case 'd':
+                    putChar(*numToString(va_arg(list, int)), WHITE);
+					i++;
+                break;
+                case 's':
+                    puts(va_arg(list, char*));
+					i++;
+                break;
+                case 'c':
+                    putChar(va_arg(list, int), WHITE);
+					i++;
+                break;
+                default:
+                    putChar('%', WHITE);
+                break;
+            }
+        } else {
+            putChar(string[i], WHITE);
+        }
+    }
+}
+
+void printf(const char * string, ...){
+    va_list list;
+    va_start(list, string);
+    print(string, list);
+    va_end(list);
 }
 
 void changeSize(int size){

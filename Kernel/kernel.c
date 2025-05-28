@@ -65,7 +65,6 @@ int main() {
 	
 	((EntryPoint)sampleCodeModuleAddress)();
 
-	while(1);
 
     return 0;
 }

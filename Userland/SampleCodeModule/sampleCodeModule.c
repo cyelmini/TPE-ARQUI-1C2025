@@ -1,5 +1,6 @@
 /* sampleCodeModule.c */
 #include "include/shell.h"
+#include "include/libC.h"
 
 char * v = (char*)0xB8000 + 79 * 2;
 
@@ -8,7 +9,7 @@ static int var2 = 0;
 
 
 int main() {
-	welcomeMessage();
+	printf("Hola chinchus");
 
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)

@@ -55,7 +55,7 @@ int atoi(char * string){
 // Escritura
 
 void putChar(char c, int fd){
-    syscall_write(STDOUT, &c, strlen(&c));
+    syscall_write(fd, &c, 1);
 }
 
 void puts(char * string){
@@ -66,8 +66,7 @@ void puts(char * string){
 }
 
 void print(const char * string, va_list list){
-    int i = 0;
-    while(string[i] != 0){
+    for(int i = 0; string[i] != 0 ; i++){
         if(string[i] == '%' && string[i + 1] != 0){
             switch (string[i]){
                 case 'd':

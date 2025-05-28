@@ -25,7 +25,9 @@ uint64_t getCursorY();
 
 void setCursor(uint64_t x, uint64_t y);
 
-void printf(char * str, uint32_t hexcode);
+void printf(const char * str, ...);
+char * numToString(int num);
+void puts(char * string);
 
 void setCursorX(uint64_t x);
 

@@ -20,10 +20,10 @@ char readChar(){
 
 int scanf(char * buffer){
     int i = 0;
-    int ini_cursor_y = syscall_cursorY();
+    int ini_cursor_y = syscall_getCursorY();
     while(1){
         char c = readChar();
-        if(c == '\b' && ini_cursor_y == syscall_cursorY() && syscall_cursorY() <= USER_LENGTH){
+        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorY() <= USER_LENGTH){
             // if user is not trying to erase the set text in the command line, continue
             continue;
         }

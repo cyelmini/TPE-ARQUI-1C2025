@@ -77,28 +77,44 @@ uint64_t getCursorY(){
 	return cursor_y;
 }
 
-void setCursorX(uint64_t x){
-	if(x >= VBE_mode_info->width || x < 0){
-		return; // cursor is out of screen bounds
-	}
-	cursor_x = x;
-}
-
-void setCursorY(uint64_t y){
-	if(y >= VBE_mode_info->height || y < 0){
-		return; // cursor is out of screen bounds
-	}
-	cursor_y = y;
-}
-
 void setCursor(uint64_t x, uint64_t y){
 	cursor_x = x;
 	cursor_y = y;
 }
+/*
+uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
+	uint32_t accumulator = 0;
+	char *pointer = buffer;
+	uint32_t remainder;
+	while (value != 0)
+	{
+		//if it is a digit then its value is "caracter - '0'"
+		// if it is a letter then its value is "caracter - 'A' + 10"
+		*pointer++ = (remainder < 10) ? (remainder + '0') : (remainder - 10 + 'A');
+		value /=base;
+		accumulator++;
+	}
 
+	*pointer = '\0';
+
+	//String is value but reversed
+
+	char * start = buffer; //start of string
+	char end = pointer - 1; //end of string
+	while (start < end)
+	{
+		char tmp = *start;
+
+		*start = *end;
+		*end = tmb;
+		start++;
+		*end--;
+	}
+	return accumulator;
+}
+*/
 
 void putChar(char c, int hexcode){
-//	char * buffer = getBuffer();
 	switch(c){
 		case '\b':
 			putBackspace();
@@ -114,14 +130,14 @@ void putChar(char c, int hexcode){
 		return;
 	}
 }
-/*
+
 void printf(char * str, uint32_t hexcode) {
 	int i = 0;
 	while(str[i] != '\0'){
 		putChar(str[i], hexcode);
 		i++;
 	}
-}*/
+}
 
 void putBackspace() {
 	// if the cursor is on the first position of the screen (top left corner)
@@ -145,6 +161,14 @@ void putBackspace() {
 void putNewLine(){
 	setCursor(0, (uint64_t)getCursorY() + DEFAULT_HEIGHT);
 }
+
+/*
+void printRegister(uint64_t value, int hexcode){
+	char buffer[21]; // Enough to hold 64-bit integer in decimal
+	numBaseToString(value, buffer, 16);
+	printf(buffer, hexcode);
+}
+*/
 
 void putTab(){
 	if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
@@ -179,6 +203,14 @@ void clearRectangle(int x, int y, int height, int width){
 	putRectangle(x, y, height, width, BLACK);
 }
 
+void clearScreen(){
+	for(int i = 0; i < VBE_mode_info->width; i++){
+		for(int j = 0; j < VBE_mode_info->width; j++){
+			putPixel(BLACK, i, j);
+		}
+	}
+}
+
 void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 	for (int i = 0; i < width; i++){
 		for (int j = 0; j < height; j++){
@@ -186,7 +218,6 @@ void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 		}
 	}
 }
-
 
 char * numToString(int num) {
     static char buffer[21]; 
@@ -226,7 +257,6 @@ void puts(char * string){
     putChar('\n', WHITE);
 }
 
-void print(const char * string, va_list list);
 void print(const char * string, va_list list){
     for(int i = 0; string[i] != 0 ; i++){
         if(string[i] == '%' && string[i + 1] != 0){
@@ -253,11 +283,8 @@ void print(const char * string, va_list list){
     }
 }
 
-void printf(const char * string, ...){
-    va_list list;
-    va_start(list, string);
-    print(string, list);
-    va_end(list);
+uint64_t getScreenHeight(){
+	return VBE_mode_info->height;
 }
 
 void changeSize(int size){

@@ -23,14 +23,20 @@ uint64_t getCursorX();
 
 uint64_t getCursorY();
 
+uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base);
+
 void setCursor(uint64_t x, uint64_t y);
 
-void printf(const char * str, ...);
+void printRegister(uint64_t value, int hexcode);
+
+uint64_t getScreenHeight();
+
+void printf(char * str, uint32_t hexcode);
+
 char * numToString(int num);
+
 void puts(char * string);
 
-void setCursorX(uint64_t x);
-
-void setCursorY(uint64_t y);
+void clearScreen();
 
 #endif // VIDEODRIVER_H

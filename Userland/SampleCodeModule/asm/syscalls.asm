@@ -4,10 +4,10 @@ GLOBAL syscall_seconds
 GLOBAL syscall_minutes
 GLOBAL syscall_hours
 GLOBAL syscall_sound
-GLOBAL syscall_setCursorX
-GLOBAL syscall_setCursorY
-GLOBAL syscall_cursorX
-GLOBAL syscall_cursorY
+GLOBAL syscall_setCursor
+GLOBAL syscall_getCursorX
+GLOBAL syscall_getCursorY
+GLOBAL syscall_getScreenHeight
 
 section .text
 
@@ -22,42 +22,51 @@ syscall_write:
     ret
 
 syscall_seconds:
-    mov rax, 0x03
-    int 80h
+    mov rax, 0x02
+    int 0x80
     ret
 
 syscall_minutes:
-    mov rax, 0x04
-    int 80h
+    mov rax, 0x03
+    int 0x80
     ret
 
 syscall_hours:
-    mov rax, 0x05
-    int 80h
+    mov rax, 0x04
+    int 0x80
     ret
 
 syscall_sound:
+    mov rax, 0x05
+    int 0x80
+    ret
+
+syscall_setCursor:
     mov rax, 0x06
-    int 80h
+    int 0x80
     ret
 
-syscall_setCursorX:
+syscall_getCursorX:
     mov rax, 0x07
-    int 80h
+    int 0x80
     ret
 
-syscall_setCursorY:
+syscall_getCursorY:
     mov rax, 0x08
-    int 80h
+    int 0x80
     ret
 
-syscall_cursorX:
+syscall_getScreenHeight:
     mov rax, 0x09
-    int 80h
+    int 0x80
     ret
 
-syscall_cursorY:
+syscall_getRegisters:
     mov rax, 0x0A
-    int 80h
+    int 0x80
     ret
 
+syscall_clearScreen:
+    mov rax,0x0B
+    int 0x80
+    ret

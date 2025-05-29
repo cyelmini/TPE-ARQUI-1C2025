@@ -10,7 +10,7 @@ static int var2 = 0;
 
 
 int main() {
-	printf("hola\n%s", "anda putNewLine\n");
+	initializeShell();
 
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)

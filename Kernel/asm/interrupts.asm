@@ -129,15 +129,6 @@ SECTION .text
 ; se pisa donde hay otros parametros, y este es el unico orden donde no se pisan :3
 
 %macro sysCallsHandlerMaster 0
-	; Example: print rax, rbx, rcx, rdx, rsi, rdi
-	mov rdi, print_fmt_regs
-	mov rsi, rax
-	mov rdx, rbx
-	mov rcx, rcx
-	mov r8, rdx
-	mov r9, rsi
-	call printf
-
 	pushState
 
 	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
@@ -222,13 +213,6 @@ _exception0Handler:
 
 ;SysCalls Interruptions Handler
 _sysCallsHandler:
-	mov rdi, print_fmt_regs
-	mov rsi, rax
-	mov rdx, rbx
-	mov rcx, rcx
-	mov r8, rdx
-	mov r9, rsi
-	call printf
 	sysCallsHandlerMaster
 
 haltcpu:

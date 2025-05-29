@@ -7,7 +7,6 @@
 #include <time.h>
 
 uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6){
-    printf("sysCallDispatcher: syscallNumber=%d, arg1=%d, arg2=%p, arg3=%d\n", syscallNumber, arg1, arg2, arg3, WHITE);
     switch (syscallNumber)
     {
     case READ:
@@ -56,7 +55,6 @@ void sys_read(uint64_t fd, char * buffer, uint64_t count){
 }
 
 void sys_write(uint64_t fd, char * buffer, uint64_t count){
-   printf("sys_write: fd=%d, buffer=%p, *buffer=%c, count=%d\n", fd, buffer, *buffer, count, WHITE);
     if(fd==STDOUT){
         putChar(*buffer, WHITE);
     } else {

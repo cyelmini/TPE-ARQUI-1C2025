@@ -1,9 +1,10 @@
 #!/bin/bash
+CONTAINER_NAME=TPE-ARQUI-1C2025
 
-docker start tpe2
-docker exec -u $USER -it tpe2 make clean -C/root/Toolchain
-docker exec -u $USER -it tpe2 make clean -C/root/
-docker exec -u $USER -it tpe2 make -C/root/Toolchain
-docker exec -u $USER -it tpe2 make -C/root/
+docker start $CONTAINER_NAME
+docker exec -it $CONTAINER_NAME make clean -C /root/Toolchain
+docker exec -it $CONTAINER_NAME make clean -C /root
+docker exec -it $CONTAINER_NAME make -C /root/Toolchain
+docker exec -it $CONTAINER_NAME make -C /root
 #docker stop tpe2
 

@@ -12,6 +12,7 @@ GLOBAL _irq03Handler
 GLOBAL _irq04Handler
 GLOBAL _irq05Handler
 GLOBAL _sysCallsHandler
+GLOBAL saveRegs
 
 GLOBAL _exception0Handler
 

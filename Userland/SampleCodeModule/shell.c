@@ -15,33 +15,31 @@ char ** filletArguments(char * arguments);
 
 
 void initializeShell(){
-    printf("Bienvenido a sistema operativo sin nombre.\nIngrese 'help' para conocer los comandos disponibles, o 'help $COMMAND para saber más sobre un comando.\n");
-    while(1){
-        printf("$USER@$DEVICE_NAME:/path/path$ ");
-        scanEntry();
-    }
+    printf("Bienvenido al mejor sistema operativo en el universo.\nIngrese 'help' para conocer los comandos disponibles, o 'help $COMMAND' para saber mas sobre un comando.\n\n");
+    scanEntry();
 }
 
-void scanEntry(){
-    char buffer[BUFFER_SIZE] = {0};
-    
+void scanEntry() {
     while(1){
-        scanf(buffer);
-       
-        if(buffer[0] == '\n') { 
-            return;                  
+        printf("$USER@$DEVICE_NAME:/path/path$ ");
+
+        char buffer[BUFFER_SIZE] = {0};
+
+        if (syscall_getCursorY() > syscall_getScreenHeight() - 1) {
+            clearScreen();
         }
 
-        entryHandler(buffer);
+        int len = scanf(buffer);
 
-        // if(syscall_getCursorY() > syscall_getScreenHeight() - 1){
-        //     clearScreen();
-        // }
+        if (len > 0 && buffer[0] != '\n') {
+            entryHandler(buffer);
+        }
 
         clearBuffer(buffer);
     }
-
+    
 }
+
 
 void clearBuffer(char * buffer){
     for(int i = 0; i < BUFFER_SIZE; i++){
@@ -96,35 +94,44 @@ char ** filletArguments(char * arguments){
 
 // leer entrada -> dirigir comandos
 void entryHandler(char * entry){
+    if(*entry == '\n'){
+        return;
+    }
     
-    char * arguments = filletEntry(entry);
-    char ** argsVec = filletArguments(arguments);
-    
+    char f = 0;
     for( int i = 0 ; i < commands_size ; i++){
         if(strcmp(entry, commands[i]) == 0){
             switch(i){
                 case 0:
-                    help(argsVec);
-                break;
+                    f = 0;
+                    help();
+                return;
                 case 1:
+                    f = 0;
                     playGolf();
-                break;
+                return;
                 case 2:
+                    f = 0;
                     time();
-                break;
+                return;
                 case 3:
+                    f = 0;
                     printRegisters();
-                break;
+                return;
                 default:
-                    printf("eso no es un comando chichulin\n");
-                break;
+                return;
             }
+        } else {
+            f = 1;
         }
+    }
+    if(f == 1){
+        printf("eso no es un comando, hace help xq necesitas ayuda chinchulin\n");
     }
 }
 
 
-void help(char ** args){
+void help(){
     printf("no tengo info para proveerte sorry se menos q vos\n");
 }
 
@@ -133,12 +140,12 @@ void printRegisters(){
 }
 
 void time(){
-    
+    printf("todavia no se implemento te pido perdon volve mas tarde\n");
 }
 
-// void clearScreen(){
-//     syscall_clearScreen();
-// }
+void clearScreen(){
+    syscall_clearScreen();
+}
 
 void playGolf(){
     printf("todavia no se implemento te pido perdon volve mas tarde\n");

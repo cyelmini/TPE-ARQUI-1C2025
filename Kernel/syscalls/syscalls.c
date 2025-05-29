@@ -19,6 +19,8 @@
 #define GET_REGISTERS 10
 #define CLEAR_SCREEN 11
 
+extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
+
 
 uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6){
     switch (syscallNumber)
@@ -60,9 +62,9 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case GET_SCREEN_HEIGHT:
         return getScreenHeight();
 
-        // case GET_REGISTERS:
-        // sys_getRegisters((uint64_t *)arg1);       // get registers
-        // return 0;
+        //  case GET_REGISTERS:
+        //  //sys_getRegisters((uint64_t *)arg1);       // get registers
+        // //return 0;
 
         case CLEAR_SCREEN:
         clearScreen();
@@ -122,8 +124,9 @@ void sys_sound(uint64_t time, uint64_t frequency){
     stopSound();
 }
 
-//  void sys_getRegisters(uint64_t * registers){
-//  for(int i = 0; i < 19, i++){
-  
-//  }
+//   void sys_getRegisters(uint64_t vec[18] registers){
+//   for(int i = 0; i < 18 ; i++){
+//     vec[i] = registers[i];
+//   }
+// }
 

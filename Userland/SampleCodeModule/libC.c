@@ -5,7 +5,7 @@
 #define STDIN 0
 #define STDOUT 1
 
-#define USER_LENGTH 10
+#define USER_LENGTH 31
 
 void print(const char * string, va_list list);
 char* numToString(int num);
@@ -23,12 +23,13 @@ int scanf(char * buffer){
     int ini_cursor_y = syscall_getCursorY();
     while(1){
         char c = readChar();
-        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorY() <= USER_LENGTH){
-            // if user is not trying to erase the set text in the command line, continue
+        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorX() <= USER_LENGTH){
+            // if user is  trying to erase the set text in the command line, continue
             continue;
         }
         putChar(c, 1);
 
+        // special characters
         if(c != -1 && c != 0){
             if(c == '\b' && i > 0){
                 i--;

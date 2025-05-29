@@ -8,6 +8,7 @@ GLOBAL syscall_setCursor
 GLOBAL syscall_getCursorX
 GLOBAL syscall_getCursorY
 GLOBAL syscall_getScreenHeight
+GLOBAL syscall_clearScreen
 
 section .text
 

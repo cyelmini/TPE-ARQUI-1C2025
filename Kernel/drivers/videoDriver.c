@@ -81,15 +81,16 @@ void setCursor(uint64_t x, uint64_t y){
 	cursor_x = x;
 	cursor_y = y;
 }
-/*
+
 uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
 	uint32_t accumulator = 0;
 	char *pointer = buffer;
-	uint32_t remainder;
+	
 	while (value != 0)
 	{
 		//if it is a digit then its value is "caracter - '0'"
 		// if it is a letter then its value is "caracter - 'A' + 10"
+		uint32_t remainder = value % base;
 		*pointer++ = (remainder < 10) ? (remainder + '0') : (remainder - 10 + 'A');
 		value /=base;
 		accumulator++;
@@ -99,20 +100,22 @@ uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
 
 	//String is value but reversed
 
-	char * start = buffer; //start of string
-	char end = pointer - 1; //end of string
+	char *start, *end;
+
+	 start = buffer; //start of string
+	 end = pointer - 1; //end of string
 	while (start < end)
 	{
-		char tmp = *start;
+		char tmb = *start;
 
 		*start = *end;
 		*end = tmb;
 		start++;
-		*end--;
+		end--;
 	}
 	return accumulator;
 }
-*/
+
 
 void putChar(char c, int hexcode){
 	switch(c){

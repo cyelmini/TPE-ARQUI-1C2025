@@ -9,16 +9,16 @@ GLOBAL syscall_setCursorY
 GLOBAL syscall_cursorX
 GLOBAL syscall_cursorY
 
-section.text
+section .text
 
 syscall_read:
     mov rax, 0x00
-    int 80h
+    int 0x80
     ret
 
 syscall_write:
     mov rax, 0x01
-    int 80h
+    int 0x80
     ret
 
 syscall_seconds:

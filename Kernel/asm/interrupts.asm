@@ -17,7 +17,12 @@ GLOBAL _exception0Handler
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
-EXTERN sysCallDispatcher		
+EXTERN sysCallDispatcher
+EXTERN printf
+
+SECTION .data
+print_fmt_regs: db "rax=%d rbx=%d rcx=%d rdx=%d rsi=%d rdi=%d", 10, 0
+
 
 SECTION .text
 
@@ -124,21 +129,28 @@ SECTION .text
 ; se pisa donde hay otros parametros, y este es el unico orden donde no se pisan :3
 
 %macro sysCallsHandlerMaster 0
+	; Example: print rax, rbx, rcx, rdx, rsi, rdi
+	mov rdi, print_fmt_regs
+	mov rsi, rax
+	mov rdx, rbx
+	mov rcx, rcx
+	mov r8, rdx
+	mov r9, rsi
+	call printf
+
 	pushState
 
 	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
-
 	; pasaje: izquierda argumentos segun c convencion C, derecha segun tabla syscall 
-	
-	mov rcx, rdx  
-	mov rdx, rsi   
-	mov rsi, rdi  
-	mov rdi, rax   
 	push r8
-	mov r8, r10		; 6 param tabla syscall
-	mov r10, r9 	; 5 param tabla syscall 
+	mov rcx, rdx
+	mov rdx, rsi
+	mov rsi, rdi
+	mov rdi, rax
+	mov r8, r10
 	pop r8
-	mov r9, r8		; 7 param tabla syscall
+	mov r10, r8
+	; r9 is already correct
 
 	call sysCallDispatcher
 
@@ -210,6 +222,13 @@ _exception0Handler:
 
 ;SysCalls Interruptions Handler
 _sysCallsHandler:
+	mov rdi, print_fmt_regs
+	mov rsi, rax
+	mov rdx, rbx
+	mov rcx, rcx
+	mov r8, rdx
+	mov r9, rsi
+	call printf
 	sysCallsHandlerMaster
 
 haltcpu:

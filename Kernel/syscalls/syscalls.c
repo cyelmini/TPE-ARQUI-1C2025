@@ -56,7 +56,11 @@ void sys_read(uint64_t fd, char * buffer, uint64_t count){
 
 void sys_write(uint64_t fd, char * buffer, uint64_t count){
     if(fd==STDOUT){
-        putChar(*buffer, WHITE);
+        while(count > 0 && *buffer != 0){
+            putChar(*buffer, WHITE);
+            count--;
+            buffer++;
+        }
     } else {
         printf("File Descriptor Error", WHITE);
     }

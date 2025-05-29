@@ -59,23 +59,23 @@ void putChar(char c, int fd){
 }
 
 void puts(char * string){
-    for(int i = 0 ; string[i] != 0 ; i++){
-        putChar(string[i], STDOUT);
-    }
-    putChar('\n', STDOUT);
+    syscall_write(STDOUT, string, strlen(string));
 }
 
 void print(const char * string, va_list list){
     for(int i = 0; string[i] != 0 ; i++){
         if(string[i] == '%' && string[i + 1] != 0){
-            switch (string[i]){
+            switch (string[i+1]){
                 case 'd':
+                    i++;
                     putChar(*numToString(va_arg(list, int)), STDOUT);
                 break;
                 case 's':
-                    puts(va_arg(list, char*));
+                    i++;
+                    puts(va_arg(list, char *));
                 break;
                 case 'c':
+                    i++;
                     putChar(va_arg(list, int), STDOUT);
                 break;
                 default:
@@ -101,6 +101,7 @@ int strlen(char * s){
     int i = 0;
     while(*s){
         i++;
+        s++;
     }
     return i;
 }

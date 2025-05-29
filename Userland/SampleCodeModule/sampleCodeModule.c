@@ -10,8 +10,7 @@ static int var2 = 0;
 
 
 int main() {
-	printf("Hola chinchus\n");
-	syscall_write(1, "A", 1);
+	printf("hola\n%s", "anda putNewLine\n");
 
 	//Test if BSS is properly set up
 	if (var1 == 0 && var2 == 0)

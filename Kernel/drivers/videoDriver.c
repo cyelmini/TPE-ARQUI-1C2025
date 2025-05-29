@@ -143,7 +143,7 @@ void putBackspace() {
 }
 
 void putNewLine(){
-	setCursor(0, (uint64_t)getCursorY + DEFAULT_HEIGHT);
+	setCursor(0, (uint64_t)getCursorY() + DEFAULT_HEIGHT);
 }
 
 void putTab(){

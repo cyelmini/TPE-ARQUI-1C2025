@@ -11,7 +11,7 @@ int atoi(char * string);
 
 // Escritura
 
-void printRegisters();
+void printAllRegisters();
 
 void putChar(char c, int fd);
 
@@ -20,6 +20,12 @@ void puts(char * string);
 void printf(const char * string, ...);
 
 // Utilidad
+
+int getSeconds();
+
+int getMinutes();
+
+int getHours();
 
 int strlen(char * s);
 

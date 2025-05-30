@@ -4,11 +4,11 @@ extern void syscall_read(int fd, char * buffer, int count);
 
 extern void syscall_write(int fd, const char * buffer, int count);
 
-extern void syscall_seconds(int * seconds);
+extern void syscall_seconds(uint64_t * seconds);
 
-extern void syscall_minutes(int * minutes);
+extern void syscall_minutes(uint64_t * minutes);
 
-extern void syscall_hours(int * hours);
+extern void syscall_hours(uint64_t * hours);
 
 extern void syscall_sound(int time, int frequency);
 

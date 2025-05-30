@@ -136,11 +136,11 @@ void help(){
 }
 
 void printRegisters(){
-    printf("todavia no se implemento te pido perdon volve mas tarde\n");
+    printAllRegisters();
 }
 
 void time(){
-    printf("todavia no se implemento te pido perdon volve mas tarde\n");
+    printf("La hora actual es: %d:0%d:0%d\n", getHours(), getMinutes(), getSeconds());
 }
 
 void clearScreen(){

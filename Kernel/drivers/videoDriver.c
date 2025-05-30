@@ -265,14 +265,6 @@ void clearScreen(){
 	}
 }
 
-/* --------------------------------------------  registers handler  ----------------------------------------- */
-
-// void printRegister(uint64_t value, int hexcode){
-// 	char buffer[21]; // Enough to hold 64-bit integer in decimal
-// 	numBaseToString(value, buffer, 16);
-// 	printf(buffer, hexcode);
-// }
-
 /* ------------------------------------------- auxiliar functions ------------------------------------------ */
 
 char * numToString(int num) {
@@ -305,42 +297,6 @@ char * numToString(int num) {
 
     return ptr;
 }
-
-uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
-	uint32_t accumulator = 0;
-	char *pointer = buffer;
-	
-	while (value != 0)
-	{
-		//if it is a digit then its value is "caracter - '0'"
-		// if it is a letter then its value is "caracter - 'A' + 10"
-		uint32_t remainder = value % base;
-		*pointer++ = (remainder < 10) ? (remainder + '0') : (remainder - 10 + 'A');
-		value /=base;
-		accumulator++;
-	}
-
-	*pointer = '\0';
-
-	//String is value but reversed
-
-	char *start, *end;
-
-	 start = buffer; //start of string
-	 end = pointer - 1; //end of string
-	while (start < end)
-	{
-		char tmb = *start;
-
-		*start = *end;
-		*end = tmb;
-		start++;
-		end--;
-	}
-	return accumulator;
-}
-
-
 
 
 

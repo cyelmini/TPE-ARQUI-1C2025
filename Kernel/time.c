@@ -18,6 +18,9 @@ int seconds_elapsed() {
 
 
 void sleep(int seconds) {
+	if (seconds <= 0) {
+		return;
+	}
 	unsigned long start = ticks;
 	while (ticks - start < seconds * 18){
 		_hlt();

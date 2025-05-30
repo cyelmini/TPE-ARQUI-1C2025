@@ -2,6 +2,7 @@
 #define VIDEODRIVER_H
 
 #include <stdint.h>
+#include <stdarg.h>
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y); 
 
@@ -25,8 +26,6 @@ uint64_t getCursorY();
 
 void setCursor(uint64_t x, uint64_t y);
 
-void printRegister(uint64_t value, int hexcode);
-
 uint64_t getScreenHeight();
 
 void printf(char * str, uint32_t hexcode);
@@ -38,5 +37,7 @@ void puts(char * string);
 void clearScreen();
 
 void drawCursor();
+
+void print(const char * string, va_list list);
 
 #endif // VIDEODRIVER_H

@@ -17,11 +17,15 @@ GLOBAL saveRegs
 GLOBAL registers
 
 GLOBAL _exception0Handler
+GLOBAL _exception01Handler
 
 EXTERN irqDispatcher
+EXTERN exceptionHandler
 EXTERN exceptionDispatcher
 EXTERN sysCallDispatcher
 EXTERN printf
+EXTERN getStackBase
+EXTERN retUserland
 
 SECTION .data
 print_fmt_regs: db "rax=%d rbx=%d rcx=%d rdx=%d rsi=%d rdi=%d", 10, 0
@@ -117,13 +121,22 @@ SECTION .text
 %endmacro
 
 %macro exceptionHandler 1
-	pushState
+		pushState
+		saveRegs					; save registers to send them to the exception
+									
+		mov rdi, %1
+		call exceptionDispatcher
 
-	mov rdi, %1 ; pasaje de parametro
-	call exceptionDispatcher
+		popState
+		call getStackBase
 
-	popState
-	iretq
+		;preparing to return to Userland
+		sub rax, 20h
+		mov qword [rsp+8*3], rax
+		call retUserland
+		mov qword [rsp], rax
+		iretq ; restores control to the user
+
 %endmacro
 
 ; cuando se hace una int80h (interrupcion de software), la interruption table lo manda a la funcion sysCallsHandler (en este archivo), la cual ejecuta 
@@ -213,6 +226,10 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;Invalid Operation Exception
+_exception01Handler:
+	exceptionHandler 6
 
 ;SysCalls Interruptions Handler
 _sysCallsHandler:

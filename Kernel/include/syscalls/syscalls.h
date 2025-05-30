@@ -17,5 +17,6 @@ void sys_hours(uint64_t *hours);
 void sys_sound(uint64_t time, uint64_t frequency);
 void sys_getRegisters(uint64_t vec[18]);
 void sys_cursor();
+void sys_sleep(int seconds);
 
 #endif

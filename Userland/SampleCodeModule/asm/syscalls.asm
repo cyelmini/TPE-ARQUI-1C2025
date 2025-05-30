@@ -11,6 +11,7 @@ GLOBAL syscall_getScreenHeight
 GLOBAL syscall_getRegisters
 GLOBAL syscall_clearScreen
 GLOBAL syscall_cursor
+GLOBAL syscall_sleep
 
 section .text
 
@@ -76,5 +77,10 @@ syscall_getRegisters:
 
 syscall_clearScreen:
     mov rax,0x0C
+    int 0x80
+    ret
+
+syscall_sleep:
+    mov rax, 0x0D
     int 0x80
     ret

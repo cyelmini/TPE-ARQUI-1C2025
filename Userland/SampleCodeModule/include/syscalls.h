@@ -1,3 +1,5 @@
+#include <stdint.h>
+
 extern void syscall_read(int fd, char * buffer, int count);
 
 extern void syscall_write(int fd, const char * buffer, int count);
@@ -20,7 +22,7 @@ extern int syscall_cursor();
 
 extern int syscall_getScreenHeight();
 
-extern int syscall_getRegisters();
+extern int syscall_getRegisters(uint64_t * registros);
 
 extern void syscall_clearScreen();
 

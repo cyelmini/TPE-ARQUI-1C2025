@@ -221,6 +221,7 @@ void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 // }
 
 void putBackspace() {
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
 	if(cursor_y == 0 && cursor_x == 0){
 		return;
 	}
@@ -237,7 +238,6 @@ void putBackspace() {
 		return;
 	}
 	cursor_x -= CHAR_WIDTH;
-	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
 }
 
 void putNewLine(){

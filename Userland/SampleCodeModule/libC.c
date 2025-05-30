@@ -6,10 +6,12 @@
 #define STDIN 0
 #define STDOUT 1
 
-#define USER_LENGTH 31
+#define USER_LENGTH 6
 
 void print(const char * string, va_list list);
 char* numToString(int num);
+
+char * strRegistros[19] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "RFLAGS", "RSP"};
 
 // Lectura
 
@@ -19,6 +21,36 @@ char readChar(){
     return buffer[0];
 }
 
+
+int scanf(char * buffer) {
+    int idx = 0;
+    int yUserPos = syscall_getCursorY(); // We save the Y position of the user, so we can check if the user tries to eliminate "$User: " from the command line
+    while (1) {
+        printCursor();
+        char c = readChar();
+        if(c == '\b' && syscall_getCursorX() <= USER_LENGTH && syscall_getCursorY() == yUserPos){
+            continue;
+        }   
+        putChar(c, 1); // We print the character
+
+        //We handle the different cases of the special characters
+        if (c != -1 && c != 0) {
+            if (c == '\b' && idx > 0) {
+                idx--;
+            } else if (c == '\n') {
+                buffer[idx] = '\0';
+                return idx;
+            } else if (c != '\t') {
+                buffer[idx] = c;
+                idx++;
+            }
+        }
+    }
+    return -1;
+}
+
+
+/*
 int scanf(char * buffer){
     int i = 0;
     int ini_cursor_y = syscall_getCursorY();
@@ -27,7 +59,7 @@ int scanf(char * buffer){
         printCursor();
         
         char c = readChar();
-        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorX() == ini_cursor_x){
+        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorX() <= USER_LENGTH){
             // if user is trying to erase the set text in the command line, continue
             continue;
         }
@@ -47,7 +79,7 @@ int scanf(char * buffer){
         }
     }
     return -1;
-}
+} */
 
 int atoi(char * string){
     int ans = 0;
@@ -63,12 +95,13 @@ int atoi(char * string){
 //     putChar('\n');
 //     uint64_t registros[18];
 //     syscall_getRegisters(registros);
-//       for (int i = 0; i < 19; i++)
-//       {
-//          printf(registros[i]);
-//      }
+      
+//        for (int i = 0; i < 19; i++)
+//        {
+//           printf(registros[i]);
+//       }
     
-//   }
+// }
 
 void putChar(char c, int fd){
     syscall_write(fd, &c, 1);

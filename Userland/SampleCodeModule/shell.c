@@ -14,7 +14,6 @@ static void clearBuffer(char * buffer);
 
 void initializeShell(){
     printf("Bienvenido al mejor sistema operativo en el universo.\nIngrese 'help' para conocer los comandos disponibles, o 'help $COMMAND' para saber mas sobre un comando.\n\n");
-    
     scanEntry();
 }
 
@@ -59,7 +58,7 @@ static char * filletEntry(char * str){
     return fillet;
 }
 
-static char ** filletArguments(char * arguments){
+staticchar ** filletArguments(char * arguments){
     static char *argsVec[MAX_ARGS + 1]; // +1 for NULL terminator
     static char argsStorage[MAX_ARGS][MAX_ARG_LEN];
 

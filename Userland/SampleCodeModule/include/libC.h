@@ -11,6 +11,8 @@ int atoi(char * string);
 
 // Escritura
 
+void printRegisters();
+
 void putChar(char c, int fd);
 
 void puts(char * string);
@@ -24,3 +26,5 @@ int strlen(char * s);
 char * numToString(int num);
 
 int strcmp(const char * s1, const char * s2);
+
+void printCursor();

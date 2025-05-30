@@ -15,9 +15,10 @@
 #define SET_CURSOR 6
 #define GET_CURSOR_X 7
 #define GET_CURSOR_Y 8
-#define GET_SCREEN_HEIGHT 9
-#define GET_REGISTERS 10
-#define CLEAR_SCREEN 11
+#define CURSOR 9
+#define GET_SCREEN_HEIGHT 10
+#define GET_REGISTERS 11
+#define CLEAR_SCREEN 12
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -58,13 +59,17 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
     
         case GET_CURSOR_Y:
         return getCursorY();       // y
+
+        case CURSOR:
+        sys_cursor();
+        return 0;
     
         case GET_SCREEN_HEIGHT:
         return getScreenHeight();
 
-        //  case GET_REGISTERS:
-        //  //sys_getRegisters((uint64_t *)arg1);       // get registers
-        // //return 0;
+          case GET_REGISTERS:
+          sys_getRegisters((uint64_t *)arg1);       // get registers
+         return 0;
 
         case CLEAR_SCREEN:
         clearScreen();
@@ -124,9 +129,12 @@ void sys_sound(uint64_t time, uint64_t frequency){
     stopSound();
 }
 
-//   void sys_getRegisters(uint64_t vec[18] registers){
-//   for(int i = 0; i < 18 ; i++){
-//     vec[i] = registers[i];
-//   }
-// }
+void sys_getRegisters(uint64_t vec[18]){
+    for(int i = 0; i < 18 ; i++){
+        vec[i] = registers[i];
+    }
+ }
 
+void sys_cursor(){
+    drawCursor();
+}

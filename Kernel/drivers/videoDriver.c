@@ -1,3 +1,4 @@
+#include <time.h>
 #include <defs.h>
 #include <font.h>
 #include <stdarg.h>
@@ -61,6 +62,8 @@ typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
+/* ------------------------------------------------- putPixel ------------------------------------------------------- */
+
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *)(uintptr_t)VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
@@ -68,6 +71,8 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+1]   =  (hexColor >> 8) & 0xFF; 
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
+
+/* ------------------------------------------------- cursor handlers ------------------------------------------------- */
 
 uint64_t getCursorX(){
 	return cursor_x;
@@ -80,6 +85,225 @@ uint64_t getCursorY(){
 void setCursor(uint64_t x, uint64_t y){
 	cursor_x = x;
 	cursor_y = y;
+}
+
+void cursor(){
+	putRectangle(cursor_x, cursor_y, 32, 5, 0x000000);
+	sleep(1);
+	putRectangle(cursor_x, cursor_y, 32, 5, 0xFFFFFF);
+}
+
+/* ---------------------------------------------- screen size handlers  -----------------------------------------------*/
+
+uint64_t getScreenHeight(){
+	return VBE_mode_info->height;
+}
+
+void changeSize(int size){
+	CHAR_HEIGHT += size;
+	CHAR_WIDTH += size ;
+	CHAR_SIZE = size;
+}
+
+/* ------------------------------------------------ libC kernel functions --------------------------------------------- */
+
+void putChar(char c, int hexcode){
+	switch(c){
+		case '\b':
+			putBackspace();
+		return;
+		case '\n':
+			putNewLine();
+		return;
+		case '\t':
+			putTab();
+		return;
+		default:
+			drawChar(c, hexcode);
+		return;
+	}
+}
+
+void printf(char * str, uint32_t hexcode) {
+	int i = 0;
+	while(str[i] != '\0'){
+		putChar(str[i], hexcode);
+		i++;
+	}
+}
+
+void puts(char * string){
+    for(int i = 0 ; string[i] != 0 ; i++){
+        putChar(string[i], WHITE);
+    }
+    putChar('\n', WHITE);
+}
+
+void print(const char * string, va_list list){
+    for(int i = 0; string[i] != 0 ; i++){
+        if(string[i] == '%' && string[i + 1] != 0){
+            switch (string[i+1]){
+                case 'd':
+                    putChar(*numToString(va_arg(list, int)), WHITE);
+					i++;
+                break;
+                case 's':
+                    puts(va_arg(list, char*));
+					i++;
+                break;
+                case 'c':
+                    putChar(va_arg(list, int), WHITE);
+					i++;
+                break;
+                default:
+                    putChar('%', WHITE);
+                break;
+            }
+        } else {
+            putChar(string[i], WHITE);
+        }
+    }
+}
+
+/* ------------------------------------------ draw functions ---------------------------------------------- */
+
+void drawCursor(){
+	putRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH, WHITE);
+}
+
+void drawChar(char c, uint64_t hexcode){
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+	int start = c - FIRST_CHAR;
+    if (c >= FIRST_CHAR && c <= LAST_CHAR) {
+    	if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width) {
+            putNewLine();
+        }
+    	// Draw the character
+        for (int i = 0; i < DEFAULT_HEIGHT ; i++) {
+            for (int j = 0; j < DEFAULT_WIDTH; j++) {
+                // Change the order of the bits
+                if ((uint8_t)font_bitmap[i + ((start) * 32)] & (1 << j)) {
+					putRectangle(cursor_x + j, cursor_y + i, CHAR_SIZE, CHAR_SIZE, hexcode);   	
+             	}
+            }
+        }
+        // Increment cursor position
+        cursor_x += CHAR_WIDTH;
+        }
+    return;
+}
+
+void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
+	for (int i = 0; i < width; i++){
+		for (int j = 0; j < height; j++){
+			putPixel(hexColor, x + i, y + j);
+		}
+	}
+}
+
+// void putBackspace() {
+// 	// if the cursor is on the first position of the screen (top left corner)
+//     if (cursor_x == 0 && cursor_y == 0) {
+//         return;
+//     }
+
+//     // if the cursor is at the beggining of a line, we move it to the end of the
+// 	// last line and delete the character on that line 
+//     if (cursor_x == 0 && cursor_y >= CHAR_HEIGHT) {
+//         cursor_y -= CHAR_HEIGHT;
+//         cursor_x = ((VBE_mode_info->width / CHAR_WIDTH) - 1) * CHAR_WIDTH;
+//     } else {
+//         cursor_x -= CHAR_WIDTH; // just move backwards one position
+//     }
+
+//     // delete the character in the cursors new position 
+//     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+// }
+
+void putBackspace() {
+	if(cursor_y == 0 && cursor_x == 0){
+		return;
+	}
+	if(cursor_x - CHAR_WIDTH < 0){
+		cursor_x = VBE_mode_info->width - CHAR_WIDTH;
+		cursor_y -= CHAR_HEIGHT;
+		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
+		return; 
+	} 
+	if(cursor_x == 0){
+		cursor_y -= CHAR_HEIGHT;
+		cursor_x = ((VBE_mode_info->width/CHAR_WIDTH)-1)*CHAR_WIDTH;
+		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
+		return;
+	}
+	cursor_x -= CHAR_WIDTH;
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
+}
+
+void putNewLine(){
+	cursor_x = 0;
+	cursor_y += CHAR_HEIGHT;
+}
+
+void putTab(){
+	if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
+			putNewLine(); 	// if we exceed the screen's width we continue writing on the next line
+			return;
+		}
+	cursor_x += TAB * DEFAULT_WIDTH;
+}
+
+void clearRectangle(int x, int y, int height, int width){
+	putRectangle(x, y, height, width, BLACK);
+}
+
+void clearScreen(){
+	for(int i = 0; i < VBE_mode_info->width; i++){
+		for(int j = 0; j < VBE_mode_info->width; j++){
+			putPixel(BLACK, i, j);
+		}
+	}
+}
+
+/* --------------------------------------------  registers handler  ----------------------------------------- */
+
+// void printRegister(uint64_t value, int hexcode){
+// 	char buffer[21]; // Enough to hold 64-bit integer in decimal
+// 	numBaseToString(value, buffer, 16);
+// 	printf(buffer, hexcode);
+// }
+
+/* ------------------------------------------- auxiliar functions ------------------------------------------ */
+
+char * numToString(int num) {
+    static char buffer[21]; 
+    char *ptr = buffer + sizeof(buffer) - 1;
+    unsigned long long n;
+    int isNegative = 0;
+
+    *ptr = '\0';
+
+    if (num == 0) {
+        *(--ptr) = '0';
+        return ptr;
+    }
+
+    if (num < 0) {
+        isNegative = 1;
+        n = (unsigned long long)(-(long long)num);
+    } else {
+        n = (unsigned long long)num;
+    }
+
+    while (n != 0) {
+        *(--ptr) = (n % 10) + '0';
+        n /= 10;
+    }
+
+    if (isNegative)
+        *(--ptr) = '-';
+
+    return ptr;
 }
 
 uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
@@ -117,181 +341,6 @@ uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base){
 }
 
 
-void putChar(char c, int hexcode){
-	switch(c){
-		case '\b':
-			putBackspace();
-		return;
-		case '\n':
-			putNewLine();
-		return;
-		case '\t':
-			putTab();
-		return;
-		default:
-			drawChar(c, hexcode);
-		return;
-	}
-}
 
-void printf(char * str, uint32_t hexcode) {
-	int i = 0;
-	while(str[i] != '\0'){
-		putChar(str[i], hexcode);
-		i++;
-	}
-}
 
-void putBackspace() {
-	// if the cursor is on the first position of the screen (top left corner)
-    if (cursor_x == 0 && cursor_y == 0) {
-        return;
-    }
 
-    // if the cursor is at the beggining of a line, we move it to the end of the
-	// last line and delete the character on that line 
-    if (cursor_x == 0 && cursor_y >= CHAR_HEIGHT) {
-        cursor_y -= CHAR_HEIGHT;
-        cursor_x = ((VBE_mode_info->width / CHAR_WIDTH) - 1) * CHAR_WIDTH;
-    } else {
-        cursor_x -= CHAR_WIDTH; // just move backwards one position
-    }
-
-    // delete the character in the cursors new position 
-    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
-}
-
-void putNewLine(){
-	setCursor(0, (uint64_t)getCursorY() + DEFAULT_HEIGHT);
-}
-
-/*
-void printRegister(uint64_t value, int hexcode){
-	char buffer[21]; // Enough to hold 64-bit integer in decimal
-	numBaseToString(value, buffer, 16);
-	printf(buffer, hexcode);
-}
-*/
-
-void putTab(){
-	if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
-			putNewLine(); 	// if we exceed the screen's width we continue writing on the next line
-			return;
-		}
-	cursor_x += TAB * DEFAULT_WIDTH;
-}
-
-void drawChar(char c, uint64_t hexcode){
-	int start = c - FIRST_CHAR;
-    if (c >= FIRST_CHAR && c <= LAST_CHAR) {
-    	if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width) {
-            putNewLine();
-        }
-    	// Draw the character
-        for (int i = 0; i < DEFAULT_HEIGHT ; i++) {
-            for (int j = 0; j < DEFAULT_WIDTH; j++) {
-                // Change the order of the bits
-                if ((uint8_t)font_bitmap[i + ((start) * 32)] & (1 << j)) {
-					putRectangle(cursor_x + j, cursor_y + i, CHAR_SIZE, CHAR_SIZE, hexcode);   	
-             	}
-            }
-        }
-        // Increment cursor position
-        cursor_x += CHAR_WIDTH;
-        }
-    return;
-}
-
-void clearRectangle(int x, int y, int height, int width){
-	putRectangle(x, y, height, width, BLACK);
-}
-
-void clearScreen(){
-	for(int i = 0; i < VBE_mode_info->width; i++){
-		for(int j = 0; j < VBE_mode_info->width; j++){
-			putPixel(BLACK, i, j);
-		}
-	}
-}
-
-void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
-	for (int i = 0; i < width; i++){
-		for (int j = 0; j < height; j++){
-			putPixel(hexColor, x + i, y + j);
-		}
-	}
-}
-
-char * numToString(int num) {
-    static char buffer[21]; 
-    char *ptr = buffer + sizeof(buffer) - 1;
-    unsigned long long n;
-    int isNegative = 0;
-
-    *ptr = '\0';
-
-    if (num == 0) {
-        *(--ptr) = '0';
-        return ptr;
-    }
-
-    if (num < 0) {
-        isNegative = 1;
-        n = (unsigned long long)(-(long long)num);
-    } else {
-        n = (unsigned long long)num;
-    }
-
-    while (n != 0) {
-        *(--ptr) = (n % 10) + '0';
-        n /= 10;
-    }
-
-    if (isNegative)
-        *(--ptr) = '-';
-
-    return ptr;
-}
-
-void puts(char * string){
-    for(int i = 0 ; string[i] != 0 ; i++){
-        putChar(string[i], WHITE);
-    }
-    putChar('\n', WHITE);
-}
-
-void print(const char * string, va_list list){
-    for(int i = 0; string[i] != 0 ; i++){
-        if(string[i] == '%' && string[i + 1] != 0){
-            switch (string[i+1]){
-                case 'd':
-                    putChar(*numToString(va_arg(list, int)), WHITE);
-					i++;
-                break;
-                case 's':
-                    puts(va_arg(list, char*));
-					i++;
-                break;
-                case 'c':
-                    putChar(va_arg(list, int), WHITE);
-					i++;
-                break;
-                default:
-                    putChar('%', WHITE);
-                break;
-            }
-        } else {
-            putChar(string[i], WHITE);
-        }
-    }
-}
-
-uint64_t getScreenHeight(){
-	return VBE_mode_info->height;
-}
-
-void changeSize(int size){
-	CHAR_HEIGHT += size;
-	CHAR_WIDTH += size ;
-	CHAR_SIZE = size;
-}

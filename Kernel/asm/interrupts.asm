@@ -14,6 +14,8 @@ GLOBAL _irq05Handler
 GLOBAL _sysCallsHandler
 GLOBAL saveRegs
 
+GLOBAL registers
+
 GLOBAL _exception0Handler
 
 EXTERN irqDispatcher

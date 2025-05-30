@@ -8,7 +8,9 @@ GLOBAL syscall_setCursor
 GLOBAL syscall_getCursorX
 GLOBAL syscall_getCursorY
 GLOBAL syscall_getScreenHeight
+GLOBAL syscall_getRegisters
 GLOBAL syscall_clearScreen
+GLOBAL syscall_cursor
 
 section .text
 
@@ -57,17 +59,22 @@ syscall_getCursorY:
     int 0x80
     ret
 
-syscall_getScreenHeight:
+syscall_cursor:
     mov rax, 0x09
     int 0x80
     ret
 
-syscall_getRegisters:
+syscall_getScreenHeight:
     mov rax, 0x0A
     int 0x80
     ret
 
+syscall_getRegisters:
+    mov rax, 0x0B
+    int 0x80
+    ret
+
 syscall_clearScreen:
-    mov rax,0x0B
+    mov rax,0x0C
     int 0x80
     ret

@@ -39,4 +39,6 @@ void puts(char * string);
 
 void clearScreen();
 
+void drawCursor();
+
 #endif // VIDEODRIVER_H

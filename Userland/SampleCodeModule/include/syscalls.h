@@ -16,7 +16,12 @@ extern int syscall_getCursorX();
 
 extern int syscall_getCursorY();
 
+extern int syscall_cursor();
+
 extern int syscall_getScreenHeight();
 
+extern int syscall_getRegisters();
+
 extern void syscall_clearScreen();
+
  

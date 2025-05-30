@@ -10,12 +10,11 @@ static char * commands[] = {"help", "playGolf", "time", "printRegisters"};
 static int commands_size = 4; 
 
 static void clearBuffer(char * buffer);
-static char * filletEntry(char * str);
-char ** filletArguments(char * arguments);
 
 
 void initializeShell(){
     printf("Bienvenido al mejor sistema operativo en el universo.\nIngrese 'help' para conocer los comandos disponibles, o 'help $COMMAND' para saber mas sobre un comando.\n\n");
+    
     scanEntry();
 }
 
@@ -29,6 +28,7 @@ void scanEntry() {
             clearScreen();
         }
 
+        // leo cursor
         int len = scanf(buffer);
 
         if (len > 0 && buffer[0] != '\n') {
@@ -47,8 +47,9 @@ void clearBuffer(char * buffer){
     }
 }
 
+/*
 // separa un string cuando encuentra el primer espacio devolviendo un puntero a la segunda mitad del string
-char * filletEntry(char * str){
+static char * filletEntry(char * str){
     char * fillet;
     while(*str != ' '){
         str++;
@@ -58,7 +59,7 @@ char * filletEntry(char * str){
     return fillet;
 }
 
-char ** filletArguments(char * arguments){
+static char ** filletArguments(char * arguments){
     static char *argsVec[MAX_ARGS + 1]; // +1 for NULL terminator
     static char argsStorage[MAX_ARGS][MAX_ARG_LEN];
 
@@ -90,7 +91,7 @@ char ** filletArguments(char * arguments){
     argsVec[argIndex] = 0; // Null terminar la lista
 
     return argsVec;
-}
+} */
 
 // leer entrada -> dirigir comandos
 void entryHandler(char * entry){

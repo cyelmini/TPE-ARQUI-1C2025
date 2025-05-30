@@ -1,4 +1,5 @@
 #include <stdarg.h>
+#include <stdint.h>
 #include "include/syscalls.h"
 #include "include/libC.h"
 
@@ -21,13 +22,16 @@ char readChar(){
 int scanf(char * buffer){
     int i = 0;
     int ini_cursor_y = syscall_getCursorY();
+    int ini_cursor_x = syscall_getCursorX();
     while(1){
+        printCursor();
+        
         char c = readChar();
-        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorX() <= USER_LENGTH){
-            // if user is  trying to erase the set text in the command line, continue
+        if(c == '\b' && ini_cursor_y == syscall_getCursorY() && syscall_getCursorX() == ini_cursor_x){
+            // if user is trying to erase the set text in the command line, continue
             continue;
         }
-        putChar(c, 1);
+        putChar(c, STDOUT);
 
         // special characters
         if(c != -1 && c != 0){
@@ -55,8 +59,23 @@ int atoi(char * string){
 
 // Escritura
 
+// void printRegisters(){
+//     putChar('\n');
+//     uint64_t registros[18];
+//     syscall_getRegisters(registros);
+//       for (int i = 0; i < 19; i++)
+//       {
+//          printf(registros[i]);
+//      }
+    
+//   }
+
 void putChar(char c, int fd){
     syscall_write(fd, &c, 1);
+}
+
+void printCursor(){
+    syscall_cursor();
 }
 
 void puts(char * string){

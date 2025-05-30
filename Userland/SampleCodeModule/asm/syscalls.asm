@@ -7,10 +7,10 @@ GLOBAL syscall_sound
 GLOBAL syscall_setCursor
 GLOBAL syscall_getCursorX
 GLOBAL syscall_getCursorY
+GLOBAL syscall_cursor
 GLOBAL syscall_getScreenHeight
 GLOBAL syscall_getRegisters
 GLOBAL syscall_clearScreen
-GLOBAL syscall_cursor
 
 section .text
 

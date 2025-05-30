@@ -75,11 +75,11 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
 /* ------------------------------------------------- cursor handlers ------------------------------------------------- */
 
 uint64_t getCursorX(){
-	return cursor_x;
+	return cursor_x/CHAR_WIDTH;
 }
 
 uint64_t getCursorY(){
-	return cursor_y;
+	return cursor_y/CHAR_HEIGHT;
 }
 
 void setCursor(uint64_t x, uint64_t y){
@@ -87,16 +87,10 @@ void setCursor(uint64_t x, uint64_t y){
 	cursor_y = y;
 }
 
-void cursor(){
-	putRectangle(cursor_x, cursor_y, 32, 5, 0x000000);
-	sleep(1);
-	putRectangle(cursor_x, cursor_y, 32, 5, 0xFFFFFF);
-}
-
 /* ---------------------------------------------- screen size handlers  -----------------------------------------------*/
 
 uint64_t getScreenHeight(){
-	return VBE_mode_info->height;
+	return VBE_mode_info->height / CHAR_HEIGHT;
 }
 
 void changeSize(int size){
@@ -175,19 +169,19 @@ void drawChar(char c, uint64_t hexcode){
 	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
 	int start = c - FIRST_CHAR;
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
+		// si el cursor si va del limite, poner nueva linea
     	if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width) {
             putNewLine();
         }
-    	// Draw the character
+    	// Dibujar el caracter
         for (int i = 0; i < DEFAULT_HEIGHT ; i++) {
             for (int j = 0; j < DEFAULT_WIDTH; j++) {
-                // Change the order of the bits
                 if ((uint8_t)font_bitmap[i + ((start) * 32)] & (1 << j)) {
 					putRectangle(cursor_x + j, cursor_y + i, CHAR_SIZE, CHAR_SIZE, hexcode);   	
              	}
             }
         }
-        // Increment cursor position
+        // Aumentar el cursor
         cursor_x += CHAR_WIDTH;
         }
     return;
@@ -201,48 +195,34 @@ void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 	}
 }
 
-// void putBackspace() {
-// 	// if the cursor is on the first position of the screen (top left corner)
-//     if (cursor_x == 0 && cursor_y == 0) {
-//         return;
-//     }
-
-//     // if the cursor is at the beggining of a line, we move it to the end of the
-// 	// last line and delete the character on that line 
-//     if (cursor_x == 0 && cursor_y >= CHAR_HEIGHT) {
-//         cursor_y -= CHAR_HEIGHT;
-//         cursor_x = ((VBE_mode_info->width / CHAR_WIDTH) - 1) * CHAR_WIDTH;
-//     } else {
-//         cursor_x -= CHAR_WIDTH; // just move backwards one position
-//     }
-
-//     // delete the character in the cursors new position 
-//     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
-// }
-
 void putBackspace() {
 	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
-	if(cursor_y == 0 && cursor_x == 0){
-		return;
-	}
-	if(cursor_x - CHAR_WIDTH < 0){
-		cursor_x = VBE_mode_info->width - CHAR_WIDTH;
-		cursor_y -= CHAR_HEIGHT;
-		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
-		return; 
-	} 
-	if(cursor_x == 0){
-		cursor_y -= CHAR_HEIGHT;
-		cursor_x = ((VBE_mode_info->width/CHAR_WIDTH)-1)*CHAR_WIDTH;
-		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
-		return;
-	}
-	cursor_x -= CHAR_WIDTH;
+	// if the cursor is on the first position of the screen (top left corner)
+    if (cursor_x == 0 && cursor_y == 0) {
+        return;
+    }
+
+    // if the cursor is at the beggining of a line, we move it to the end of the
+	// last line and delete the character on that line 
+    if (cursor_x == 0 && cursor_y >= CHAR_HEIGHT) {
+        cursor_y -= CHAR_HEIGHT;
+        cursor_x = ((VBE_mode_info->width / CHAR_WIDTH) - 1) * CHAR_WIDTH;
+    } else {
+        cursor_x -= CHAR_WIDTH; // just move backwards one position
+    }
+
+    // delete the character in the cursors new position 
+    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
 }
 
 void putNewLine(){
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
 	cursor_x = 0;
 	cursor_y += CHAR_HEIGHT;
+
+	if (cursor_y / CHAR_HEIGHT >= VBE_mode_info->height / CHAR_HEIGHT) {
+        clearScreen();
+    }
 }
 
 void putTab(){
@@ -258,11 +238,13 @@ void clearRectangle(int x, int y, int height, int width){
 }
 
 void clearScreen(){
-	for(int i = 0; i < VBE_mode_info->width; i++){
-		for(int j = 0; j < VBE_mode_info->width; j++){
+	for (int i = 0; i < VBE_mode_info->width; i++){
+		for (int j = 0; j < VBE_mode_info->height; j++){
 			putPixel(BLACK, i, j);
 		}
 	}
+	cursor_x = 0;
+	cursor_y = 0;
 }
 
 /* --------------------------------------------  registers handler  ----------------------------------------- */

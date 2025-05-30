@@ -18,7 +18,5 @@ void printRegisters();
 
 void time();
 
-void clearScreen();
-
 void playGolf();
 

@@ -67,9 +67,9 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case GET_SCREEN_HEIGHT:
         return getScreenHeight();
 
-          case GET_REGISTERS:
-          sys_getRegisters((uint64_t *)arg1);       // get registers
-         return 0;
+        case GET_REGISTERS:
+        sys_getRegisters((uint64_t *)arg1);       // get registers
+        return 0;
 
         case CLEAR_SCREEN:
         clearScreen();

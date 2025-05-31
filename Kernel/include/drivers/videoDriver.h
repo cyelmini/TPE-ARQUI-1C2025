@@ -23,8 +23,6 @@ uint64_t getCursorX();
 
 uint64_t getCursorY();
 
-uint64_t numBaseToString(uint64_t value, char * buffer, uint32_t base);
-
 void setCursor(uint64_t x, uint64_t y);
 
 void printRegister(uint64_t value, int hexcode);

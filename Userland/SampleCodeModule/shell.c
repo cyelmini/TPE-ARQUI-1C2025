@@ -85,13 +85,15 @@ void help(){
     printf("no tengo info para proveerte sorry se menos q vos\n");
 }
 
-void time(){
-    printf("todavia no se implemento te pido perdon volve mas tarde\n");
+void printRegisters(){
+    printAllRegisters();
 }
 
-void printRegisters(){
-    printf("todavia no se implemento te pido perdon volve mas tarde\n");
+>>>>>>> papa
+void time(){
+    printf("La hora actual es: %d:0%d:0%d\n", getHours(), getMinutes(), getSeconds());
 }
+
 
 void playGolf(){
     printf("todavia no se implemento te pido perdon volve mas tarde\n");

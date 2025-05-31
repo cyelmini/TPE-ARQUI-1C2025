@@ -6,19 +6,15 @@
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 50
 
-static char * commands[] = {"help", "time", "printRegisters", "playGolf"};
-static int commands_size = 4; 
-
-
 static void clearBuffer(char * buffer);
 static void clearScreen();
+static void executeCommand();
 
 
 void initializeShell(){
-    printf("Bienvenido al mejor sistema operativo en el universo.\n");
-    printf("Ingrese 'help' para conocer los comandos disponibles, o 'help $COMMAND' para saber mas sobre un comando.\n\n");
+    // FALTA ARREGLAR IMPRESION Y BACKSPACE
+    printf("¡Bienvenido a nuestro Sistema Operativo! Ingrese help para conocer los comandos disponibles.\n");
     scanEntry();
-    
 }
 
 void scanEntry() {
@@ -42,63 +38,119 @@ void entryHandler(char * entry){
         return;
     }
     
-    char f = 0;
+    char command[BUFFER_SIZE] = {0};
+    char arg[BUFFER_SIZE] = {0}; 
+    
+    
+    int i = 0;
+    int j = 0;
 
-    for( int i = 0 ; i < commands_size ; i++){
-        if(strcmp(entry, commands[i]) == 0){
-            switch(i){
-                case 0:
-                    f = 0;
-                    help();
-                return;
-
-                case 1:
-                    f = 0;
-                    playGolf();
-                return;
-
-                case 2:
-                    f = 0;
-                    time();
-                return;
-
-                case 3:
-                    f = 0;
-                    printRegisters();
-                return;
-
-                default:
-                return;
-            }
-        } else {
-            f = 1;
+    // buscamos el comando hasta el espacio 
+    while(entry[i] != ' ' && entry[i] != 0) {
+        command[i] = entry[i];
+        i++;
+    }
+    command[i] = 0;
+    
+    // buscamos el argumento 
+    if(entry[i] == ' ') {
+        i++; // Saltar el espacio
+        while(entry[i] != 0) {
+            arg[j] = entry[i];
+            i++;
+            j++;
         }
+        arg[j] = 0;
     }
-    if(f == 1){
-        printf("eso no es un comando, hace help xq necesitas ayuda chinchulin\n");
-    }
+
+    executeCommand(command, arg);
 }
 
 /* ---------------------------------- command functions ------------------------------------- */
 
-void help(){
-    printf("no tengo info para proveerte sorry se menos q vos\n");
+void executeCommand(char * command, char * arg){
+   
+    if(strcmp(command, "help") == 0) {
+        help(arg);
+        return;
+    } else if(strcmp(command, "time") == 0) {
+        time();
+        return;
+    } else if(strcmp(command, "printRegisters") == 0) {
+        printRegisters();
+        return;
+    } else if(strcmp(command, "clear") == 0) {
+        clearScreen();
+        return;
+    } else if(strcmp(command, "playGolf") == 0) {
+        playGolf();
+        return;
+    }
+    
+    printf("El comando '%s' no es valido\n", command);
+    printf("Escribe 'help' para conocer la lista de comandos disponibles.\n");
 }
 
+// FALTA DIVIDEBYCERO E INVALIDOP (no se si alguno mas)
+
+void help(char *command){
+
+    if(command[0] == 0) {
+        printf("==== COMANDOS DISPONIBLES ====\n");
+        
+        printf(" - help\n");
+        printf(" - time\n");
+        printf(" - printRegisters\n");
+        printf(" - clear\n");  
+        printf(" - playGolf\n");
+
+        printf("Para conocer mas informacion sobre un comando especifico, escribe 'help + comando'.\n");
+
+    } else if(strcmp(command, "help") == 0) {
+
+        printf("Comando: help [comando]\n");
+        printf("Sin argumentos, muestra la lista de comandos disponibles.\n");
+        printf("Con un comando como argumento, muestra informacion detallada sobre ese comando.\n");
+
+    } else if(strcmp(command, "time") == 0) {
+
+        printf("Comando: time\n");
+        printf("Muestra la hora actual del sistema en formato HH:MM:SS\n");
+
+    } else if(strcmp(command, "printRegisters") == 0) {
+
+        printf("Comando: printRegisters\n");
+        printf("Muestra los valores actuales de todos los registros del CPU\n");
+
+    } else if(strcmp(command, "clear") == 0) {  
+        
+        printf("Comando: clear\n");
+        printf("Limpia la pantalla y reinicia la posicion del cursor\n");
+
+    } else if(strcmp(command, "playGolf") == 0) {
+
+        printf("Comando: playGolf\n");
+        printf("Inicializa una partida de golf\n");
+
+    } else {
+        printf("El comando '%s' no es valido\n", command);
+    }
+}
+
+// REVISAR
 void printRegisters(){
     printAllRegisters();
 }
 
->>>>>>> papa
+// REVISAR 
 void time(){
     printf("La hora actual es: %d:0%d:0%d\n", getHours(), getMinutes(), getSeconds());
 }
 
-
+//FALTA
 void playGolf(){
-    printf("todavia no se implemento te pido perdon volve mas tarde\n");
+    printf("Falta implementar\n");
 }
-
 
 /* --------------------------------- auxiliar functions ------------------------------------ */
 

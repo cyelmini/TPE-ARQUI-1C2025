@@ -26,6 +26,4 @@ extern int syscall_getRegisters(uint64_t * registros);
 
 extern void syscall_clearScreen();
 
-extern void syscall_sleep(int seconds);
-
  

@@ -12,7 +12,7 @@ void print(const char * string, va_list list);
 char* numToString(int num);
 static void decimalToHex(uint64_t value, char * buffer);
 
-static char * strRegisters[18] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "RFLAGS", "RSP"};
+static char * strRegisters[19] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "RFLAGS", "RSP"};
 
 // Lectura
 
@@ -97,7 +97,7 @@ void printAllRegisters(){
     char hexNumber[19];
     uint64_t registers[18];
     syscall_getRegisters(registers);
-        for (int i = 0; i < 18; i++)
+        for (int i = 0; i < 19; i++)
         {
            printf("%s: ", strRegisters[i]);
            decimalToHex(registers[i], hexNumber);
@@ -151,10 +151,6 @@ void printf(const char * string, ...){
 }
 
 // Utilidad
-
-void sleep(int seconds){
-    syscall_sleep(seconds);
-}
 
 int getSeconds(){
     uint64_t seconds;

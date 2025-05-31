@@ -19,7 +19,6 @@
 #define GET_SCREEN_HEIGHT 10
 #define GET_REGISTERS 11
 #define CLEAR_SCREEN 12
-#define SLEEP 13
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -68,16 +67,12 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case GET_SCREEN_HEIGHT:
         return getScreenHeight();
 
-        case GET_REGISTERS:
-        sys_getRegisters((uint64_t *)arg1);       // get registers
-        return 0;
+          case GET_REGISTERS:
+          sys_getRegisters((uint64_t *)arg1);       // get registers
+         return 0;
 
         case CLEAR_SCREEN:
         clearScreen();
-        return 0;
-
-        case SLEEP:
-        sys_sleep(arg1);       // sleep
         return 0;
         
         default:
@@ -142,8 +137,4 @@ void sys_getRegisters(uint64_t vec[18]){
 
 void sys_cursor(){
     drawCursor();
-}
-
-void sys_sleep(int seconds) {
-    sleep(seconds);
 }

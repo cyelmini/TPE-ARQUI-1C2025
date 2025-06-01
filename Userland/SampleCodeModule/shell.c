@@ -1,6 +1,7 @@
 #include "include/libC.h"
 #include "include/shell.h"
 #include "include/syscalls.h"
+#include "include/exceptions.h"
 
 #define BUFFER_SIZE 1024
 #define MAX_ARGS 10
@@ -9,6 +10,22 @@
 static void clearBuffer(char * buffer);
 static void clearScreen();
 static void executeCommand();
+
+/*------------------------Funciones nuevas-------------------------------------*/
+
+static void invalidOpException();
+static void divisionByZeroException();
+
+static void invalidOpException() {
+    printf("Error: Operacion invalida.\n");
+    invalidOpCode();
+}
+
+static void divisionByZeroException() {
+    printf("Error: Division por cero.\n");
+    divisionByZero();
+}
+/*-----------------------------------------------------------------------------*/
 
 
 void initializeShell(){
@@ -85,8 +102,15 @@ void executeCommand(char * command, char * arg){
     } else if(strcmp(command, "playGolf") == 0) {
         playGolf();
         return;
+        /*--------------------------Nuevo------------------------------*/
+    } else if (strcmp(command, "invalidOp") == 0) {
+        invalidOpException();
+        return;
+    } else if (strcmp(command, "divisionByZero") == 0) {
+        divisionByZeroException();
+        return;
     }
-    
+        /*-------------------------------------------------------------*/
     printf("El comando '%s' no es valido\n", command);
     printf("Escribe 'help' para conocer la lista de comandos disponibles.\n");
 }

@@ -30,7 +30,7 @@ static void divisionByZeroException() {
 
 void initializeShell(){
     // FALTA ARREGLAR IMPRESION Y BACKSPACE
-    printf("¡Bienvenido a nuestro Sistema Operativo! Ingrese help para conocer los comandos disponibles.\n");
+    printf("Bienvenido al mejor sistema operativo del mundo. Ingrese help para conocer los comandos disponibles.\n");
     scanEntry();
 }
 

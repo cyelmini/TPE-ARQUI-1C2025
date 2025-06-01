@@ -170,7 +170,7 @@ void drawChar(char c, uint64_t hexcode){
 	int start = c - FIRST_CHAR;
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
 		// si el cursor si va del limite, poner nueva linea
-    	if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width) {
+    	if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width - CHAR_WIDTH) {
             putNewLine();
         }
     	// Dibujar el caracter
@@ -226,6 +226,7 @@ void putNewLine(){
 }
 
 void putTab(){
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
 	if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
 			putNewLine(); 	// if we exceed the screen's width we continue writing on the next line
 			return;

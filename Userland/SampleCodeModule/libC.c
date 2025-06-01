@@ -67,6 +67,7 @@ void printCursor(){
 
 void puts(char * string){
     syscall_write(STDOUT, string, strlen(string));
+    putChar('\n', STDOUT);
 }
 
 void print(const char * string, va_list list){
@@ -79,7 +80,7 @@ void print(const char * string, va_list list){
                 break;
                 case 's':
                     i++;
-                    puts(va_arg(list, char *));
+                    printf((va_arg(list, char *)));
                 break;
                 case 'c':
                     i++;

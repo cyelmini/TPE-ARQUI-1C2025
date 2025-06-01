@@ -11,6 +11,8 @@ void scanEntry();
 // leer entrada -> dirigir comandos
 void entryHandler(char * entry);
 
+void printRegisters();
+
 void help();
 
 void time();

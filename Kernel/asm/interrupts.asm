@@ -17,11 +17,13 @@ GLOBAL saveRegs
 GLOBAL registers
 
 GLOBAL _exception0Handler
+GLOBAL printRegs
 
 EXTERN irqDispatcher
 EXTERN exceptionDispatcher
 EXTERN sysCallDispatcher
 EXTERN printf
+EXTERN printRegisters
 
 SECTION .data
 print_fmt_regs: db "rax=%d rbx=%d rcx=%d rdx=%d rsi=%d rdi=%d", 10, 0
@@ -126,6 +128,11 @@ SECTION .text
 	iretq
 %endmacro
 
+printRegs:
+	mov qword rdi, registers ; I need the registers through asm
+	call printRegisters
+	ret
+
 ; cuando se hace una int80h (interrupcion de software), la interruption table lo manda a la funcion sysCallsHandler (en este archivo), la cual ejecuta 
 ; esta macro. La misma setea en los registros requeridos los parametros de la syscall para llamar a la funcion en C "sysCallDispatcher", la cual decide, 
 ; segun lo que hay en rdi, qué syscall ejecutar. Los parámetros se pasan asi en lugar de en orden (primero a ultimo) porque para pasar los parametros 
@@ -213,6 +220,10 @@ _irq05Handler:
 ;Zero Division Exception
 _exception0Handler:
 	exceptionHandler 0
+
+;Invalid Code Exception
+_exception01Handler:
+	exceptionHandler 6
 
 ;SysCalls Interruptions Handler
 _sysCallsHandler:

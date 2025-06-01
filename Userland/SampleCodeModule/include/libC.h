@@ -11,8 +11,6 @@ int atoi(char * string);
 
 // Escritura
 
-void printAllRegisters();
-
 void putChar(char c, int fd);
 
 void puts(char * string);

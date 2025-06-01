@@ -1,5 +1,5 @@
-#include <stdint.h>
 #include <drivers/keyboardDriver.h>
+#include <kernelLib.h>
 
 #define KEYS 58
 #define BUFFER_SIZE 512 
@@ -88,6 +88,10 @@ void keyboardHandler(){
             }
         }
         break;
+    }
+
+    if(buffer[buffer_index-1] == 'r' && ctrl_pressed == 1){
+        snapShotFlag = 1; // set the flag to take a snapshot of the registers
     }
 }
 

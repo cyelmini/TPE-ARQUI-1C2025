@@ -5,6 +5,7 @@
 #include <interruptions/lib.h>
 #include <syscalls/syscalls.h>
 #include <time.h>
+#include <interruptions/interrupts.h>
 
 #define READ 0
 #define WRITE 1
@@ -68,7 +69,7 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return getScreenHeight();
 
         case GET_REGISTERS:
-        sys_getRegisters((uint64_t *)arg1);       // get registers
+        sys_getRegisters();       // get registers
         return 0;
 
         case CLEAR_SCREEN:
@@ -129,10 +130,8 @@ void sys_sound(uint64_t time, uint64_t frequency){
     stopSound();
 }
 
-void sys_getRegisters(uint64_t vec[18]){
-    for(int i = 0; i < 18 ; i++){
-        vec[i] = registers[i];
-    }
+void sys_getRegisters(){
+    printRegs();
  }
 
 void sys_cursor(){

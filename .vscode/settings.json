@@ -1,6 +1,7 @@
 {
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
-        "libc.h": "c"
+        "libc.h": "c",
+        "stdint.h": "c"
     }
 }

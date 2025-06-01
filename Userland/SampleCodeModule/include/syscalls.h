@@ -22,7 +22,7 @@ extern int syscall_cursor();
 
 extern int syscall_getScreenHeight();
 
-extern int syscall_getRegisters(uint64_t * registros);
+extern int syscall_getRegisters();
 
 extern void syscall_clearScreen();
 

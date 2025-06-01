@@ -13,9 +13,6 @@ void entryHandler(char * entry);
 
 void help();
 
-
-void printRegisters();
-
 void time();
 
 void playGolf();

@@ -20,6 +20,8 @@ void _sysCallsHandler(void);
 
 void _exception0Handler(void);
 
+void printRegs(void);
+
 void _cli(void);
 
 void _sti(void);

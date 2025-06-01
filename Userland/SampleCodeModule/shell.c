@@ -139,7 +139,7 @@ void help(char *command){
 
 // REVISAR
 void printRegisters(){
-    printAllRegisters();
+    syscall_getRegisters();
 }
 
 // REVISAR 

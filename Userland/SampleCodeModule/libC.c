@@ -9,9 +9,6 @@
 
 void print(const char * string, va_list list);
 char* numToString(int num);
-static void decimalToHex(uint64_t value, char * buffer);
-
-static char * strRegisters[19] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "RFLAGS", "RSP"};
 
 // Lectura
 
@@ -59,19 +56,6 @@ int atoi(char * string){
 }
 
 // Escritura
-
-void printAllRegisters(){
-    puts("\n");
-    char hexNumber[19];
-    uint64_t registers[18];
-    syscall_getRegisters(registers);
-        for (int i = 0; i < 19; i++)
-        {
-           printf("%s: ", strRegisters[i]);
-           decimalToHex(registers[i], hexNumber);
-           printf("%s   ", hexNumber);
-        }
-}
 
 void putChar(char c, int fd){
     syscall_write(fd, &c, 1);
@@ -135,7 +119,7 @@ int getMinutes(){
 int getHours(){
     uint64_t hours;
     syscall_hours(&hours);
-    return hours - 3;
+    return hours - 3; // RTC is in UTC, converts it to UTC-3
 }
 
 int strlen(char * s){
@@ -184,34 +168,4 @@ int strcmp(const char * s1, const char * s2){
         s2++;
     }
     return *s1 - *s2;
-}
-
-static void decimalToHex(uint64_t value, char * buffer){
-    char hexDigits[] = "0123456789ABCDEF";
-    char temp[17]; // 16 digits + null terminator 
-    int i = 0;
-
-    if (value == 0) {
-        buffer[0] = '0';
-        buffer[1] = 'x';
-        buffer[2] = '0';
-        buffer[3] = '\0';
-        return;
-    }
-
-    while (value > 0) {
-        temp[i++] = hexDigits[value % 16];
-        value /= 16;
-    }
-
-    // Prefix "0x"
-    buffer[0] = '0';
-    buffer[1] = 'x';
-
-    // Reverse the string
-    int j = 2;
-    while (i > 0) {
-        buffer[j++] = temp[--i];
-    }
-    buffer[j] = '\0';
 }

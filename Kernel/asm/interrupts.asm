@@ -125,18 +125,15 @@ SECTION .text
 	pushState
 	saveRegs
 
-	;Call the exception dispatcher
-
 	mov rdi, %1 ;PARAMETER
 	call exceptionDispatcher
 
-
-	popState         ;Restore the registers
-	call getStackBase  ;Get the stack base
-	sub rax, 20h
+	popState        
+	call getStackBase  ; Needed for returning correct context
+	sub rax, 20h ; saves 32 bytes (specified in funcion def in kernel.c) 
 	mov qword [rsp+8*3], rax
 	call retUserland  ;Return to userland
-	mov qword [rsp], rax
+	mov qword [rsp], rax ; rax has returnAdress for function to restart
 	iretq
 %endmacro
 

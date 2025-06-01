@@ -22,8 +22,14 @@ extern int syscall_cursor();
 
 extern int syscall_getScreenHeight();
 
+extern int syscall_getScreenWidth();
+
 extern int syscall_getRegisters();
 
 extern void syscall_clearScreen();
+
+extern void syscall_changeCharSize();
+
+extern void syscall_defaultCharSize();
 
  

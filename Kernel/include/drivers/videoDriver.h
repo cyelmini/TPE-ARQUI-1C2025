@@ -42,4 +42,10 @@ void drawCursor();
 
 int getCharHeight();
 
+uint64_t getScreenWidth();
+
+void changeCharSize(int size);
+
+void defaultCharSize();
+
 #endif // VIDEODRIVER_H

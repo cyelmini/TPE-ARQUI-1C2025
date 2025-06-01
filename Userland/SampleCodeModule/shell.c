@@ -2,6 +2,7 @@
 #include "include/shell.h"
 #include "include/syscalls.h"
 #include "include/exceptions.h"
+#include "include/golf.h"
 
 #define BUFFER_SIZE 1024
 #define MAX_ARGS 10
@@ -115,12 +116,10 @@ void executeCommand(char * command, char * arg){
         divisionByZeroException();
         return;
     }
-        /*-------------------------------------------------------------*/
+    
     printf("El comando '%s' no es valido\n", command);
     printf("Escribe 'help' para conocer la lista de comandos disponibles.\n");
 }
-
-// FALTA DIVIDEBYCERO E INVALIDOP (no se si alguno mas)
 
 void help(char *command){
 
@@ -132,6 +131,8 @@ void help(char *command){
         printf(" - printRegisters\n");
         printf(" - clear\n");  
         printf(" - playGolf\n");
+        printf(" - invalidOp\n");
+        printf(" - divisionByZero\n");
 
         printf("Para conocer mas informacion sobre un comando especifico, escribe 'help + comando'.\n");
 
@@ -161,12 +162,21 @@ void help(char *command){
         printf("Comando: playGolf\n");
         printf("Inicializa una partida de golf\n");
 
+    } else if(strcmp(command, "invalidOp") == 0) {
+
+        printf("Comando: invalidOp\n");
+        printf("Lanza una excepcion por operacion invalida\n");
+
+    } else if(strcmp(command, "divisionByZero") == 0) {
+
+        printf("Comando: divisionByZero\n");
+        printf("Lanza una excepcion por division por cero\n");
+
     } else {
         printf("El comando '%s' no es valido\n", command);
     }
 }
 
-// REVISAR
 void printRegisters(){
     syscall_getRegisters();
 }
@@ -176,10 +186,7 @@ void time(){
     printf("La hora actual es: %d:0%d:0%d\n", getHours(), getMinutes(), getSeconds());
 }
 
-//FALTA
-void playGolf(){
-    printf("Falta implementar\n");
-}
+
 
 /* --------------------------------- auxiliar functions ------------------------------------ */
 

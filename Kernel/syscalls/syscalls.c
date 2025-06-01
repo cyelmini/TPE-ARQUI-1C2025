@@ -18,8 +18,11 @@
 #define GET_CURSOR_Y 8
 #define CURSOR 9
 #define GET_SCREEN_HEIGHT 10
-#define GET_REGISTERS 11
-#define CLEAR_SCREEN 12
+#define GET_SCREEN_WIDTH 11
+#define GET_REGISTERS 12
+#define CLEAR_SCREEN 13
+#define CHANGE_CHAR_SIZE 14
+#define DEFAULT_CHAR_SIZE 15
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -52,14 +55,14 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return 0;
 
         case SET_CURSOR:
-        setCursor(arg1, arg2);       // x, y
+        setCursor(arg1, arg2);       
         return 0;
    
         case GET_CURSOR_X:
-        return getCursorX();       // x
+        return getCursorX();     
     
         case GET_CURSOR_Y:
-        return getCursorY();       // y
+        return getCursorY();       
 
         case CURSOR:
         sys_cursor();
@@ -68,12 +71,23 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case GET_SCREEN_HEIGHT:
         return getScreenHeight();
 
+        case GET_SCREEN_WIDTH:
+        return getScreenWidth();
+
         case GET_REGISTERS:
-        sys_getRegisters();       // get registers
+        sys_getRegisters();      
         return 0;
 
         case CLEAR_SCREEN:
         clearScreen();
+        return 0;
+
+        case CHANGE_CHAR_SIZE:
+        changeCharSize(arg1);
+        return 0;
+
+        case DEFAULT_CHAR_SIZE:
+        defaultCharSize();
         return 0;
         
         default:

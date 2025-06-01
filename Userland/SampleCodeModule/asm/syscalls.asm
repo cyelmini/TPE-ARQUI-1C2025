@@ -9,8 +9,11 @@ GLOBAL syscall_getCursorX
 GLOBAL syscall_getCursorY
 GLOBAL syscall_cursor
 GLOBAL syscall_getScreenHeight
+GLOBAL syscall_gretScreenWidth
 GLOBAL syscall_getRegisters
 GLOBAL syscall_clearScreen
+GLOBAL syscall_changeCharSize
+GLOBAL syscall_defaultCharSize
 
 section .text
 
@@ -69,12 +72,27 @@ syscall_getScreenHeight:
     int 0x80
     ret
 
-syscall_getRegisters:
+syscall_gretScreenWidth:
     mov rax, 0x0B
     int 0x80
     ret
 
+syscall_getRegisters:
+    mov rax, 0x0C
+    int 0x80
+    ret
+
 syscall_clearScreen:
-    mov rax,0x0C
+    mov rax,0x0D
+    int 0x80
+    ret
+
+syscall_changeCharSize:
+    mov rax, 0x0E
+    int 0x80
+    ret
+
+syscall_defaultCharSize
+    mov rax, 0x0D
     int 0x80
     ret

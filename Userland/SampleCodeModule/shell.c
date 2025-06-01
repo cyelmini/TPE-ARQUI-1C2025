@@ -17,19 +17,25 @@ static void invalidOpException();
 static void divisionByZeroException();
 
 static void invalidOpException() {
-    printf("Error: Operacion invalida.\n");
-    invalidOpCode();
+    if(syscall_getScreenHeight() <= syscall_getCursorY() + 25){
+        printf("Error: Operacion invalida.\n");
+        invalidOpCode();
+    }
+    return;
 }
 
 static void divisionByZeroException() {
-    printf("Error: Division por cero.\n");
-    divisionByZero();
+    if (syscall_getScreenHeight() <= syscall_getCursorY() + 25)
+    {
+        printf("Error: Division por cero.\n");
+        divisionByZero();
+    }
+    return;
 }
 /*-----------------------------------------------------------------------------*/
 
 
 void initializeShell(){
-    // FALTA ARREGLAR IMPRESION Y BACKSPACE
     printf("Bienvenido al mejor sistema operativo del mundo. Ingrese help para conocer los comandos disponibles.\n");
     scanEntry();
 }
@@ -102,7 +108,6 @@ void executeCommand(char * command, char * arg){
     } else if(strcmp(command, "playGolf") == 0) {
         playGolf();
         return;
-        /*--------------------------Nuevo------------------------------*/
     } else if (strcmp(command, "invalidOp") == 0) {
         invalidOpException();
         return;

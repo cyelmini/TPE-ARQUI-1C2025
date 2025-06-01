@@ -46,7 +46,6 @@ int scanf(char * buffer){
     return -1;
 }
 
-
 int atoi(char * string){
     int ans = 0;
     for(int i = 0 ; string[i] != 0 ; i++){

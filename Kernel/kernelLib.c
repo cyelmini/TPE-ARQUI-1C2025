@@ -15,6 +15,9 @@ void printRegisters(uint64_t * registers){
         printf("Para ver los registros, presione ctrl + r\n", WHITE);
         return;
     }
+    if(getCursorY() + 18 * getCharHeight() >= getScreenHeight()){
+        clearScreen();
+    }
     for (int i = 0; i < 18; i++){
         char buffer[20]; // Buffer to hold the hexadecimal representation
         decimalToHex(registers[i], buffer);

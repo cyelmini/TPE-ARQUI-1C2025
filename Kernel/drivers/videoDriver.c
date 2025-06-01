@@ -195,6 +195,7 @@ void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
 	}
 }
 
+/*
 void putBackspace() {
 	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
 	// if the cursor is on the first position of the screen (top left corner)
@@ -213,6 +214,27 @@ void putBackspace() {
 
     // delete the character in the cursors new position 
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+}*/
+
+void putBackspace() {
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
+
+	if(cursor_y == 0 && cursor_x == 0){
+		return;
+	}
+	if(cursor_x - CHAR_WIDTH < 0){
+		cursor_x = VBE_mode_info->width - CHAR_WIDTH;
+		cursor_x -= CHAR_HEIGHT;
+		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+		return; 
+	} 
+	if(cursor_x==0){
+		cursor_y -= CHAR_HEIGHT;
+		cursor_x = ((VBE_mode_info->width/CHAR_WIDTH)-1)*CHAR_WIDTH;
+		clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT,CHAR_WIDTH);
+		return;
+	}
+	cursor_x -= CHAR_WIDTH;
 }
 
 void putNewLine(){
@@ -281,5 +303,6 @@ char * numToString(int num) {
     return ptr;
 }
 
-
-
+int getCharHeight(){
+	return CHAR_HEIGHT;
+}

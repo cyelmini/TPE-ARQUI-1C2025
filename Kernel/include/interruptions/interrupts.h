@@ -19,6 +19,7 @@ void _irq05Handler(void);
 void _sysCallsHandler(void);
 
 void _exception0Handler(void);
+void _exception01Handler(void);
 
 void printRegs(void);
 

@@ -2,6 +2,8 @@
     "C_Cpp.errorSquiggles": "disabled",
     "files.associations": {
         "libc.h": "c",
-        "stdint.h": "c"
+        "stdint.h": "c",
+        "kernellib.h": "c",
+        "moduleloader.h": "c"
     }
 }

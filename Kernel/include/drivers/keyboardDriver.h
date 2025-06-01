@@ -8,5 +8,6 @@ extern uint8_t getKey();
 void keyboardHandler();
 char nextChar();
 char * getBuffer();
+char isCtrlPressed();
 
 #endif

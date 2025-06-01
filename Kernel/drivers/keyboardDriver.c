@@ -2,7 +2,7 @@
 #include <kernelLib.h>
 
 #define KEYS 58
-#define BUFFER_SIZE 512 
+#define BUFFER_SIZE 1024
 
 // utility keys
 #define ESC 0x01
@@ -31,8 +31,8 @@ char alt_pressed = 0;
 
 // global variables to manage buffer
 char buffer[BUFFER_SIZE] = {0}; 
-int buffer_index = 0;
-int current = 0;
+int write_index = 0;
+int read_index = 0;
 int remaining_chars = 0;    // variable used to control the characters that havent been read yet
 
 static unsigned char keyboard[KEYS][2] = {
@@ -47,7 +47,6 @@ void keyboardHandler(){
     uint64_t scancode_key = getKey(); 
 
     switch (scancode_key) {
-
     case RSHIFT:
     case LSHIFT:
         shift_pressed = 1;
@@ -80,32 +79,36 @@ void keyboardHandler(){
         break;
 
     default:
-        if (scancode_key < KEYS && keyboard[scancode_key][0] != 0) {
-            if (buffer_index < BUFFER_SIZE) {
-                char key = keyboard[(int)scancode_key][(caps_pressed + shift_pressed) % 2];
-                buffer[buffer_index++] = key;
-                remaining_chars++;
-            }
+        if (scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
+            char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
+            buffer[write_index++] = key;
+            write_index %= BUFFER_SIZE;
+            remaining_chars++;
         }
         break;
     }
 
-    if(buffer[buffer_index-1] == 'r' && ctrl_pressed == 1){
-        snapShotFlag = 1; // set the flag to take a snapshot of the registers
+    int last = (write_index == 0) ? BUFFER_SIZE - 1 : write_index - 1;
+    if(buffer[last] == 'r' && ctrl_pressed == 1){
+        snapShotFlag = 1;
     }
 }
+
 
 char nextChar(){
     if(remaining_chars == 0) {
         return -1;
     }
-    if (current == BUFFER_SIZE) {
-        current = 0;
-    }
+    char c = buffer[read_index++];
+    read_index %= BUFFER_SIZE;
     remaining_chars--;
-    return buffer[current++];
+    return c;
 }
 
 char * getBuffer(){
     return buffer;
+}
+
+char isCtrlPressed(){
+    return ctrl_pressed;
 }

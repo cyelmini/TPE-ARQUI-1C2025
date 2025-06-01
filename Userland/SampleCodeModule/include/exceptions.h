@@ -1,8 +1,8 @@
 #ifndef EXCEPTIONS_H
 #define EXCEPTIONS_H
 
-void divisionByZero(void);
+extern void divisionByZero(void);
 
-void invalidOpCode(void);
+extern void invalidOpCode(void);
 
 #endif // EXCEPTIONS_H

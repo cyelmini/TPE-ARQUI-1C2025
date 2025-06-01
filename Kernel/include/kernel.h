@@ -1,0 +1,3 @@
+
+void * getStackBase();
+void * retUserland();

@@ -17,6 +17,7 @@ GLOBAL saveRegs
 GLOBAL registers
 
 GLOBAL _exception0Handler
+GLOBAL _exception01Handler
 GLOBAL printRegs
 
 EXTERN irqDispatcher
@@ -24,6 +25,8 @@ EXTERN exceptionDispatcher
 EXTERN sysCallDispatcher
 EXTERN printf
 EXTERN printRegisters
+EXTERN getStackBase
+ExTERN retUserland
 
 SECTION .data
 print_fmt_regs: db "rax=%d rbx=%d rcx=%d rdx=%d rsi=%d rdi=%d", 10, 0
@@ -120,11 +123,20 @@ SECTION .text
 
 %macro exceptionHandler 1
 	pushState
+	saveRegs
 
-	mov rdi, %1 ; pasaje de parametro
+	;Call the exception dispatcher
+
+	mov rdi, %1 ;PARAMETER
 	call exceptionDispatcher
 
-	popState
+
+	popState         ;Restore the registers
+	call getStackBase  ;Get the stack base
+	sub rax, 20h
+	mov qword [rsp+8*3], rax
+	call retUserland  ;Return to userland
+	mov qword [rsp], rax
 	iretq
 %endmacro
 

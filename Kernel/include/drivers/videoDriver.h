@@ -40,4 +40,6 @@ void clearScreen();
 
 void drawCursor();
 
+int getCharHeight();
+
 #endif // VIDEODRIVER_H

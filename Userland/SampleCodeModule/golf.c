@@ -15,15 +15,22 @@
 #define BUFFER_SIZE 10
 #define MAX_LEVELS 5
 #define MAX_PLAYERS 2
+#define MAX_OBSTACLES 10
+#define SMALL_OBS 5
+#define MEDIUM_OBS 10
+#define BIG_OBS 15
 
 // Colors
 #define BLACK 0x000000
-#define WHITE
+#define WHITE 0xFFFFFF
 #define LIGHT_GRASS_GREEN 0xc0ff6d
 #define GRASS_GREEN 0x62bc2f
 #define EARTH_BROWN 0x5d441d
 #define PONGI_BLUE 0x96e2ee
 #define SEA_BLUE 0x1b72ae
+
+static int SCREEN_WIDTH = syscall_getScreenWidth();
+static int SCREEN_HEIGHT = syscall_getScreenHeight();
 
 typedef struct Pongi{
     float x;
@@ -52,12 +59,6 @@ typedef struct Obstacle{
 
 typedef struct Obstacle * TObstacle;
 
-typedef struct Screen{
-    int ** matrix;
-    TObstacle * obstacles;
-}Screen;
-
-typedef struct Screen * TScreen;
 
 // Declaraciones, en .h playGolf
 void playGolf(void);
@@ -72,7 +73,6 @@ void createPongi(int x, int y);
 void movePongi(void);
 void moveBall(void);
 
-static TScreen screen;
 
 void playGolf(){
     printf("Bienvenido al Pongi Golf. Ingrese la cantidad de jugadores (1 o 2):\n");
@@ -114,7 +114,7 @@ void startLevel(Pongi pongis[], int level) {
     setObstacles(level);
     setGoal(level);
     setPongis(pongis);
-    //printLevel();
+    printLevel();
 }
 
 void setBackground(){
@@ -123,9 +123,11 @@ void setBackground(){
 
 // Seteo
 void setObstacles(int level){
+    TObstacle obstacles[MAX_OBSTACLES] = {0};
     switch(level){
         case 0:
-            screen->obstacles[0] = createObstacle(15, 0, EARTH_BROWN);
+            obstacles[0] = createObstacle(15, 0, EARTH_BROWN);
+            //setObstacle(TObstacle obstacles[]);
         return;
         case 1:
 
@@ -142,6 +144,9 @@ void setObstacles(int level){
     }
 }
 
+void setObstacle(TObstacle obstacles[]){
+    
+}
 
 void setGoal(int level){
     switch(level){
@@ -184,7 +189,11 @@ TObstacle createObstacle(int x, int y, int color){
 void printLevel(){
     //printPongis();
     //printBall();
-    //printObstacles();
+    printObstacles();
+}
+
+void printObstacles(){
+
 }
 
 // Movimiento

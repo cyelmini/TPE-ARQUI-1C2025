@@ -8,6 +8,9 @@
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 50
 
+// Colors
+#define GRASS_GREEN 0x62bc2f
+
 static void clearBuffer(char * buffer);
 static void clearScreen();
 static void executeCommand();
@@ -45,7 +48,7 @@ void scanEntry() {
     char buffer[BUFFER_SIZE] = {0};
 
     while(1){    
-        printf("$USER@$DEVICE_NAME:/path/path$ ");
+        printColor("$USER@$DEVICE_NAME:/path/path$ ", GRASS_GREEN);
 
         int len = scanf(buffer);
 

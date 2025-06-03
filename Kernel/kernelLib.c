@@ -7,7 +7,7 @@
 char snapShotFlag = 0;
 static void decimalToHex(uint64_t value, char * buffer);
 
-static char * strRegisters[] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "RFLAGS", "RSP"};
+static char * strRegisters[] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP", "R8", "R9", "R10", "R11", "R12", "R13", "R14", "R15", "RIP", "CS", "RFLAGS", "RSP"};
 
 
 void printRegisters(uint64_t * registers){
@@ -15,10 +15,10 @@ void printRegisters(uint64_t * registers){
         printf("Para ver los registros, presione ctrl + r\n", WHITE);
         return;
     }
-    if(getCursorY() + 18 * getCharHeight() >= getScreenHeight()){
+    if(getCursorY() + 19 * getCharHeight() >= getScreenHeight()){
         clearScreen();
     }
-    for (int i = 0; i < 18; i++){
+    for (int i = 0; i < 19; i++){
         char buffer[20]; // Buffer to hold the hexadecimal representation
         decimalToHex(registers[i], buffer);
         printf(strRegisters[i], WHITE);

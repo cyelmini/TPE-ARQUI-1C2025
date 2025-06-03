@@ -17,6 +17,8 @@ void puts(char * string);
 
 void printf(const char * string, ...);
 
+void printColor(char * string, int color);
+
 // Utilidad
 
 int getSeconds();

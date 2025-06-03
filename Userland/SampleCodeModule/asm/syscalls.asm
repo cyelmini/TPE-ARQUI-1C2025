@@ -7,13 +7,15 @@ GLOBAL syscall_sound
 GLOBAL syscall_setCursor
 GLOBAL syscall_getCursorX
 GLOBAL syscall_getCursorY
-GLOBAL syscall_cursor
+GLOBAL syscall_drawCursor
 GLOBAL syscall_getScreenHeight
-GLOBAL syscall_gretScreenWidth
+GLOBAL syscall_getScreenWidth
 GLOBAL syscall_getRegisters
 GLOBAL syscall_clearScreen
 GLOBAL syscall_changeCharSize
 GLOBAL syscall_defaultCharSize
+GLOBAL syscall_changeBackgroundColor
+GLOBAL syscall_colorWrite
 
 section .text
 
@@ -62,7 +64,7 @@ syscall_getCursorY:
     int 0x80
     ret
 
-syscall_cursor:
+syscall_drawCursor:
     mov rax, 0x09
     int 0x80
     ret
@@ -92,7 +94,17 @@ syscall_changeCharSize:
     int 0x80
     ret
 
-syscall_defaultCharSize
-    mov rax, 0x0D
+syscall_defaultCharSize:
+    mov rax, 0x0F
+    int 0x80
+    ret
+
+syscall_changeBackgroundColor:
+    mov rax, 0x10
+    int 0x80
+    ret
+
+syscall_colorWrite:
+    mov rax, 0x11
     int 0x80
     ret

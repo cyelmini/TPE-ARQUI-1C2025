@@ -60,8 +60,12 @@ void putChar(char c, int fd){
     syscall_write(fd, &c, 1);
 }
 
+void putColorChar(char c, int fd, int color){
+    syscall_colorWrite(&c, color);
+}
+
 void printCursor(){
-    syscall_cursor();
+    syscall_drawCursor();
 }
 
 void puts(char * string){
@@ -101,6 +105,15 @@ void printf(const char * string, ...){
     print(string, list);
     va_end(list);
 }
+
+void printColor(char * string, int color){
+    int i = 0;
+    while(string[i] != '\0'){
+        putColorChar(string[i], 1, color);
+        i++;
+    }
+}
+
 
 // Utilidad
 

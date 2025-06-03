@@ -18,7 +18,7 @@ extern int syscall_getCursorX();
 
 extern int syscall_getCursorY();
 
-extern int syscall_cursor();
+extern int syscall_drawCursor();
 
 extern int syscall_getScreenHeight();
 
@@ -32,4 +32,6 @@ extern void syscall_changeCharSize();
 
 extern void syscall_defaultCharSize();
 
- 
+extern void syscall_changeBackgroundColor(int color);
+
+extern void syscall_colorWrite(char * c, int color);

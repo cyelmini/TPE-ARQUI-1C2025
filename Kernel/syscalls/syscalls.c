@@ -16,13 +16,15 @@
 #define SET_CURSOR 6
 #define GET_CURSOR_X 7
 #define GET_CURSOR_Y 8
-#define CURSOR 9
+#define DRAW_CURSOR 9
 #define GET_SCREEN_HEIGHT 10
 #define GET_SCREEN_WIDTH 11
 #define GET_REGISTERS 12
 #define CLEAR_SCREEN 13
 #define CHANGE_CHAR_SIZE 14
 #define DEFAULT_CHAR_SIZE 15
+#define CHANGE_BACKGROUND_COLOR 16
+#define COLOR_WRITE 17
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -55,7 +57,7 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return 0;
 
         case SET_CURSOR:
-        setCursor(arg1, arg2);       
+        setCursor(arg1, arg2);
         return 0;
    
         case GET_CURSOR_X:
@@ -64,8 +66,8 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case GET_CURSOR_Y:
         return getCursorY();       
 
-        case CURSOR:
-        sys_cursor();
+        case DRAW_CURSOR:
+        drawCursor();
         return 0;
     
         case GET_SCREEN_HEIGHT:
@@ -75,7 +77,7 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return getScreenWidth();
 
         case GET_REGISTERS:
-        sys_getRegisters();      
+        printRegs();
         return 0;
 
         case CLEAR_SCREEN:
@@ -89,9 +91,16 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         case DEFAULT_CHAR_SIZE:
         defaultCharSize();
         return 0;
+
+        case CHANGE_BACKGROUND_COLOR:
+        changeBackgroundColor(arg1);
         
+        case COLOR_WRITE:
+        putChar(*(char *)arg1, arg2); 
+        return 0;
+
         default:
-        return -1; 
+        return -1;
     }
 }
 
@@ -142,12 +151,4 @@ void sys_sound(uint64_t time, uint64_t frequency){
     makeSound(frequency);
     sleep(time);
     stopSound();
-}
-
-void sys_getRegisters(){
-    printRegs();
- }
-
-void sys_cursor(){
-    drawCursor();
 }

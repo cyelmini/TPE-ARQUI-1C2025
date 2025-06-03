@@ -7,10 +7,8 @@
 
 #define DEFAULT_HEIGHT 32
 #define DEFAULT_WIDTH 10
-
 #define FIRST_CHAR 32
 #define LAST_CHAR 126
-
 #define TAB 4
 
 static int CHAR_SIZE = 1;
@@ -21,48 +19,49 @@ uint64_t cursor_x = 0;
 uint64_t cursor_y = 0;
 
 struct vbe_mode_info_structure {
-	uint16_t attributes;		// deprecated, only bit 7 should be of interest to you, and it indicates the mode supports a linear frame buffer.
-	uint8_t window_a;			// deprecated
-	uint8_t window_b;			// deprecated
-	uint16_t granularity;		// deprecated; used while calculating bank numbers
-	uint16_t window_size;
-	uint16_t segment_a;
-	uint16_t segment_b;
-	uint32_t win_func_ptr;		// deprecated; used to switch banks from protected mode without returning to real mode
-	uint16_t pitch;				// number of bytes per horizontal line
-	uint16_t width;				// width in pixels
-	uint16_t height;			// height in pixels
-	uint8_t w_char;				// unused...
-	uint8_t y_char;				// ...
-	uint8_t planes;
-	uint8_t bpp;				// bits per pixel in this mode
-	uint8_t banks;				// deprecated; total number of banks in this mode
-	uint8_t memory_model;
-	uint8_t bank_size;			// deprecated; size of a bank, almost always 64 KB but may be 16 KB...
-	uint8_t image_pages;
-	uint8_t reserved0;
- 
-	uint8_t red_mask;
-	uint8_t red_position;
-	uint8_t green_mask;
-	uint8_t green_position;
-	uint8_t blue_mask;
-	uint8_t blue_position;
-	uint8_t reserved_mask;
-	uint8_t reserved_position;
-	uint8_t direct_color_attributes;
- 
-	uint32_t framebuffer;			// physical address of the linear frame buffer, write here to draw to the screen
-	uint32_t off_screen_mem_off;
-	uint16_t off_screen_mem_size;	// size of memory in the framebuffer but not being displayed on the screen
-	uint8_t reserved1[206];
+    uint16_t attributes;
+    uint8_t window_a;
+    uint8_t window_b;
+    uint16_t granularity;
+    uint16_t window_size;
+    uint16_t segment_a;
+    uint16_t segment_b;
+    uint32_t win_func_ptr;
+    uint16_t pitch;
+    uint16_t width;
+    uint16_t height;
+    uint8_t w_char;
+    uint8_t y_char;
+    uint8_t planes;
+    uint8_t bpp;
+    uint8_t banks;
+    uint8_t memory_model;
+    uint8_t bank_size;
+    uint8_t image_pages;
+    uint8_t reserved0;
+
+    uint8_t red_mask;
+    uint8_t red_position;
+    uint8_t green_mask;
+    uint8_t green_position;
+    uint8_t blue_mask;
+    uint8_t blue_position;
+    uint8_t reserved_mask;
+    uint8_t reserved_position;
+    uint8_t direct_color_attributes;
+
+    uint32_t framebuffer;
+    uint32_t off_screen_mem_off;
+    uint16_t off_screen_mem_size;
+    uint8_t reserved1[206];
 } __attribute__ ((packed));
 
 typedef struct vbe_mode_info_structure * VBEInfoPtr;
 
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-/* ------------------------------------------------- putPixel ------------------------------------------------------- */
+
+// Manejo de píxeles y pantalla
 
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *)(uintptr_t)VBE_mode_info->framebuffer;
@@ -72,68 +71,89 @@ void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     framebuffer[offset+2]   =  (hexColor >> 16) & 0xFF;
 }
 
-/* ------------------------------------------------- cursor handlers ------------------------------------------------- */
-
-uint64_t getCursorX(){
-	return cursor_x/CHAR_WIDTH;
+void putRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width, uint32_t hexColor){
+    for (int i = 0; i < width; i++){
+        for (int j = 0; j < height; j++){
+            putPixel(hexColor, x + i, y + j);
+        }
+    }
 }
 
-uint64_t getCursorY(){
-	return cursor_y/CHAR_HEIGHT;
+void clearRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width){
+    putRectangle(x, y, height, width, BLACK);
 }
 
-void setCursor(uint64_t x, uint64_t y){
-	cursor_x = x;
-	cursor_y = y;
+void clearScreen(){
+    putRectangle(0, 0, VBE_mode_info->height, VBE_mode_info->width, BLACK);
+    cursor_x = 0;
+    cursor_y = 0;
 }
 
-/* ---------------------------------------------- screen size handlers  -----------------------------------------------*/
-
-uint64_t getScreenHeight(){
-	return VBE_mode_info->height / CHAR_HEIGHT;
+void changeBackgroundColor(uint32_t hexColor){
+    putRectangle(0, 0, VBE_mode_info->height, VBE_mode_info->width, hexColor);
 }
 
-uint64_t getScreenWidth(){
-	return VBE_mode_info->width / CHAR_WIDTH;
+
+// Manejo del cursor
+
+uint64_t getCursorX(){ 
+	return cursor_x / CHAR_WIDTH; 
 }
 
-void changeCharSize(int size){
-	CHAR_HEIGHT += size;
-	CHAR_WIDTH += size ;
-	CHAR_SIZE = size;
+uint64_t getCursorY(){ 
+	return cursor_y / CHAR_HEIGHT; 
 }
 
-void defaultCharSize(){
-	CHAR_HEIGHT += DEFAULT_HEIGHT;
-	CHAR_WIDTH += DEFAULT_WIDTH;
-	CHAR_SIZE = 1;
+void setCursor(uint64_t x, uint64_t y){ 
+	cursor_x = x; 
+	cursor_y = y; 
 }
 
-/* ------------------------------------------------ libC kernel functions --------------------------------------------- */
+void drawCursor(){ 
+	putRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH, WHITE); 
+}
 
-void putChar(char c, int hexcode){
-	switch(c){
-		case '\b':
-			putBackspace();
-		return;
-		case '\n':
-			putNewLine();
-		return;
-		case '\t':
-			putTab();
-		return;
-		default:
-			drawChar(c, hexcode);
-		return;
-	}
+
+// Dimensiones de pantalla y caracteres
+
+uint64_t getScreenHeight(){ 
+	return VBE_mode_info->height / CHAR_HEIGHT; 
+}
+
+uint64_t getScreenWidth(){ 
+	return VBE_mode_info->width / CHAR_WIDTH; 
+}
+
+void changeCharSize(int size){ 
+	CHAR_HEIGHT += size; 
+	CHAR_WIDTH += size; 
+	CHAR_SIZE = size; }
+
+void defaultCharSize(){ 
+	CHAR_HEIGHT = DEFAULT_HEIGHT; 
+	CHAR_WIDTH = DEFAULT_WIDTH; 
+	CHAR_SIZE = 1; }
+
+uint64_t getCharHeight(){ return CHAR_HEIGHT; }
+
+
+// Funciones de impresión
+
+void putChar(char c, uint32_t hexcode){
+    switch(c){
+        case '\b': putBackspace(); return;
+        case '\n': putNewLine(); return;
+        case '\t': putTab(); return;
+        default: drawChar(c, hexcode); return;
+    }
 }
 
 void printf(char * str, uint32_t hexcode) {
-	int i = 0;
-	while(str[i] != '\0'){
-		putChar(str[i], hexcode);
-		i++;
-	}
+    int i = 0;
+    while(str[i] != '\0'){
+        putChar(str[i], hexcode);
+        i++;
+    }
 }
 
 void puts(char * string){
@@ -147,21 +167,10 @@ void print(const char * string, va_list list){
     for(int i = 0; string[i] != 0 ; i++){
         if(string[i] == '%' && string[i + 1] != 0){
             switch (string[i+1]){
-                case 'd':
-                    putChar(*numToString(va_arg(list, int)), WHITE);
-					i++;
-                break;
-                case 's':
-                    puts(va_arg(list, char*));
-					i++;
-                break;
-                case 'c':
-                    putChar(va_arg(list, int), WHITE);
-					i++;
-                break;
-                default:
-                    putChar('%', WHITE);
-                break;
+                case 'd': putChar(*numToString(va_arg(list, int)), WHITE); i++; break;
+                case 's': puts(va_arg(list, char*)); i++; break;
+                case 'c': putChar(va_arg(list, int), WHITE); i++; break;
+                default: putChar('%', WHITE); break;
             }
         } else {
             putChar(string[i], WHITE);
@@ -169,13 +178,10 @@ void print(const char * string, va_list list){
     }
 }
 
-/* ------------------------------------------ draw functions ---------------------------------------------- */
 
-void drawCursor(){
-	putRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH, WHITE);
-}
+// Control de caracteres especiales
 
-void drawChar(char c, uint64_t hexcode) {
+void drawChar(char c, uint32_t hexcode) {
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     int start = c - FIRST_CHAR;
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
@@ -199,65 +205,39 @@ void drawChar(char c, uint64_t hexcode) {
 }
 
 void putBackspace() {
-    if (cursor_x == 0 && cursor_y == 0) {
-        return;
-    }
+	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+    if (cursor_x == 0 && cursor_y == 0) return;
     if (cursor_x == 0) {
         clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
         cursor_y -= CHAR_HEIGHT;
         cursor_x = ((VBE_mode_info->width / CHAR_WIDTH) - 1) * CHAR_WIDTH;
-        clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     } else {
-        clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
         cursor_x -= CHAR_WIDTH;
-        clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     }
-}
-
-void putRectangle(int x, int y, int height, int width, uint32_t hexColor){
-	for (int i = 0; i < width; i++){
-		for (int j = 0; j < height; j++){
-			putPixel(hexColor, x + i, y + j);
-		}
-	}
+    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
 }
 
 void putNewLine(){
-	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
-	cursor_x = 0;
-	cursor_y += CHAR_HEIGHT;
-
-	if (cursor_y / CHAR_HEIGHT >= VBE_mode_info->height / CHAR_HEIGHT) {
+    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+    cursor_x = 0;
+    cursor_y += CHAR_HEIGHT;
+    if (cursor_y / CHAR_HEIGHT >= VBE_mode_info->height / CHAR_HEIGHT) {
         clearScreen();
     }
 }
 
 void putTab(){
-	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
-	if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
-			putNewLine(); 	// if we exceed the screen's width we continue writing on the next line
-			return;
-		}
-	cursor_x += TAB * DEFAULT_WIDTH;
+    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+    if((cursor_x + TAB * DEFAULT_WIDTH) >= VBE_mode_info->width){
+        putNewLine(); return;
+    }
+    cursor_x += TAB * DEFAULT_WIDTH;
 }
 
-void clearRectangle(int x, int y, int height, int width){
-	putRectangle(x, y, height, width, BLACK);
-}
 
-void clearScreen(){
-	for (int i = 0; i < VBE_mode_info->width; i++){
-		for (int j = 0; j < VBE_mode_info->height; j++){
-			putPixel(BLACK, i, j);
-		}
-	}
-	cursor_x = 0;
-	cursor_y = 0;
-}
+// Funciones auxiliares
 
-/* ------------------------------------------- auxiliar functions ------------------------------------------ */
-
-char * numToString(int num) {
+char * numToString(uint64_t num) {
     static char buffer[21]; 
     char *ptr = buffer + sizeof(buffer) - 1;
     unsigned long long n;
@@ -286,8 +266,4 @@ char * numToString(int num) {
         *(--ptr) = '-';
 
     return ptr;
-}
-
-int getCharHeight(){
-	return CHAR_HEIGHT;
 }

@@ -2,7 +2,7 @@
 #include "include/shell.h"
 #include "include/syscalls.h"
 #include "include/exceptions.h"
-#include "include/golf.h"
+#include "include/pongi_golf/golf.h"
 
 #define BUFFER_SIZE 1024
 #define MAX_ARGS 10
@@ -11,11 +11,12 @@
 // Colors
 #define GRASS_GREEN 0x62bc2f
 
+
 static void clearBuffer(char * buffer);
 static void clearScreen();
 static void executeCommand();
 
-/*------------------------Funciones nuevas-------------------------------------*/
+/*------------------------ exceptions ------------------------------------------*/
 
 static void invalidOpException();
 static void divisionByZeroException();
@@ -46,7 +47,6 @@ void initializeShell(){
 
 void scanEntry() {
     char buffer[BUFFER_SIZE] = {0};
-
     while(1){    
         printColor("$USER@$DEVICE_NAME:/path/path$ ", GRASS_GREEN);
 
@@ -110,7 +110,7 @@ void executeCommand(char * command, char * arg){
         clearScreen();
         return;
     } else if(strcmp(command, "playGolf") == 0) {
-        playGolf();
+        initializeGolf();
         return;
     } else if (strcmp(command, "invalidOp") == 0) {
         invalidOpException();
@@ -186,7 +186,7 @@ void printRegisters(){
 
 // REVISAR 
 void time(){
-    printf("La hora actual es: %d:0%d:0%d\n", getHours(), getMinutes(), getSeconds());
+    printf("La hora actual es: %d:%d:%d\n", getHoursUser(), getMinutesUser(), getSecondsUser());
 }
 
 
@@ -202,4 +202,3 @@ void clearBuffer(char * buffer){
         buffer[i] = 0;
     }
 }
-

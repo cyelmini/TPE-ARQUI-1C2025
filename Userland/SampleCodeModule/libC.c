@@ -117,22 +117,22 @@ void printColor(char * string, int color){
 
 // Utilidad
 
-int getSeconds(){
+int getSecondsUser(){
     uint64_t seconds;
     syscall_seconds(&seconds);
     return seconds;
 }
 
-int getMinutes(){
+int getMinutesUser(){
     uint64_t minutes;
     syscall_minutes(&minutes);
     return minutes;
 }
 
-int getHours(){
+int getHoursUser(){
     uint64_t hours;
     syscall_hours(&hours);
-    return hours - 3; // RTC is in UTC, converts it to UTC-3
+    return hours;
 }
 
 int strlen(char * s){

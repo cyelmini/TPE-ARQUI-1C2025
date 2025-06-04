@@ -93,7 +93,7 @@ SECTION .text
 %endmacro
 
 %macro saveRegs 0
-	pushState	
+
 	mov [registers+8*0], 	rax
 	mov [registers+8*1],	rbx
 	mov [registers+8*2],	rcx
@@ -110,22 +110,17 @@ SECTION .text
 	mov [registers+8*13], 	r14
 	mov [registers+8*14], 	r15
 
-	push rax
+	mov rax, rsp
 
-	mov rax, [rsp+8*1] ; rip
-	mov [registers+8*15], 	rax 
+	add rax, 8*20 
 
-	mov rax, [rsp+8*2] ; cs
-	mov	[registers+8*16], 	rax
-
-	mov rax, [rsp+8*3] ; rflags
-	mov [registers+8*17], 	rax
-
-	mov rax, [rsp+8*4] ; rsp
-	mov [registers+8*18], 	rax
-
-	pop rax
-	popState
+	mov [registers+8*15], rax
+	mov rax, [rsp+8*15] 
+	mov [registers+8*16], rax
+	mov rax, [rsp+8*17]
+	mov [registers+8*17], rax 
+	mov rax, [rsp+8*18]
+	mov [registers+8*18], rax
 %endmacro
 
 %macro exceptionHandler 1
@@ -252,4 +247,4 @@ haltcpu:
 
 SECTION .bss
 	aux resq 1
-	registers resq 189
+	registers resq 19

@@ -3,7 +3,7 @@ include ../Makefile.inc
 MODULE=0000-sampleCodeModule.bin
 
 #C_SOURCES := $(filter-out _loader.c, $(wildcard *.c))
-C_SOURCES=$(wildcard [^_]*.c)
+C_SOURCES=$(wildcard [^_]*.c) $(wildcard pongi_golf/*.c)
 
 #ASM_SOURCES := asm/syscalls.asm
 ASM_SOURCES=$(wildcard asm/*.asm)

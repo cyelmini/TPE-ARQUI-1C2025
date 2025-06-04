@@ -42,7 +42,6 @@ getHours:
 	sti				; use instruction "sti" to enable interruptions 
 	ret
 
-
 getMinutes:
 	cli
 
@@ -53,7 +52,6 @@ getMinutes:
 	sti
 	ret
 
-
 getSeconds:
 	cli
 
@@ -63,7 +61,6 @@ getSeconds:
 
 	sti
 	ret
-
 
 getKey:
     in al, 64h

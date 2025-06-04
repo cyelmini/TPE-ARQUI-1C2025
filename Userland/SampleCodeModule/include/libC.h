@@ -21,11 +21,11 @@ void printColor(char * string, int color);
 
 // Utilidad
 
-int getSeconds();
+int getSecondsUser();
 
-int getMinutes();
+int getMinutesUser();
 
-int getHours();
+int getHoursUser();
 
 int strlen(char * s);
 

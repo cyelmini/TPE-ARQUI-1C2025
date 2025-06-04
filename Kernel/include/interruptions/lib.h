@@ -8,11 +8,11 @@ void * memcpy(void * destination, const void * source, uint64_t length);
 
 char * cpuVendor(char *result);
 
+
 extern int getSeconds();
 extern int getMinutes();
 extern int getHours();
-
-extern void makeSound(uint16_t frequency);
+extern void makeSound(int64_t frequency);
 extern void stopSound();
 
 #endif

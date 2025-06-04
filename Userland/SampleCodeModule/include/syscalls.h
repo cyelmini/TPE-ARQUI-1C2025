@@ -35,3 +35,5 @@ extern void syscall_defaultCharSize();
 extern void syscall_changeBackgroundColor(int color);
 
 extern void syscall_colorWrite(char * c, int color);
+
+extern void syscall_putRectangle(int x, int y, int height, int width, int color);

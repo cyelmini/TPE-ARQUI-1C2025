@@ -4,6 +4,12 @@
         "libc.h": "c",
         "stdint.h": "c",
         "kernellib.h": "c",
-        "moduleloader.h": "c"
+        "moduleloader.h": "c",
+        "hole.h": "c",
+        "pongi.h": "c",
+        "input.h": "c",
+        "ball.h": "c",
+        "obstacle.h": "c",
+        "stdio.h": "c"
     }
 }

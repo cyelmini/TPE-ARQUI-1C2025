@@ -16,6 +16,7 @@ GLOBAL syscall_changeCharSize
 GLOBAL syscall_defaultCharSize
 GLOBAL syscall_changeBackgroundColor
 GLOBAL syscall_colorWrite
+GLOBAL syscall_putRectangle
 
 section .text
 
@@ -106,5 +107,10 @@ syscall_changeBackgroundColor:
 
 syscall_colorWrite:
     mov rax, 0x11
+    int 0x80
+    ret
+
+syscall_putRectangle:
+    mov rax, 0x12
     int 0x80
     ret

@@ -5,7 +5,8 @@ typedef struct Obstacle {
     int x;
     int y;
     int color;
-    int size;
+    int height;
+    int width;
 } Obstacle;
 
 typedef Obstacle* TObstacle;

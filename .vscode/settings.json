@@ -10,6 +10,7 @@
         "input.h": "c",
         "ball.h": "c",
         "obstacle.h": "c",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "compare": "c"
     }
 }

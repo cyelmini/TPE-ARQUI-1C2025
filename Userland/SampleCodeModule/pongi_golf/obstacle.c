@@ -2,16 +2,27 @@
 #include "../include/syscalls.h"
 
 #define NULL 0
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 
-TObstacle createObstacle(int x, int y, int color, int size) {
+TObstacle createObstacle(int x, int y, int color, int height, int width) {
     TObstacle obstacle = 0;
     if (obstacle != NULL) {
         obstacle->x = x;
         obstacle->y = y;
         obstacle->color = color;
-        obstacle->size = size;
+        obstacle->height = height;
+        obstacle->width = width;
     }
     return obstacle;
+}
+
+int checkCollision(TPongi pongi, TObstacle obstacles[]){
+
+}
+
+int checkCollision(TBall ball, TObstacle obstacles[]){
+
 }
 
 void printObstacles(TObstacle obstacles[], int count) {

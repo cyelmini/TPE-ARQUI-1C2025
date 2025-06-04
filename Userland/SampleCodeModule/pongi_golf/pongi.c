@@ -2,6 +2,8 @@
 #include "../include/syscalls.h"
 
 #define NULL 0
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define PONGI_BLUE 0x96e2ee
 
 TPongi createPongi(int x, int y) {
@@ -13,10 +15,33 @@ TPongi createPongi(int x, int y) {
     return pongi;
 }
 
-void movePongi(TPongi pongi, int direction) {
-    // falta implementar movimiento (switch)
+static void movePongi(TPongi pongi, int dmove[3]) {
+
+    pongi->x += dmove[0];
+    pongi->y += dmove[1];
+
+    checkCollision(pongi, obstacles);
+}
+
+void movePongis(TPongi pongis[], dmove[3]) {
+
+    if(dmove[2] == 1){
+        movePongi(pongis[0];)
+    }
+    if(dmove[2] == 2){
+        movePongi(pongis[1]);
+    }
 }
 
 void printPongi(TPongi pongi) {
-    // syscall_putCircle();
+    if (pongi == NULL) {
+        return;
+    }
+    syscall_drawCircle(pongi->x, pongi->y, 10, pongi->color);
 }
+
+void printPongis(TPongi pongis[]) {
+    printPongi(pongis[0]);
+    printPongi(pongis[1]);
+}
+

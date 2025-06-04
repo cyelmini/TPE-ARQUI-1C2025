@@ -2,6 +2,8 @@
 #include "../include/syscalls.h"
 
 #define NULL 0
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 
 THole createHole(int x, int y, int size) {
     THole hole = 0;
@@ -15,6 +17,6 @@ THole createHole(int x, int y, int size) {
 
 void printHole(THole hole) {
     if (hole != NULL) {
-        //syscall_putCirle(hole->x, hole->y, hole->size, hole->size, HOLE_COLOR);
+        syscall_drawCirle(hole->x, hole->y, hole->size, hole->size, HOLE_COLOR);
     }
 }

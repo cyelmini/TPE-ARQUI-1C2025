@@ -37,3 +37,5 @@ extern void syscall_changeBackgroundColor(int color);
 extern void syscall_colorWrite(char * c, int color);
 
 extern void syscall_putRectangle(int x, int y, int height, int width, int color);
+
+extern void syscall_drawCircle(int x, int y, int radius, int color);

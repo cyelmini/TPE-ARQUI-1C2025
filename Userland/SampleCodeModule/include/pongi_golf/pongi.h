@@ -17,7 +17,9 @@ typedef struct Pongi {
 typedef Pongi* TPongi;
 
 TPongi createPongi(int x, int y);
-void movePongi(TPongi pongi, int direction);
-void printPongi(TPongi pongi);
+
+void movePongis(TPongi pongi, int direction);
+
+void printPongis(TPongi pongi);
 
 #endif // PONGI_H

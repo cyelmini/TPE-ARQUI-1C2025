@@ -79,6 +79,31 @@ void putRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width, uint3
     }
 }
 
+void drawCircle(uint64_t x0, uint64_t y0, uint64_t radius, uint64_t color) {
+    int x = radius;
+    int y = 0;
+    int err = 0;
+
+    while (x >= y) {
+        putPixel(color, x0 + x, y0 + y);
+        putPixel(color, x0 + y, y0 + x);
+        putPixel(color, x0 - y, y0 + x);
+        putPixel(color, x0 - x, y0 + y);
+        putPixel(color, x0 - x, y0 - y);
+        putPixel(color, x0 - y, y0 - x);
+        putPixel(color, x0 + y, y0 - x);
+        putPixel(color, x0 + x, y0 - y);
+
+        y++;
+        if (err <= 0) {
+            err += 2 * y + 1;
+        } else {
+            x--;
+            err += 2 * (y - x + 1);
+        }
+    }
+}
+
 void clearRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width){
     putRectangle(x, y, height, width, BLACK);
 }

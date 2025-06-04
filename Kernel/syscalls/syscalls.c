@@ -26,6 +26,7 @@
 #define CHANGE_BACKGROUND_COLOR 16
 #define COLOR_WRITE 17
 #define PUT_RECTANGLE 18
+#define DRAW_CIRCLE 19
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -102,6 +103,10 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
 
         case PUT_RECTANGLE:
         putRectangle(arg1, arg2, arg3, arg4, arg5);
+        return 0;
+
+        case DRAW_CIRCLE:
+        drawCircle(arg1, arg2, arg3, arg4);
         return 0;
 
         default:

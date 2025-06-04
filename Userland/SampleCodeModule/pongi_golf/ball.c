@@ -10,23 +10,45 @@
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 #define BALL_RADIUS 10
+#define MOVE_SPEED 1
 
-TBall createBall(int x, int y, int moveSpeed, int color) {
+TBall createBall(int x, int y, int color) {
     TBall ball = 0;
     ball->x = x;
     ball->y = y;
-    ball->moveSpeed = moveSpeed;
+    ball->moveSpeed = MOVE_SPEED;
     ball->color = color;
     return ball;
 }
 
-void moveBall(TBall ball, int ballDirection) {
-    //falta implementar movimiento pelota (switch)
+void moveBall(TBall ball, char input) {
+    for (int i = 0; i < ball->moveSpeed; i++)
+    {
+        sleep(1);
+        switch (ballDirection){
+            case 'w':
+            case 'i':
+            ball->y += 1; // up
+            break;
+            case 'd':
+            case 'l':
+            ball->x += 1; // right
+            break;
+            case 's':
+            case 'k':
+            ball->y -= 1; // down
+            break;
+            case 'a':
+            case 'j':
+            ball->x -= 1; // left
+            break;
+        }
+        printBall(ball);
+    }
 }
 
-int checkCollision(TBall ball, TPongi pongi) {
-    //hay q verificar esta cuenta
-
+int checkBallCollision(TBall ball, TPongi pongi) {
+    // hay q chequear esta cuenta
     if (ball == NULL || pongi == NULL) return 0;
     int dx = ball->x - pongi->x;
     int dy = ball->y - pongi->y;
@@ -37,5 +59,5 @@ int checkCollision(TBall ball, TPongi pongi) {
 
 void printBall(TBall ball) {
     if (ball == NULL) return;
-    // sysCall_putCircle(ball->x, ball->y, BALL_RADIUS, ball->color); FALTA IMPLEMENTAR
+    syscall_drawCircle(ball->x, ball->y, BALL_RADIUS, ball->color); FALTA IMPLEMENTAR
 }

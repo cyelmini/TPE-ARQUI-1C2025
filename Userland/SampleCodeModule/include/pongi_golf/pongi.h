@@ -1,25 +1,20 @@
-#ifndef PONGI_H
-#define PONGI_H
-
-#include <stdint.h>
-
-#define PONGI_COLOR 0x96e2ee
-#define PONGI_RADIUS 10
-
 
 typedef struct Pongi {
     int x;
     int y;
     int points;
-    uint64_t color;
+    int color;
 }Pongi;
 
-typedef Pongi* TPongi;
+typedef struct Ball * TBall;
+typedef struct Obstacle * TObstacle;
+typedef struct Hole * THole;
+typedef struct Pongi * TPongi;
+
+#define PONGI_COLOR 0x96e2ee
+#define PONGI_RADIUS 10
+
 
 TPongi createPongi(int x, int y);
-
-void movePongis(TPongi pongi, int direction);
-
-void printPongis(TPongi pongi);
-
-#endif // PONGI_H
+void movePongis(TPongi pongis[], int dmove[3], TObstacle obstacles[]);
+void printPongis(TPongi pongis[]);

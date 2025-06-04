@@ -1,3 +1,4 @@
+#include "../include/pongi_golf/collision.h"
 #include "../include/pongi_golf/pongi.h"
 #include "../include/pongi_golf/ball.h"
 #include "../include/pongi_golf/obstacle.h"

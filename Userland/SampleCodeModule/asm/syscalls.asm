@@ -77,7 +77,7 @@ syscall_getScreenHeight:
     int 0x80
     ret
 
-syscall_gretScreenWidth:
+syscall_getScreenWidth:
     mov rax, 0x0B
     int 0x80
     ret

@@ -1,4 +1,5 @@
 #include "../include/pongi_golf/pongi.h"
+#include "../include/pongi_golf/obstacle.h"
 #include "../include/syscalls.h"
 
 #define NULL 0
@@ -6,7 +7,11 @@
 #define SCREEN_HEIGHT 768
 #define PONGI_BLUE 0x96e2ee
 
-TPongi createPongi(int x, int y) {
+
+static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[]);
+static void printPongi(TPongi pongi);
+
+TPongi createPongi(int x, int y){
     TPongi pongi = 0;
     pongi->x = x;
     pongi->y = y;
@@ -15,7 +20,7 @@ TPongi createPongi(int x, int y) {
     return pongi;
 }
 
-static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles) {
+static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[]) {
 
     if(pongi == NULL){
         return;
@@ -28,15 +33,15 @@ static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles) {
 }
 
 
-void movePongis(TPongi pongis[], dmove[3]) {
+void movePongis(TPongi pongis[], int dmove[3], TObstacle obstacles[]) {
     if(dmove[2] == 1){
-        movePongi(pongis[0];)
+        movePongi(pongis[0], dmove, obstacles);
     } else if(dmove[2] == 2){
-        movePongi(pongis[1]);
+        movePongi(pongis[1], dmove, obstacles);
     }
 }
 
-void printPongi(TPongi pongi) {
+static void printPongi(TPongi pongi) {
     if (pongi == NULL) {
         return;
     }

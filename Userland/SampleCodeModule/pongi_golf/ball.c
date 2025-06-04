@@ -2,7 +2,7 @@
 #include "../include/pongi_golf/obstacle.h"
 #include "../include/pongi_golf/pongi.h"
 #include "../include/pongi_golf/hole.h"
-#include "../include/pongi_golf/input.h"
+#include "../include/pongi_golf/collision.h"
 #include "../include/syscalls.h"
 
 #include <stdint.h>
@@ -10,8 +10,8 @@
 #define NULL 0
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
-#define BALL_RADIUS 10
 #define MOVE_SPEED 1
+
 
 TBall createBall(int x, int y, int color) {
     TBall ball = 0;
@@ -47,5 +47,5 @@ void printBall(TBall ball) {
     if (ball == NULL) {
         return;
     }
-    syscall_drawCircle(ball->x, ball->y, BALL_RADIUS, ball->color); FALTA IMPLEMENTAR
+    syscall_drawCircle(ball->x, ball->y, BALL_RADIUS, ball->color);
 }

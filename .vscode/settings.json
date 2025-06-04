@@ -11,6 +11,8 @@
         "ball.h": "c",
         "obstacle.h": "c",
         "stdio.h": "c",
-        "compare": "c"
+        "compare": "c",
+        "syscalls.h": "c",
+        "collision.h": "c"
     }
 }

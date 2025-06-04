@@ -1,11 +1,7 @@
-#include "../include/pongi_golf/pongi.h"
-#include "../include/pongi_golf/ball.h"
-#include "../include/pongi_golf/obstacle.h"
-#include "../include/pongi_golf/hole.h"
-#include "../include/pongi_golf/levels.h"
-#include "../include/syscalls.h"
-#include "../include/libC.h"
+typedef struct Ball * TBall;
+typedef struct Obstacle * TObstacle;
+typedef struct Hole * THole;
+typedef struct Pongi * TPongi;
 
-void printObstacles(Obstacle obstacles[], int amountOfObstacles);
 
-Obstacle * setLevel(int level, TPongi pongi[], TBall ball, THole hole);
+void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obstacles[]);

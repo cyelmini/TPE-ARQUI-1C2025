@@ -7,6 +7,7 @@
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 
+
 THole createHole(int x, int y, int size) {
     THole hole = 0;
     if (hole != NULL) {
@@ -26,6 +27,6 @@ int wonLevel(TBall ball, THole hole){
 
 void printHole(THole hole) {
     if (hole != NULL) {
-        syscall_drawCirle(hole->x, hole->y, hole->size, hole->size, HOLE_COLOR);
+        syscall_drawCircle(hole->x, hole->y, hole->size, HOLE_COLOR);
     }
 }

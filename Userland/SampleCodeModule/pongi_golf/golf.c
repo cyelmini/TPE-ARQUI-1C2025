@@ -17,24 +17,30 @@
 #define BLUE 0x0000FF
 #define YELLOW 0xFFFF00
 
-void gameLoop();
-void cleanup();
-void quitGame();
+static void gameLoop(int players);
+static void quitGame(int * end);
+static void processInput(char input, int dmove[]);
+static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole);
+static void changeBackscreen(int color);
 
 void initializeGolf() {
-
     printf("Bienvenido a Pongi Golf\nIngrese cantidad de jugadores (1 o 2)\n");
-    char buffer = readChar();
-    while(buffer != '1' || buffer != '2'){
+
+    char buffer[4];
+    scanf(buffer);
+
+    while(buffer[0] != '1' && buffer[0] != '2'){
         printf("1 O DOS JUGADORES. INGRESE NUEVAMENTE:\n");
-        buffer = readChar();
+        scanf(buffer);
     }
+
     int players = atoi(buffer);
     changeBackscreen(GREEN);
     gameLoop(players);
 }
 
-void gameLoop() {
+
+static void gameLoop(int players) {
 
     TPongi pongis[MAX_PLAYERS] = {0};
     pongis[0] = createPongi(50, 50);
@@ -44,32 +50,41 @@ void gameLoop() {
     
     TBall ball = createBall(60, 50, WHITE);
 
-    THole hole = createHole(1000, 700);
+    THole hole = createHole(1000, 700, 20);
+
+    TObstacle obstacles[MAX_OBSTACLES];
 
     int dmove[3] = {0,0,0};            
 
     char input;
+
+    int end = 0;
     
-    for(int level = 1 ; level <= MAX_LEVELS ; ) {
-        
+    changeBackscreen(GREEN);
+    for(int level = 1 ; level <= MAX_LEVELS && !end; ) {
         changeBackscreen(GREEN);
 
-        Obstacle obstacles[] = setLevel(level, pongis, ball, hole);
-        renderGame(ball, pongi, obstacles, hole);
+        setLevel(level, pongis, ball, hole, obstacles);
+    
 
-        while (1) {
+        renderGame(ball, pongis, obstacles, hole);
+
+        while (!end) {
             input = readChar();
             if (input == 'q') {
-            quitGame();
+                quitGame(&end);
                 break;
             }
-            processInput(input, &dmove);
+            processInput(input, dmove);
 
-            movePongis(pongis, dmove);   // movePongi tiene un checkObstacleCollision y printPongi
-            if(checkBallCollision(ball, pongi)){
-                moveBall(ball, dmove);      // moveBall tiene un checkObstacleCollision y printBall
+            movePongis(pongis, dmove, obstacles);
+            for(int i = 0; i < players; i++) {
+                if(checkBallCollision(ball, pongis[i])){
+                    moveBall(ball, dmove, obstacles);
+                    break; // Solo mover la bola una vez por input
+                }
             }
-            if(wonLevel()){
+            if(wonLevel(ball, hole)){
                 level++;
                 break;
             }
@@ -77,12 +92,16 @@ void gameLoop() {
     }
 }
 
-static void quitGame() {
+static void quitGame(int * end) {
+    *end = 1;
     printf("Juego finalizado\n");
     changeBackscreen(BLACK);
 }
 
 static void processInput(char input, int * dmove){
+    dmove[0] = 0;
+    dmove[1] = 0;
+    dmove[2] = 0;
     switch(input){
         // up
         case 'w':
@@ -126,13 +145,13 @@ static void processInput(char input, int * dmove){
 
 }
 
-static void renderGame(TBall ball, TPongi pongi, TObstacle obstacles[], THole hole){
+static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole){
     printBall(ball);
-    printPongi(pongi);
+    printPongis(pongis);
     printObstacles(obstacles);
     printHole(hole);
 }
 
 static void changeBackscreen(int color){
-    syscall_putRectangle(0, 0, syscall_getScreenHeight, syscall_getScreenWidth, color);
+    syscall_putRectangle(0, 0, syscall_getScreenHeight(), syscall_getScreenWidth(), color);
 }

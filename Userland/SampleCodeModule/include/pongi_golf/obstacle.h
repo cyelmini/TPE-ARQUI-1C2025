@@ -7,11 +7,8 @@ typedef struct Obstacle {
     int color;
     int height;
     int width;
-} Obstacle;
+}Obstacle;
 
 typedef Obstacle* TObstacle;
-
-TObstacle createObstacle(int x, int y, int color, int size);
-void printObstacles();
 
 #endif // OBSTACLE_H

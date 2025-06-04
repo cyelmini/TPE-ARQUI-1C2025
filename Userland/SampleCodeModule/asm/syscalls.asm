@@ -18,6 +18,7 @@ GLOBAL syscall_changeBackgroundColor
 GLOBAL syscall_colorWrite
 GLOBAL syscall_putRectangle
 GLOBAL syscall_drawCircle
+GLOBAL syscall_sleep
 
 section .text
 
@@ -118,5 +119,10 @@ syscall_putRectangle:
 
 syscall_drawCircle:
     mov rax, 0x13
+    int 0x80
+    ret
+
+syscall_sleep:
+    mov rax, 0x14
     int 0x80
     ret

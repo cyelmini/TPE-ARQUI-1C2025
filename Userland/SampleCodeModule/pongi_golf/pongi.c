@@ -15,20 +15,23 @@ TPongi createPongi(int x, int y) {
     return pongi;
 }
 
-static void movePongi(TPongi pongi, int dmove[3]) {
+static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles) {
 
-    pongi->x += dmove[0];
-    pongi->y += dmove[1];
-
-    checkCollision(pongi, obstacles);
+    if(pongi == NULL){
+        return;
+    }
+    if(!checkPongiObstacleCollision(pongi, dmove, obstacles)){
+        pongi->x += dmove[0];
+        pongi->y += dmove[1];
+        printPongi(pongi);
+    }
 }
 
-void movePongis(TPongi pongis[], dmove[3]) {
 
+void movePongis(TPongi pongis[], dmove[3]) {
     if(dmove[2] == 1){
         movePongi(pongis[0];)
-    }
-    if(dmove[2] == 2){
+    } else if(dmove[2] == 2){
         movePongi(pongis[1]);
     }
 }

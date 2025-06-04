@@ -37,6 +37,7 @@ void printObstacles(Obstacle[] obstacles, int amountOfObstacles) {
         syscall_putRectangle(obstacles[i].x, obstacles[i].y, obstacles[i].height, obstacles[i].width, obstacles[i].color);
     }
 } 
+
 Obstacle * setLevel(int level, TPongi pongi[], Tball ball, THole hole){
     pongi->x = 50;
     pongi->y = 50;

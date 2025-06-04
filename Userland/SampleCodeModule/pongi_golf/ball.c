@@ -3,6 +3,7 @@
 #include "../include/pongi_golf/pongi.h"
 #include "../include/pongi_golf/hole.h"
 #include "../include/pongi_golf/input.h"
+#include "../include/syscalls.h"
 
 #include <stdint.h>
 
@@ -21,43 +22,30 @@ TBall createBall(int x, int y, int color) {
     return ball;
 }
 
-void moveBall(TBall ball, char input) {
+void moveBall(TBall ball, int dmove[3], TObstacle obstacles[]) {
     for (int i = 0; i < ball->moveSpeed; i++)
     {
-        sleep(1);
-        switch (ballDirection){
-            case 'w':
-            case 'i':
-            ball->y += 1; // up
-            break;
-            case 'd':
-            case 'l':
-            ball->x += 1; // right
-            break;
-            case 's':
-            case 'k':
-            ball->y -= 1; // down
-            break;
-            case 'a':
-            case 'j':
-            ball->x -= 1; // left
-            break;
+        if(!checkBallObstacleCollision(ball, dmove, obstacles)){
+            syscall_sleep(1);
+            ball->x += dmove[0];
+            ball->y += dmove[1];
         }
+        
         printBall(ball);
     }
 }
 
 int checkBallCollision(TBall ball, TPongi pongi) {
-    // hay q chequear esta cuenta
-    if (ball == NULL || pongi == NULL) return 0;
-    int dx = ball->x - pongi->x;
-    int dy = ball->y - pongi->y;
-    int distanceSquared = dx * dx + dy * dy;
-    int radiusSum = BALL_RADIUS + PONGI_RADIUS;
-    return distanceSquared <= (radiusSum * radiusSum);
+    if (ball == NULL || pongi == NULL) {
+        return 0;
+    }
+
+    return checkCirclesCollision(ball->x, ball->y, BALL_RADIUS, pongi->x, pongi->y, PONGI_RADIUS);
 }
 
 void printBall(TBall ball) {
-    if (ball == NULL) return;
+    if (ball == NULL) {
+        return;
+    }
     syscall_drawCircle(ball->x, ball->y, BALL_RADIUS, ball->color); FALTA IMPLEMENTAR
 }

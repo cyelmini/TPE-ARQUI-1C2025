@@ -7,7 +7,7 @@
 // Manejo de píxeles y pantalla
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y);
 void putRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width, uint32_t hexColor);
-void drawCircle(uint64_t x0, uint64_t y0, uint64_t radius, uint64_t color) 
+void drawCircle(uint64_t x0, uint64_t y0, uint64_t radius, uint64_t color);
 void clearRectangle(uint64_t x, uint64_t y, uint64_t height, uint64_t width);
 void clearScreen();
 void changeBackgroundColor(uint32_t hexColor);

@@ -4,9 +4,10 @@ typedef struct Hole {
     int x; 
     int y; 
     int size; 
-} Hole;
+}Hole;
 
 typedef struct Hole * THole;
 
 THole createHole(int x, int y, int size);
+int wonLevel(TBall ball, THole hole);
 void printHole(THole hole);

@@ -8,7 +8,7 @@ typedef struct Ball {
     int y;          
     int moveSpeed;  
     int color;      
-} Ball;
+}Ball;
 
 typedef Ball* TBall;
 

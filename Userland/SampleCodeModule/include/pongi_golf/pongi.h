@@ -12,7 +12,7 @@ typedef struct Pongi {
     int y;
     int points;
     uint64_t color;
-} Pongi;
+}Pongi;
 
 typedef Pongi* TPongi;
 

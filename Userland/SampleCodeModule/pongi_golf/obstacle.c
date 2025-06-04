@@ -1,5 +1,6 @@
 #include "../include/pongi_golf/obstacle.h"
 #include "../include/syscalls.h"
+#include "../include/collision.h"
 
 #define NULL 0
 #define SCREEN_WIDTH 1024
@@ -17,18 +18,32 @@ TObstacle createObstacle(int x, int y, int color, int height, int width) {
     return obstacle;
 }
 
-int checkCollision(TPongi pongi, TObstacle obstacles[]){
-
-}
-
-int checkCollision(TBall ball, TObstacle obstacles[]){
-
-}
-
-void printObstacles(TObstacle obstacles[], int count) {
-    for (int i = 0; i < count; i++) {
-        if (obstacles[i] != NULL) {
-            syscall_putRectangle(obstacles[i]->x, obstacles[i]->y, obstacles[i]->size, obstacles[i]->size, obstacles[i]->color);
+int checkPongiObstacleCollision(TPongi pongi, TObstacle obstacles[]) {
+    if (obstacles == NULL || pongi == NULL) return 0;
+    int i = 0;
+    while (obstacles[i] != NULL) {
+        if (checkRectangleCircleCollision(
+                obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
+                pongi->x, pongi->y, pongi->radius)) {
+            return 1; // Hay colisión
         }
+        i++;
     }
+    return 0; // No hay colisión
 }
+
+int checkBallObstacleCollision(TBall ball, TObstacle obstacles[]) {
+    if (obstacles == NULL || ball == NULL) return 0;
+    int i = 0;
+    while (obstacles[i] != NULL) {
+        if (checkRectangleCircleCollision(
+                obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
+                ball->x, ball->y, ball->radius)) {
+            return 1; // Hay colisión
+        }
+        i++;
+    }
+    return 0; // No hay colisión
+}
+
+

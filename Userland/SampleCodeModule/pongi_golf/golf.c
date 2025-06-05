@@ -1,3 +1,4 @@
+#include "../include/pongi_golf/golf.h"
 #include "../include/pongi_golf/pongi.h"
 #include "../include/pongi_golf/ball.h"
 #include "../include/pongi_golf/obstacle.h"
@@ -9,15 +10,6 @@
 
 #define MAX_PLAYERS 2
 #define MAX_LEVELS 5
-
-#define WHITE 0xFFFFFF
-#define BLACK 0x000000
-#define RED 0xFF0000
-#define GREEN 0x62bc2f  
-#define BLUE 0x1b72ae
-
-// #define SCREEN_HEIGHT 768
-// #define SCREEN_WIDTH 1024
 
 static void gameLoop(int players);
 static void quitGame(int * end);
@@ -64,7 +56,6 @@ static void gameLoop(int players) {
 
         setLevel(level, pongis, ball, hole, obstacles);
     
-
         renderGame(ball, pongis, obstacles, hole);
 
         while (!end) {
@@ -103,16 +94,16 @@ static void processInput(char input, int * dmove){
     switch(input){
         // up
         case 'w':
-            dmove[1] = 1;
+            dmove[1] = -1;
             dmove[2] = 1;
             break;
         case 'i':
-            dmove[1] = 1;
+            dmove[1] = -1;
             dmove[2] = 2;
             break;
         // down
         case 's':
-            dmove[1] = -1;
+            dmove[1] = 1;
             dmove[2] = 1;
             break;
         case 'k':
@@ -140,7 +131,6 @@ static void processInput(char input, int * dmove){
         default:
             break;
     }
-
 }
 
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole){

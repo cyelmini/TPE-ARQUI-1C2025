@@ -2,9 +2,9 @@
 #include "../include/pongi_golf/collision.h"
 #include "../include/pongi_golf/ball.h"
 #include "../include/pongi_golf/pongi.h"
+#include "../include/pongi_golf/golf.h"
 #include "../include/syscalls.h"
 
-#define NULL 0
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 

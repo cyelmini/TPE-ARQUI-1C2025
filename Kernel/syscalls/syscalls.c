@@ -99,7 +99,7 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         changeBackgroundColor(arg1);
         
         case COLOR_WRITE:
-        putChar(*(char *)arg1, arg2); 
+        putChar(*(char *) arg1, arg2); 
         return 0;
 
         case PUT_RECTANGLE:

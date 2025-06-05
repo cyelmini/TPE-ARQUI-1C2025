@@ -2,10 +2,8 @@
 #include "../include/pongi_golf/ball.h"
 #include "../include/pongi_golf/collision.h"
 #include "../include/syscalls.h"
+#include "../include/pongi_golf/golf.h"
 
-#define NULL 0
-#define SCREEN_WIDTH 1024
-#define SCREEN_HEIGHT 768
 
 #define HOLE_BASE_ADDR 0x52000
 #define HOLE_SIZE      0x100

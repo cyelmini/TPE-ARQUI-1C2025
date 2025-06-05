@@ -154,21 +154,21 @@ printRegs:
 
 	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
 	; pasaje: izquierda argumentos segun c convencion C, derecha segun tabla syscall 
+	push r9
 	push r8
-	mov rcx, rdx
-	mov rdx, rsi
-	mov rsi, rdi
-	mov rdi, rax
-	mov r8, r10
-	pop r8
-	mov r10, r8
+	mov r8, rcx    ; move 4th arg (color) to r8
+	mov rcx, rdx   ; move 3rd arg (radius) to rcx
+	mov rdx, rsi   ; move 2nd arg (y) to rdx
+	mov rsi, rdi   ; move 1st arg (x) to rsi
+	mov rdi, rax   ; syscall number to rdi
 	; r9 is already correct
 
 	call sysCallDispatcher
 
 	mov al, 20h 	; avisa al pic que termino la interrupcion 
 	out 20h, al
-
+	pop r8
+	pop r9
 	popState
 	iretq
 %endmacro

@@ -14,7 +14,7 @@
 static void gameLoop(int players);
 static void quitGame(int * end);
 static void processInput(char input, int dmove[]);
-static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole);
+static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players);
 static void changeBackscreen(int color);
 
 void initializeGolf() {
@@ -30,6 +30,8 @@ void initializeGolf() {
     int players = atoi(buffer);
     changeBackscreen(GREEN);
     gameLoop(players);
+
+    printf("Ganaste! Nos vemos en la proxima version\n");
 }
 
 static void gameLoop(int players) {
@@ -56,7 +58,7 @@ static void gameLoop(int players) {
 
         setLevel(level, pongis, ball, hole, obstacles);
     
-        renderGame(ball, pongis, obstacles, hole);
+        renderGame(ball, pongis, obstacles, hole, players);
 
         while (!end) {
             input = readChar();
@@ -66,14 +68,14 @@ static void gameLoop(int players) {
             }
             processInput(input, dmove);
 
-            movePongis(pongis, dmove, obstacles);
-            for(int i = 0; i < players; i++) {
-                if(checkBallCollision(ball, pongis[i])){
-                    moveBall(ball, dmove, obstacles);
-                    break; // Solo mover la bola una vez por input
-                }
-            }
+            movePongis(pongis, dmove, obstacles, ball);       // movePongis moves the ball if theres a collision
+        
             if(wonLevel(ball, hole)){
+                // Increment score for the player who last hit the ball
+                syscall_sound(1,50);
+                if(dmove[2] > 0 && dmove[2] <= players) {
+                    pongis[dmove[2]-1]->points++;
+                }
                 level++;
                 break;
             }
@@ -133,7 +135,7 @@ static void processInput(char input, int * dmove){
     }
 }
 
-static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole){
+static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players){
     changeBackscreen(GREEN);
     printPongis(pongis);
     printBall(ball);
@@ -144,3 +146,4 @@ static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole
 static void changeBackscreen(int color){
     syscall_changeBackgroundColor(color);
 }
+

@@ -12,7 +12,7 @@ extern void syscall_hours(uint64_t * hours);
 
 extern void syscall_sound(int time, int frequency);
 
-extern void syscall_setCursor(int x);
+extern void syscall_setCursor(int x, int i);
 
 extern int syscall_getCursorX();
 

@@ -30,7 +30,7 @@ int checkPongiObstacleCollision(TPongi pongi, int dmove[3], TObstacle obstacles[
     while (obstacles[i] != NULL) {
         if (checkRectangleCircleCollision(
                 obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
-                pongi->x, pongi->y, BALL_RADIUS)) {
+                pongi->x + dmove[0], pongi->y + dmove[1], PONGI_RADIUS)) {
             return 1; // Hay colisión
         }
         i++;
@@ -44,7 +44,7 @@ int checkBallObstacleCollision(TBall ball, int dmove[3], TObstacle obstacles[]) 
     while (obstacles[i] != NULL) {
         if (checkRectangleCircleCollision(
                 obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
-                ball->x, ball->y, BALL_RADIUS)) {
+                ball->x + dmove[0], ball->y + dmove[1], BALL_RADIUS)) {
             return 1; // Hay colisión
         }
         i++;

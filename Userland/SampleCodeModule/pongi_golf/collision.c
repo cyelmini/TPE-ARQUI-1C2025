@@ -4,7 +4,6 @@
 #include "../include/pongi_golf/obstacle.h"
 #include "../include/pongi_golf/hole.h"
 
-
 int checkCirclesCollision(int x1, int y1, int r1, int x2, int y2, int r2){
     int dx = x1 - x2;
     int dy = y1 - y2;

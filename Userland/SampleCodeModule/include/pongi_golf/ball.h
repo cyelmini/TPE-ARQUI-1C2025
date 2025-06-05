@@ -15,5 +15,5 @@ typedef struct Pongi * TPongi;
 
 TBall createBall(int x, int y, int color);
 void moveBall(TBall ball, int dmove[3], TObstacle obstacles[]);
-int checkBallCollision(TBall ball, TPongi pongi);
+int checkBallCollision(TBall ball, TPongi pongi, int dmove[3]);
 void printBall(TBall ball);

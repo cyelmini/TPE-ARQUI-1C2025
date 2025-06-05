@@ -11,7 +11,7 @@
 // Colors
 #define GRASS_GREEN 0x62bc2f
 
-
+static int bcdToBinary(int bcd);
 static void clearBuffer(char * buffer);
 static void clearScreen();
 static void executeCommand();
@@ -99,6 +99,9 @@ void executeCommand(char * command, char * arg){
    
     if(strcmp(command, "help") == 0) {
         help(arg);
+        // syscall_putRectangle(0, 0, 100, 100, 0x00FF00); // Green
+        // syscall_putRectangle(120, 0, 100, 100, 0x0000FF); // Red (should appear blue if BGR)
+        // syscall_putRectangle(240, 0, 100, 100, 0xFF0000); // Blue (should appear red if BGR)
         return;
     } else if(strcmp(command, "time") == 0) {
         time();
@@ -184,14 +187,29 @@ void printRegisters(){
     syscall_getRegisters();
 }
 
-// REVISAR 
 void time(){
-    printf("La hora actual es: %d:%d:%d\n", getHoursUser(), getMinutesUser(), getSecondsUser());
+    int hours = bcdToBinary(getHoursUser()) - 3;
+    int minutes = bcdToBinary(getMinutesUser());
+    int seconds = bcdToBinary(getSecondsUser());
+
+   printf("%d", hours / 10);
+   printf("%d", hours % 10);
+   printf(":");
+   printf("%d", minutes / 10);
+   printf("%d", minutes % 10);
+   printf(":");
+   printf("%d", seconds / 10);
+   printf("%d", seconds % 10);
+   printf("\n");
 }
 
 
 
 /* --------------------------------- auxiliar functions ------------------------------------ */
+
+static int bcdToBinary(int bcd) {
+    return ((bcd >> 4) * 10) + (bcd & 0x0F);
+}
 
 void clearScreen(){
     syscall_clearScreen();

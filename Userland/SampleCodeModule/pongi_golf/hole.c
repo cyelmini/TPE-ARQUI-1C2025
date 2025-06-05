@@ -7,14 +7,17 @@
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 
+#define HOLE_BASE_ADDR 0x52000
+#define HOLE_SIZE      0x100
 
 THole createHole(int x, int y, int size) {
-    THole hole = 0;
-    if (hole != NULL) {
-        hole->x = x;
-        hole->y = y;
-        hole->size = size;
-    }
+    static unsigned long next_addr = HOLE_BASE_ADDR;
+    THole hole = (THole)next_addr;
+    next_addr += HOLE_SIZE;
+
+    hole->x = x;
+    hole->y = y;
+    hole->size = size;
     return hole;
 }
 

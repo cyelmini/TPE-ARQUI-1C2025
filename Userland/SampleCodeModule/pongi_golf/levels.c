@@ -8,6 +8,7 @@
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
+#define NULL 0
 
 #define MARRON 0x5D441D
 
@@ -29,6 +30,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             hole->y = 950;
             hole->size = 150;
             obstacles[0] = obs1;
+            obstacles[1] = NULL;
             break;
         case 2:
             hole->x = 700;
@@ -36,6 +38,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             hole->size = 125;
             obstacles[0] = obs3;
             obstacles[1] = obs4;
+            obstacles[2] = NULL;
             break;
         case 3:
             hole->x = 700;
@@ -43,6 +46,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             hole->size = 100;
             obstacles[0] = obs1;
             obstacles[1] = obs3;
+            obstacles[2] = NULL;
             break;
         case 4:
             hole->x = 700;
@@ -51,6 +55,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             obstacles[0] = obs2;
             obstacles[1] = obs5;
             obstacles[2] = obs4;
+            obstacles[3] = NULL;
             break;
         case 5:
             hole->x = 700;
@@ -60,6 +65,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             obstacles[1] = obs2;
             obstacles[2] = obs3;
             obstacles[3] = obs4;
+            obstacles[4] = NULL;
             break;
         default:
     }

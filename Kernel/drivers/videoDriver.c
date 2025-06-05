@@ -142,11 +142,11 @@ void drawCursor(){
 // Dimensiones de pantalla y caracteres
 
 uint64_t getScreenHeight(){ 
-	return VBE_mode_info->height / CHAR_HEIGHT; 
+	return VBE_mode_info->height; 
 }
 
 uint64_t getScreenWidth(){ 
-	return VBE_mode_info->width / CHAR_WIDTH; 
+	return VBE_mode_info->width; 
 }
 
 void changeCharSize(int size){ 

@@ -13,9 +13,11 @@
 #define WHITE 0xFFFFFF
 #define BLACK 0x000000
 #define RED 0xFF0000
-#define GREEN 0x00FF00  
-#define BLUE 0x0000FF
-#define YELLOW 0xFFFF00
+#define GREEN 0x62bc2f  
+#define BLUE 0x1b72ae
+
+// #define SCREEN_HEIGHT 768
+// #define SCREEN_WIDTH 1024
 
 static void gameLoop(int players);
 static void quitGame(int * end);
@@ -30,15 +32,13 @@ void initializeGolf() {
     scanf(buffer);
 
     while(buffer[0] != '1' && buffer[0] != '2'){
-        printf("1 O DOS JUGADORES. INGRESE NUEVAMENTE:\n");
+        printf("1 O 2 JUGADORES. INGRESE NUEVAMENTE:\n");
         scanf(buffer);
     }
-
     int players = atoi(buffer);
     changeBackscreen(GREEN);
     gameLoop(players);
 }
-
 
 static void gameLoop(int players) {
 
@@ -60,9 +60,7 @@ static void gameLoop(int players) {
 
     int end = 0;
     
-    changeBackscreen(GREEN);
     for(int level = 1 ; level <= MAX_LEVELS && !end; ) {
-        changeBackscreen(GREEN);
 
         setLevel(level, pongis, ball, hole, obstacles);
     
@@ -146,12 +144,13 @@ static void processInput(char input, int * dmove){
 }
 
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole){
-    printBall(ball);
+    changeBackscreen(GREEN);
     printPongis(pongis);
+    printBall(ball);
     printObstacles(obstacles);
     printHole(hole);
 }
 
 static void changeBackscreen(int color){
-    syscall_putRectangle(0, 0, syscall_getScreenHeight(), syscall_getScreenWidth(), color);
+    syscall_changeBackgroundColor(color);
 }

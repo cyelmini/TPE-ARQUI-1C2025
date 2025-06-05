@@ -12,9 +12,14 @@
 #define SCREEN_HEIGHT 768
 #define MOVE_SPEED 1
 
+#define BALL_BASE_ADDR 0x50000
+#define BALL_SIZE      0x100
 
 TBall createBall(int x, int y, int color) {
-    TBall ball = 0;
+    static unsigned long next_addr = BALL_BASE_ADDR;
+    TBall ball = (TBall)next_addr;
+    next_addr += BALL_SIZE;
+
     ball->x = x;
     ball->y = y;
     ball->moveSpeed = MOVE_SPEED;

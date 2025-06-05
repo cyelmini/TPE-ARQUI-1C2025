@@ -8,16 +8,19 @@
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 
+#define OBSTACLE_BASE_ADDR 0x53000
+#define OBSTACLE_SIZE      0x100
 
 TObstacle createObstacle(int x, int y, int color, int height, int width) {
-    TObstacle obstacle = 0;
-    if (obstacle != NULL) {
-        obstacle->x = x;
-        obstacle->y = y;
-        obstacle->color = color;
-        obstacle->height = height;
-        obstacle->width = width;
-    }
+    static unsigned long next_addr = OBSTACLE_BASE_ADDR;
+    TObstacle obstacle = (TObstacle)next_addr;
+    next_addr += OBSTACLE_SIZE;
+
+    obstacle->x = x;
+    obstacle->y = y;
+    obstacle->color = color;
+    obstacle->height = height;
+    obstacle->width = width;
     return obstacle;
 }
 
@@ -54,4 +57,4 @@ void printObstacles(TObstacle obstacles[]) {
     for(int i = 0; i < MAX_OBSTACLES && obstacles[i] != 0 ; i++) {
         syscall_putRectangle(obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width, obstacles[i]->color);
     }
-} 
+}

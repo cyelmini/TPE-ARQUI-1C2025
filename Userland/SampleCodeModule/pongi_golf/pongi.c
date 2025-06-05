@@ -7,12 +7,17 @@
 #define SCREEN_HEIGHT 768
 #define PONGI_BLUE 0x96e2ee
 
+#define PONGI_BASE_ADDR 0x51000
+#define PONGI_SIZE 0x100
 
 static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[]);
 static void printPongi(TPongi pongi);
 
 TPongi createPongi(int x, int y){
-    TPongi pongi = 0;
+    static unsigned long next_addr = PONGI_BASE_ADDR;
+    TPongi pongi = (TPongi)next_addr;
+    next_addr += PONGI_SIZE;
+
     pongi->x = x;
     pongi->y = y;
     pongi->points = 0;
@@ -31,7 +36,6 @@ static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[]) {
         printPongi(pongi);
     }
 }
-
 
 void movePongis(TPongi pongis[], int dmove[3], TObstacle obstacles[]) {
     if(dmove[2] == 1){

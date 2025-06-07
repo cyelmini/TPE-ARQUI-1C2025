@@ -6,6 +6,8 @@
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
+#define SCORE_AREA_HEIGHT 40
+#define SCORE_SIGN_WIDTH 180
 
 #define PONGI_BASE_ADDR 0x51000
 #define PONGI_SIZE 0x100
@@ -14,6 +16,7 @@ static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[], TBall b
 static void clearPongi(TPongi pongi);
 static void printPongi(TPongi pongi);
 static int isOutOfBoundsPongi(int x, int y);
+static int isInScoreSignArea(int x);
 
 
 TPongi createPongi(int x, int y){
@@ -84,9 +87,28 @@ void printPongis(TPongi pongis[]) {
     printPongi(pongis[1]);
 }
 
+static int isInScoreSignArea(int x) {
+    if (x - PONGI_RADIUS < SCORE_SIGN_WIDTH) {
+        return 1;
+    }
+    if (x + PONGI_RADIUS > SCREEN_WIDTH - SCORE_SIGN_WIDTH) {
+        return 1;
+    }
+    return 0;
+}
 
 static int isOutOfBoundsPongi(int x, int y) {
-    return (x - PONGI_RADIUS < 0 || x + PONGI_RADIUS > SCREEN_WIDTH ||
-            y - PONGI_RADIUS < 0 || y + PONGI_RADIUS > SCREEN_HEIGHT);
+    if (y - PONGI_RADIUS < 0){
+        return 1;
+    }
+        
+    if (isInScoreSignArea(x) && (y - PONGI_RADIUS < SCORE_AREA_HEIGHT)) {
+        return 1;
+    }
+    if (x - PONGI_RADIUS < 0 || x + PONGI_RADIUS > SCREEN_WIDTH ||
+        y + PONGI_RADIUS > SCREEN_HEIGHT) {
+        return 1;
+    }
+    return 0;
 }
 

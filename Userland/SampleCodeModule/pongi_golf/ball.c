@@ -11,12 +11,15 @@
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
 #define MOVE_SPEED 300
+#define SCORE_AREA_HEIGHT 40
+#define SCORE_SIGN_WIDTH 180
 
 #define BALL_BASE_ADDR 0x50000
 #define BALL_SIZE 0x100
 
 static void clearBall(TBall ball);
 static int isOutOfBoundsBall(int x, int y);
+static int isInScoreSignAreaBall(int x);
 
 
 TBall createBall(int x, int y, int color) {
@@ -40,7 +43,13 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) 
             if (nextX - BALL_RADIUS < 0 || nextX + BALL_RADIUS > SCREEN_WIDTH) {
                 dmove[0] = -dmove[0];
             }
-            if (nextY - BALL_RADIUS < 0 || nextY + BALL_RADIUS > SCREEN_HEIGHT) {
+            if (isInScoreSignAreaBall(nextX) && (nextY - BALL_RADIUS < SCORE_AREA_HEIGHT)) {
+                dmove[1] = -dmove[1];
+                nextY = SCORE_AREA_HEIGHT + BALL_RADIUS + 5;
+            } else if (nextY - BALL_RADIUS < 0) {
+                dmove[1] = -dmove[1];
+                nextY = BALL_RADIUS + 5;
+            } else if (nextY + BALL_RADIUS > SCREEN_HEIGHT) {
                 dmove[1] = -dmove[1];
             }
             nextX = ball->x + dmove[0];
@@ -84,6 +93,25 @@ void printBall(TBall ball) {
 }
 
 static int isOutOfBoundsBall(int x, int y) {
-    return (x - BALL_RADIUS < 0 || x + BALL_RADIUS > SCREEN_WIDTH ||
-            y - BALL_RADIUS < 0 || y + BALL_RADIUS > SCREEN_HEIGHT);
+    if (y - BALL_RADIUS < 0) {
+        return 1;
+    }
+    if (isInScoreSignAreaBall(x) && (y - BALL_RADIUS < SCORE_AREA_HEIGHT)) {
+        return 1;
+    }
+    if (x - BALL_RADIUS < 0 || x + BALL_RADIUS > SCREEN_WIDTH ||
+        y + BALL_RADIUS > SCREEN_HEIGHT) {
+        return 1;
+    }
+    return 0;
+}
+
+static int isInScoreSignAreaBall(int x) {
+    if (x - BALL_RADIUS < SCORE_SIGN_WIDTH) {
+        return 1;
+    }
+    if (x + BALL_RADIUS > SCREEN_WIDTH - SCORE_SIGN_WIDTH) {
+        return 1;
+    }
+    return 0;
 }

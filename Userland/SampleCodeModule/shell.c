@@ -192,18 +192,8 @@ void time(){
     int minutes = bcdToBinary(getMinutesUser());
     int seconds = bcdToBinary(getSecondsUser());
 
-   printf("%d", hours / 10);
-   printf("%d", hours % 10);
-   printf(":");
-   printf("%d", minutes / 10);
-   printf("%d", minutes % 10);
-   printf(":");
-   printf("%d", seconds / 10);
-   printf("%d", seconds % 10);
-   printf("\n");
+    printf("Hora actual: %d:%d:%d\n", hours, minutes, seconds);
 }
-
-
 
 /* --------------------------------- auxiliar functions ------------------------------------ */
 

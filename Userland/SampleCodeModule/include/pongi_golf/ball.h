@@ -14,6 +14,6 @@ typedef struct Hole * THole;
 typedef struct Pongi * TPongi;
 
 TBall createBall(int x, int y, int color);
-void moveBall(TBall ball, int dmove[3], TObstacle obstacles[]);
+void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]);
 int checkBallCollision(TBall ball, TPongi pongi, int dmove[3]);
 void printBall(TBall ball);

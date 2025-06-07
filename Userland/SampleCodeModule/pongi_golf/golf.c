@@ -7,7 +7,8 @@
 #include "../include/syscalls.h"
 #include "../include/libC.h"
 
-
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define MAX_PLAYERS 2
 #define MAX_LEVELS 5
 
@@ -16,6 +17,7 @@ static void quitGame(int * end);
 static void processInput(char input, int dmove[]);
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players);
 static void changeBackscreen(int color);
+static void displayScores(TPongi pongis[], int players);
 
 void initializeGolf() {
     printf("Bienvenido a Pongi Golf\nIngrese cantidad de jugadores (1 o 2)\n");
@@ -141,9 +143,29 @@ static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole
     printBall(ball);
     printObstacles(obstacles);
     printHole(hole);
+    displayScores(pongis, players);
 }
 
 static void changeBackscreen(int color){
     syscall_changeBackgroundColor(color);
 }
 
+static void displayScores(TPongi pongis[], int players) {
+    int leftX = 10;
+    int rightX = SCREEN_WIDTH - 180; 
+    int y = 10;
+    
+    // Player 1:
+    syscall_setCursor(leftX, y);
+    printColor("Player 1: ", WHITE); 
+    char* score1Str = numToString(pongis[0]->points);
+    printColor(score1Str, WHITE);
+    
+    // Player 2: 
+    if(players == 2) {
+        syscall_setCursor(rightX, y);
+        printColor("Player 2: ", WHITE); 
+        char* score2Str = numToString(pongis[1]->points);
+        printColor(score2Str, WHITE);
+    }
+}

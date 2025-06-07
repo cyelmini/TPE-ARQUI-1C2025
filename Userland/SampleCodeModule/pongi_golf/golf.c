@@ -109,7 +109,7 @@ static void processInput(char input, int * dmove){
             dmove[2] = 1;
             break;
         case 'k':
-            dmove[1] = -1;
+            dmove[1] = 1;
             dmove[2] = 2;
             break;
         // left

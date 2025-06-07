@@ -79,11 +79,17 @@ void print(const char * string, va_list list){
             switch (string[i+1]){
                 case 'd':
                     i++;
-                    putChar(*numToString(va_arg(list, int)), STDOUT);
+                    char *numStr = numToString(va_arg(list, int));
+                    for (int j = 0; numStr[j] != '\0'; j++) {
+                        putChar(numStr[j], STDOUT);
+                    }
                 break;
                 case 's':
                     i++;
-                    printf((va_arg(list, char *)));
+                    char *str = va_arg(list, char *);
+                    for (int j = 0; str[j] != '\0'; j++) {
+                        putChar(str[j], STDOUT);
+                    }
                 break;
                 case 'c':
                     i++;

@@ -8,13 +8,16 @@
 
 #include <stdint.h>
 
+#define SCREEN_WIDTH 1024
+#define SCREEN_HEIGHT 768
 #define MOVE_SPEED 300
 
 #define BALL_BASE_ADDR 0x50000
 #define BALL_SIZE 0x100
 
 static void clearBall(TBall ball);
-static int isOutOfBoundsBall(TBall ball);
+static int isOutOfBoundsBall(int x, int y);
+
 
 TBall createBall(int x, int y, int color) {
     static unsigned long next_addr = BALL_BASE_ADDR;
@@ -28,16 +31,32 @@ TBall createBall(int x, int y, int color) {
     return ball;
 }
 
-void moveBall(TBall ball, int dmove[3], TObstacle obstacles[]) {
+void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) {
     for (int i = 0; i < ball->moveSpeed; i+=3){
+        int nextX = ball->x + dmove[0];
+        int nextY = ball->y + dmove[1];
+        
+        if (isOutOfBoundsBall(nextX, nextY)) {
+            if (nextX - BALL_RADIUS < 0 || nextX + BALL_RADIUS > SCREEN_WIDTH) {
+                dmove[0] = -dmove[0];
+            }
+            if (nextY - BALL_RADIUS < 0 || nextY + BALL_RADIUS > SCREEN_HEIGHT) {
+                dmove[1] = -dmove[1];
+            }
+            nextX = ball->x + dmove[0];
+            nextY = ball->y + dmove[1];
+        }
+
         if(!checkBallObstacleCollision(ball, dmove, obstacles)){
             clearBall(ball);
-            ball->x += dmove[0];
-            ball->y += dmove[1];
+            ball->x = nextX;
+            ball->y = nextY;
             printBall(ball);
+            printPongis(pongis);
         } else {
             printBall(ball);
             printObstacles(obstacles);
+            printPongis(pongis);
         }
     }
 }
@@ -64,19 +83,7 @@ void printBall(TBall ball) {
     syscall_drawCircle(ball->x, ball->y, BALL_RADIUS, ball->color);
 }
 
-
-// FALTA AGREGARLO AL MOVIMIENTO 
-
-static int isOutOfBoundsBall(TBall ball){
-    if (ball == NULL) {
-        return 0;
-    }
-    
-    int sWidth = syscall_getScreenWidth();
-    int sHeight = syscall_getScreenHeight();
-    
-    return ((ball->x + BALL_RADIUS) >= sWidth || 
-            (ball->x - BALL_RADIUS) < 0 || 
-            (ball->y + BALL_RADIUS) >= sHeight || 
-            (ball->y - BALL_RADIUS) < 0);
+static int isOutOfBoundsBall(int x, int y) {
+    return (x - BALL_RADIUS < 0 || x + BALL_RADIUS > SCREEN_WIDTH ||
+            y - BALL_RADIUS < 0 || y + BALL_RADIUS > SCREEN_HEIGHT);
 }

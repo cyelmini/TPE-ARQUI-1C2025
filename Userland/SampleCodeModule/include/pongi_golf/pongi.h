@@ -1,4 +1,3 @@
-
 typedef struct Pongi {
     int x;
     int y;

@@ -70,7 +70,7 @@ static void gameLoop(int players) {
             }
             processInput(input, dmove);
 
-            movePongis(pongis, dmove, obstacles, ball);       // movePongis moves the ball if theres a collision
+            movePongis(pongis, dmove, obstacles, ball, hole);       // movePongis moves the ball if theres a collision
         
             if(wonLevel(ball, hole)){
                 // Increment score for the player who last hit the ball

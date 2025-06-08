@@ -30,7 +30,7 @@ int checkPongiObstacleCollision(TPongi pongi, int dmove[3], TObstacle obstacles[
     while (obstacles[i] != NULL) {
         if (checkRectangleCircleCollision(
                 obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
-                pongi->x + dmove[0], pongi->y + dmove[1], PONGI_RADIUS)) {
+                pongi->x + dmove[0]*PONGI_SPEED, pongi->y + dmove[1]*PONGI_SPEED, PONGI_RADIUS)) {
             return 1; // Hay colisión
         }
         i++;

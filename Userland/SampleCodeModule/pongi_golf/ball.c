@@ -10,7 +10,7 @@
 
 #define SCREEN_WIDTH 1024
 #define SCREEN_HEIGHT 768
-#define MOVE_SPEED 300
+#define MOVE_SPEED 500
 #define SCORE_AREA_HEIGHT 40
 #define SCORE_SIGN_WIDTH 180
 
@@ -35,7 +35,7 @@ TBall createBall(int x, int y, int color) {
 }
 
 void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) {
-    for (int i = 0; i < ball->moveSpeed; i+=3){
+    for (int i = 0; i < ball->moveSpeed; i+=5){
         int nextX = ball->x + dmove[0];
         int nextY = ball->y + dmove[1];
         
@@ -61,7 +61,7 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) 
             ball->x = nextX;
             ball->y = nextY;
             printBall(ball);
-            printPongis(pongis);
+            
         } else {
             printBall(ball);
             printObstacles(obstacles);
@@ -75,7 +75,7 @@ int checkBallCollision(TBall ball, TPongi pongi, int dmove[3]) {
         return 0;
     }
 
-    return checkCirclesCollision(ball->x, ball->y, BALL_RADIUS, pongi->x + dmove[0], pongi->y + dmove[1], PONGI_RADIUS);
+    return checkCirclesCollision(ball->x, ball->y, BALL_RADIUS, pongi->x + dmove[0]*PONGI_SPEED, pongi->y + dmove[1]*PONGI_SPEED, PONGI_RADIUS);
 }
 
 static void clearBall(TBall ball){

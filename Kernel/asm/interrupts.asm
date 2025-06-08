@@ -144,32 +144,28 @@ printRegs:
 	call printRegisters
 	ret
 
-; cuando se hace una int80h (interrupcion de software), la interruption table lo manda a la funcion sysCallsHandler (en este archivo), la cual ejecuta 
-; esta macro. La misma setea en los registros requeridos los parametros de la syscall para llamar a la funcion en C "sysCallDispatcher", la cual decide, 
-; segun lo que hay en rdi, qué syscall ejecutar. Los parámetros se pasan asi en lugar de en orden (primero a ultimo) porque para pasar los parametros 
-; se pisa donde hay otros parametros, y este es el unico orden donde no se pisan :3
-
 %macro sysCallsHandlerMaster 0
 	pushState
+	mov rbp, rsp
 
-	; organizo los parametros para llamar a una funcion segun la convecion de llamado de funcion a C
-	; pasaje: izquierda argumentos segun c convencion C, derecha segun tabla syscall 
 	push r9
-	push r8
-	mov r8, rcx    ; move 4th arg (color) to r8
-	mov rcx, rdx   ; move 3rd arg (radius) to rcx
-	mov rdx, rsi   ; move 2nd arg (y) to rdx
-	mov rsi, rdi   ; move 1st arg (x) to rsi
-	mov rdi, rax   ; syscall number to rdi
-	; r9 is already correct
+	mov r9, r8
+	mov r8, rcx
+	mov rcx, rdx
+	mov rdx, rsi
+	mov rsi, rdi
+	mov rdi, rax
+	call sysCallDispatcher 
+	mov [aux], rax 
 
-	call sysCallDispatcher
+	mov al,20h
+	out 20h,al
 
-	mov al, 20h 	; avisa al pic que termino la interrupcion 
-	out 20h, al
-	pop r8
 	pop r9
+	mov rsp,rbp 
 	popState
+
+	mov rax, [aux]
 	iretq
 %endmacro
 

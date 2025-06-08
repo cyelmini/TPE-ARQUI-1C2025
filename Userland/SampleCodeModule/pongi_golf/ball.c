@@ -20,7 +20,7 @@
 static void clearBall(TBall ball);
 static int isOutOfBoundsBall(int x, int y);
 static int isInScoreSignAreaBall(int x);
-
+static void bounceBallOnObstacle(TBall ball, int dmove[3], TObstacle obstacles[]);
 
 TBall createBall(int x, int y, int color) {
     static unsigned long next_addr = BALL_BASE_ADDR;
@@ -61,8 +61,9 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) 
             ball->x = nextX;
             ball->y = nextY;
             printBall(ball);
-            
         } else {
+            clearBall(ball);
+            bounceBallOnObstacle(ball, dmove, obstacles);
             printBall(ball);
             printObstacles(obstacles);
             printPongis(pongis);
@@ -114,4 +115,27 @@ static int isInScoreSignAreaBall(int x) {
         return 1;
     }
     return 0;
+}
+
+static void bounceBallOnObstacle(TBall ball, int dmove[3], TObstacle obstacles[]) {
+    int orig_dx = dmove[0];
+    int orig_dy = dmove[1];
+    dmove[0] = -orig_dx;
+    dmove[1] = orig_dy;
+    if(!checkBallObstacleCollision(ball, dmove, obstacles)){
+        ball->x += dmove[0];
+        ball->y += dmove[1];
+        return;
+    }
+    dmove[0] = orig_dx;
+    dmove[1] = -orig_dy;
+    if(!checkBallObstacleCollision(ball, dmove, obstacles)){
+        ball->x += dmove[0];
+        ball->y += dmove[1];
+        return;
+    }
+    dmove[0] = -orig_dx;
+    dmove[1] = -orig_dy;
+    ball->x += dmove[0];
+    ball->y += dmove[1];
 }

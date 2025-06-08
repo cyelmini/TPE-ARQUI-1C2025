@@ -18,6 +18,7 @@ static void processInput(char input, int dmove[]);
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players);
 static void changeBackscreen(int color);
 static void displayScores(TPongi pongis[], int players);
+static void playShortWinSound();
 
 void initializeGolf() {
     printf("Bienvenido a Pongi Golf\nIngrese cantidad de jugadores (1 o 2)\n");
@@ -73,8 +74,8 @@ static void gameLoop(int players) {
             movePongis(pongis, dmove, obstacles, ball, hole);       // movePongis moves the ball if theres a collision
         
             if(wonLevel(ball, hole)){
+                playShortWinSound();
                 // Increment score for the player who last hit the ball
-                syscall_sound(1,50);
                 if(dmove[2] > 0 && dmove[2] <= players) {
                     pongis[dmove[2]-1]->points++;
                 }
@@ -148,6 +149,13 @@ static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole
 
 static void changeBackscreen(int color){
     syscall_changeBackgroundColor(color);
+}
+
+static void playShortWinSound(){
+    syscall_sound(100, 587);  // D5
+    syscall_sound(100, 698);  // F5
+    syscall_sound(200, 880);  // A5
+    syscall_sound(400, 1175); // D6
 }
 
 static void displayScores(TPongi pongis[], int players) {

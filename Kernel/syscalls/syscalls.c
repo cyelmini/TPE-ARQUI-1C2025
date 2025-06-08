@@ -165,6 +165,6 @@ void sys_sound(uint64_t time, uint64_t frequency){
         return;
     
     makeSound(frequency);
-    sleep(time);
+    sleep_ms(time);
     stopSound();
 }

@@ -54,7 +54,7 @@ static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[], TBall b
         if(!checkPongiObstacleCollision(pongi, dmove, obstacles)){
 
             if(checkBallCollision(ball, pongi, dmove)){
-                moveBall(ball, dmove, obstacles, pongis);
+                moveBall(ball, dmove, obstacles, pongis, hole);
                 return;
             }
 

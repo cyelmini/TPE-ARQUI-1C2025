@@ -34,7 +34,7 @@ TBall createBall(int x, int y, int color) {
     return ball;
 }
 
-void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) {
+void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[], THole hole) {
     for (int i = 0; i < ball->moveSpeed; i+=5){
         int nextX = ball->x + dmove[0];
         int nextY = ball->y + dmove[1];
@@ -61,10 +61,12 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[]) 
             ball->x = nextX;
             ball->y = nextY;
             printBall(ball);
+            printHole(hole);
         } else {
             clearBall(ball);
             bounceBallOnObstacle(ball, dmove, obstacles);
             printBall(ball);
+            printHole(hole);
             printObstacles(obstacles);
             printPongis(pongis);
         }

@@ -193,6 +193,7 @@ void time(){
     int seconds = bcdToBinary(getSecondsUser());
 
     printf("Hora actual: %d:%d:%d\n", hours, minutes, seconds);
+    syscall_sound(2, 440); // Emit a sound to indicate the command was executed
 }
 
 /* --------------------------------- auxiliar functions ------------------------------------ */

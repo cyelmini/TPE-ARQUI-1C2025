@@ -33,6 +33,7 @@ void initializeGolf() {
     int players = atoi(buffer);
     changeBackscreen(GREEN);
     gameLoop(players);
+    changeBackscreen(BLACK);
 
     printf("Ganaste! Nos vemos en la proxima version\n");
 }

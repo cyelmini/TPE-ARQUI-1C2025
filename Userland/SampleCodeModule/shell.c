@@ -13,8 +13,8 @@
 
 static int bcdToBinary(int bcd);
 static void clearBuffer(char * buffer);
-static void clearScreen();
-static void executeCommand();
+void clearScreen();
+void executeCommand(char * command, char * arg);
 
 /*------------------------ exceptions ------------------------------------------*/
 
@@ -22,19 +22,12 @@ static void invalidOpException();
 static void divisionByZeroException();
 
 static void invalidOpException() {
-    if(syscall_getScreenHeight() <= syscall_getCursorY() + 25){
-        printf("Error: Operacion invalida.\n");
-        invalidOpCode();
-    }
+    invalidOpCode();
     return;
 }
 
 static void divisionByZeroException() {
-    if (syscall_getScreenHeight() <= syscall_getCursorY() + 25)
-    {
-        printf("Error: Division por cero.\n");
-        divisionByZero();
-    }
+    divisionByZero();
     return;
 }
 /*-----------------------------------------------------------------------------*/
@@ -121,6 +114,15 @@ void executeCommand(char * command, char * arg){
     } else if (strcmp(command, "divisionByZero") == 0) {
         divisionByZeroException();
         return;
+    } else if(strcmp(command, "fontUp") == 0) {
+        syscall_changeCharSize(2);
+        return;
+    } else if(strcmp(command, "fontDown") == 0) {
+       syscall_changeCharSize(-2);
+        return;
+    }else if(strcmp(command, "fontDefault") == 0) {
+        syscall_defaultCharSize();
+        return;
     }
     
     printf("El comando '%s' no es valido\n", command);
@@ -139,6 +141,9 @@ void help(char *command){
         printf(" - playGolf\n");
         printf(" - invalidOp\n");
         printf(" - divisionByZero\n");
+        printf(" - fontUp\n");
+        printf(" - forntDown\n");
+        printf(" - fontDefault\n");
 
         printf("Para conocer mas informacion sobre un comando especifico, escribe 'help + comando'.\n");
 
@@ -178,6 +183,21 @@ void help(char *command){
         printf("Comando: divisionByZero\n");
         printf("Lanza una excepcion por division por cero\n");
 
+    } else if(strcmp(command, "fontUp") == 0) {
+
+        printf("Comando: fontUp\n");
+        printf("Aumenta el tamaño de la letra\n");
+
+    } else if(strcmp(command, "fontDown") == 0) {
+
+        printf("Comando: fontDown\n");
+        printf("Disminuye el tamaño de la letra\n");
+
+    } else if(strcmp(command, "fontDefault") == 0) {
+
+        printf("Comando: fontDefault\n");
+        printf("Restablece el tamaño de la letra al valor por defecto\n");
+
     } else {
         printf("El comando '%s' no es valido\n", command);
     }
@@ -189,11 +209,13 @@ void printRegisters(){
 
 void time(){
     int hours = bcdToBinary(getHoursUser()) - 3;
+    if (hours < 0) {
+        hours += 24;  // Ajustar para valores negativos en el formato de 24 horas
+    }
     int minutes = bcdToBinary(getMinutesUser());
     int seconds = bcdToBinary(getSecondsUser());
 
     printf("Hora actual: %d:%d:%d\n", hours, minutes, seconds);
-    syscall_sound(2, 440); // Emit a sound to indicate the command was executed
 }
 
 /* --------------------------------- auxiliar functions ------------------------------------ */

@@ -18,6 +18,8 @@ static int CHAR_WIDTH = DEFAULT_WIDTH;
 uint64_t cursor_x = 0;
 uint64_t cursor_y = 0;
 
+static void scrollScreen();
+
 struct vbe_mode_info_structure {
     uint16_t attributes;
     uint8_t window_a;
@@ -135,9 +137,26 @@ uint64_t getScreenWidth(){
 }
 
 void changeCharSize(int size){ 
-	CHAR_HEIGHT += size; 
-	CHAR_WIDTH += size; 
-	CHAR_SIZE = size; }
+ 
+    int newHeight = CHAR_HEIGHT + size;
+    int newWidth = CHAR_WIDTH + size;
+    
+    int minHeight = 8; 
+    int minWidth = 4;   
+    
+    int maxHeight = DEFAULT_HEIGHT * 3;
+    int maxWidth = DEFAULT_WIDTH * 3;    
+    
+    if (newHeight < minHeight || newWidth < minWidth || 
+        newHeight > maxHeight || newWidth > maxWidth) {
+        return;
+    }
+    
+    CHAR_HEIGHT += size; 
+    CHAR_WIDTH += size; 
+    
+    CHAR_SIZE = (size >= 0) ? size : 1;
+}
 
 void defaultCharSize(){ 
 	CHAR_HEIGHT = DEFAULT_HEIGHT; 
@@ -194,22 +213,37 @@ void print(const char * string, va_list list){
 void drawChar(char c, uint32_t hexcode) {
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     int start = c - FIRST_CHAR;
+    
     if (c >= FIRST_CHAR && c <= LAST_CHAR) {
+
         if (cursor_x + CHAR_WIDTH >= VBE_mode_info->width - CHAR_WIDTH) {
             cursor_x = 0;
             cursor_y += CHAR_HEIGHT;
-            if (cursor_y / CHAR_HEIGHT >= VBE_mode_info->height / CHAR_HEIGHT) {
-                clearScreen();
+            
+            if (cursor_y + CHAR_HEIGHT >= VBE_mode_info->height) {
+                scrollScreen();
+                cursor_y = VBE_mode_info->height - CHAR_HEIGHT;
             }
             return;
         }
+        
+        int scaleX = CHAR_WIDTH / DEFAULT_WIDTH;
+        int scaleY = CHAR_HEIGHT / DEFAULT_HEIGHT;
+        
+        if (scaleX < 1) scaleX = 1;
+        if (scaleY < 1) scaleY = 1;
+        
         for (int i = 0; i < DEFAULT_HEIGHT; i++) {
             for (int j = 0; j < DEFAULT_WIDTH; j++) {
                 if ((uint8_t)font_bitmap[i + ((start) * 32)] & (1 << j)) {
-                    putRectangle(cursor_x + j, cursor_y + i, CHAR_SIZE, CHAR_SIZE, hexcode);
+                    int x = cursor_x + (j * scaleX);
+                    int y = cursor_y + (i * scaleY);
+                    
+                    putRectangle(x, y, scaleY, scaleX, hexcode);
                 }
             }
         }
+        
         cursor_x += CHAR_WIDTH;
     }
 }
@@ -231,8 +265,11 @@ void putNewLine(){
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     cursor_x = 0;
     cursor_y += CHAR_HEIGHT;
-    if (cursor_y / CHAR_HEIGHT >= VBE_mode_info->height / CHAR_HEIGHT) {
-        clearScreen();
+    
+
+    if (cursor_y + CHAR_HEIGHT >= VBE_mode_info->height) {
+        scrollScreen();
+        cursor_y = VBE_mode_info->height - CHAR_HEIGHT;
     }
 }
 
@@ -246,6 +283,25 @@ void putTab(){
 
 
 // Funciones auxiliares
+
+static void scrollScreen() {
+    int scrollAmount = CHAR_HEIGHT;
+    
+    // Muevo la pantalla por copiar los píxeles hacia arriba
+    for (int y = scrollAmount; y < VBE_mode_info->height; y++) {
+        for (int x = 0; x < VBE_mode_info->width; x++) {
+            uint8_t *framebuffer = (uint8_t *)(uintptr_t)VBE_mode_info->framebuffer;
+            uint64_t srcOffset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
+            uint64_t destOffset = (x * ((VBE_mode_info->bpp)/8)) + ((y - scrollAmount) * VBE_mode_info->pitch);
+            
+            framebuffer[destOffset] = framebuffer[srcOffset];
+            framebuffer[destOffset+1] = framebuffer[srcOffset+1];
+            framebuffer[destOffset+2] = framebuffer[srcOffset+2];
+        }
+    }
+    
+    clearRectangle(0, VBE_mode_info->height - scrollAmount, scrollAmount, VBE_mode_info->width);
+}
 
 char * numToString(uint64_t num) {
     static char buffer[21]; 

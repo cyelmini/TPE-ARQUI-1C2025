@@ -28,7 +28,7 @@ extern int syscall_getRegisters();
 
 extern void syscall_clearScreen();
 
-extern void syscall_changeCharSize();
+extern void syscall_changeCharSize(int size);
 
 extern void syscall_defaultCharSize();
 

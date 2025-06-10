@@ -4,7 +4,7 @@
 #define KEYS 58
 #define BUFFER_SIZE 1024
 
-// utility keys
+// --- Teclas de utilidad ---
 #define ESC 0x01
 #define BACK 0x0E
 #define TAB 0x0F
@@ -23,30 +23,20 @@
 
 #define TAB_AMOUNT 4
 
-// flags to manage capitalization of letters and special keys
+// --- Variables globales ---
 char shift_pressed = 0;
 char caps_pressed = 0;
 char ctrl_pressed = 0;
 char alt_pressed = 0;
 
-// global variables to manage buffer
 char buffer[BUFFER_SIZE] = {0}; 
 int write_index = 0;
 int read_index = 0;
-int remaining_chars = 0;    // variable used to control the characters that havent been read yet
-
+int remaining_chars = 0;
 char getKeyPressed[KEYS] = {0};
-
 int inGameMode = 0;
-void setGameMode(int enabled) { inGameMode = enabled; }
 
-char isKeyPressed(int scancode) {
-    if (scancode < 0 || scancode >= KEYS) {
-        return 0;
-    } 
-    return getKeyPressed[scancode];
-}
-
+// --- Tabla de traducción de scancodes ---
 static unsigned char keyboard[KEYS][2] = {
     {0, 0}, {27, 27}, {'1', '!'}, {'2', '@'}, {'3', '#'}, {'4', '$'}, {'5', '%'}, {'6', '^'}, {'7', '&'}, {'8', '*'}, {'9', '('}, {'0', ')'}, {'-', '_'}, {'=', '+'}, {'\b', '\b'},
     {'\t', '\t'}, {'q', 'Q'}, {'w', 'W'}, {'e', 'E'}, {'r', 'R'}, {'t', 'T'}, {'y', 'Y'}, {'u', 'U'}, {'i', 'I'}, {'o', 'O'}, {'p', 'P'}, {'[', '{'}, {']', '}'}, {'\n', '\n'}, 
@@ -55,7 +45,9 @@ static unsigned char keyboard[KEYS][2] = {
     {0, 0}, {0, 0}, {' ', ' '},
 };
 
-void keyboardHandler(){
+// --- Funciones principales ---
+
+void keyboardHandler() {
     uint64_t scancode_key = getKey(); 
 
     if (scancode_key & KEYRELEASE) {
@@ -97,7 +89,7 @@ void keyboardHandler(){
             case ESC:
                 break;
             default:
-                if (ctrl_pressed && scancode_key == 0x13) { //ctrl + 'r'
+                if (ctrl_pressed && scancode_key == 0x13) { // ctrl + 'r'
                     snapShotFlag = 1;
                 } 
                 else if (!inGameMode && scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
@@ -115,7 +107,7 @@ void keyboardHandler(){
     }
 }
 
-char nextChar(){
+char nextChar() {
     if(remaining_chars == 0) {
         return -1;
     }
@@ -125,10 +117,23 @@ char nextChar(){
     return c;
 }
 
-char * getBuffer(){
+char * getBuffer() {
     return buffer;
 }
 
-char isCtrlPressed(){
+char isCtrlPressed() {
     return ctrl_pressed;
+}
+
+// --- Funciones auxiliares ---
+
+char isKeyPressed(int scancode) {
+    if (scancode < 0 || scancode >= KEYS) {
+        return 0;
+    } 
+    return getKeyPressed[scancode];
+}
+
+void setGameMode(int enabled) {
+    inGameMode = enabled;
 }

@@ -13,7 +13,7 @@ int checkCirclesCollision(int x1, int y1, int r1, int x2, int y2, int r2){
 }
 
 int checkRectangleCircleCollision(int x1, int y1, int height1, int width1, int x2, int y2, int r1 ){
-    // Find the closest point on the rectangle to the circle's center
+// Encontrar el punto más cercano en el rectángulo al centro del círculo
     int closestX = x2;
     int closestY = y2;
 
@@ -23,10 +23,10 @@ int checkRectangleCircleCollision(int x1, int y1, int height1, int width1, int x
     if (y2 < y1) closestY = y1;
     else if (y2 > y1 + height1) closestY = y1 + height1;
 
-    // Calculate the distance between the circle's center and this closest point
+// Calcular la distancia entre el centro del círculo y este punto más cercano
     int dx = x2 - closestX;
     int dy = y2 - closestY;
 
-    // If the distance is less than the circle's radius, there's a collision
+// Si la distancia es menor que el radio del círculo, hay colisión
     return (dx * dx + dy * dy) <= (r1 * r1);
 }

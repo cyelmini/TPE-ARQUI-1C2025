@@ -9,7 +9,7 @@
 #define SCREEN_HEIGHT 768
 
 #define OBSTACLE_BASE_ADDR 0x53000
-#define OBSTACLE_SIZE      0x100
+#define OBSTACLE_SIZE 0x100
 
 TObstacle createObstacle(int x, int y, int color, int height, int width) {
     static unsigned long next_addr = OBSTACLE_BASE_ADDR;
@@ -31,11 +31,11 @@ int checkPongiObstacleCollision(TPongi pongi, int dmove[3], TObstacle obstacles[
         if (checkRectangleCircleCollision(
                 obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
                 pongi->x + dmove[0]*PONGI_SPEED, pongi->y + dmove[1]*PONGI_SPEED, PONGI_RADIUS)) {
-            return 1; // Hay colisión
+            return 1;
         }
         i++;
     }
-    return 0; // No hay colisión
+    return 0;
 }
 
 int checkBallObstacleCollision(TBall ball, int dmove[3], TObstacle obstacles[]) {
@@ -45,13 +45,12 @@ int checkBallObstacleCollision(TBall ball, int dmove[3], TObstacle obstacles[]) 
         if (checkRectangleCircleCollision(
                 obstacles[i]->x, obstacles[i]->y, obstacles[i]->height, obstacles[i]->width,
                 ball->x + dmove[0], ball->y + dmove[1], BALL_RADIUS)) {
-            return 1; // Hay colisión
+            return 1;
         }
         i++;
     }
-    return 0; // No hay colisión
+    return 0;
 }
-
 
 void printObstacles(TObstacle obstacles[]) {
     for(int i = 0; i < MAX_OBSTACLES && obstacles[i] != 0 ; i++) {

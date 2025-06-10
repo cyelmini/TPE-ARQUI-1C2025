@@ -13,6 +13,7 @@
         "stdio.h": "c",
         "compare": "c",
         "syscalls.h": "c",
-        "collision.h": "c"
+        "collision.h": "c",
+        "random": "c"
     }
 }

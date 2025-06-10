@@ -19,7 +19,7 @@ void printRegisters(uint64_t * registers){
         clearScreen();
     }
     for (int i = 0; i < 19; i++){
-        char buffer[20]; // Buffer to hold the hexadecimal representation
+        char buffer[20]; 
         decimalToHex(registers[i], buffer);
         printf(strRegisters[i], WHITE);
         printf(": ", WHITE);
@@ -32,7 +32,7 @@ void printRegisters(uint64_t * registers){
 
 static void decimalToHex(uint64_t value, char * buffer){
     char hexDigits[] = "0123456789ABCDEF";
-    char temp[17]; // 16 digits + null terminator 
+    char temp[17]; 
     int i = 0;
 
     if (value == 0) {
@@ -48,11 +48,9 @@ static void decimalToHex(uint64_t value, char * buffer){
         value /= 16;
     }
 
-    // Prefix "0x"
     buffer[0] = '0';
     buffer[1] = 'x';
-
-    // Reverse the string
+    
     int j = 2;
     while (i > 0) {
         buffer[j++] = temp[--i];

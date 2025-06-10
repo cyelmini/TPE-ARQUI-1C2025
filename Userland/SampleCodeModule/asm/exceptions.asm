@@ -5,9 +5,9 @@ section .text
 
 divisionByZero: 
 mov rax, 0
-div rax ; the invalid division is forced
+div rax 
 ret
 
 invalidOpCode:
-ud2 ; the invalid operation is forced
+ud2 
 ret

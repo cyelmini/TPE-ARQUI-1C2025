@@ -4,9 +4,8 @@
 #include "../include/syscalls.h"
 #include "../include/pongi_golf/golf.h"
 
-
 #define HOLE_BASE_ADDR 0x52000
-#define HOLE_SIZE      0x100
+#define HOLE_SIZE 0x100
 
 THole createHole(int x, int y, int size) {
     static unsigned long next_addr = HOLE_BASE_ADDR;

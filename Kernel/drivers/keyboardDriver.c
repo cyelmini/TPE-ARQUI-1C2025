@@ -79,13 +79,15 @@ void keyboardHandler(){
         break;
 
     default:
-        if (scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
-            char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
-            buffer[write_index++] = key;
-            write_index %= BUFFER_SIZE;
-            remaining_chars++;
-        }
-        break;
+    if (ctrl_pressed == 1 && scancode_key == 19) {
+        snapShotFlag = 1;
+    } else if (scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
+        char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
+        buffer[write_index++] = key;
+        write_index %= BUFFER_SIZE;
+        remaining_chars++;
+    }
+    break;
     }
 
     int last = (write_index == 0) ? BUFFER_SIZE - 1 : write_index - 1;

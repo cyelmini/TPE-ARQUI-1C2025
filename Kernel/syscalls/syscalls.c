@@ -112,7 +112,7 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return 0;
         
         case SLEEP:
-        sleep(arg1);
+        sleep_ms(arg1);
         return 0;
 
         default:

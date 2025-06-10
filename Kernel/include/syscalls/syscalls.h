@@ -67,4 +67,18 @@ void sys_hours(uint64_t *hours);
  */
 void sys_sound(uint64_t time, uint64_t frequency);
 
+/**
+ * @brief Obtiene el valor actual de los caracteres presionados en el teclado
+ * @param buffer Puntero al buffer donde se almacenarán los caracteres presionados
+ * @return void
+ */
+void sys_getKeyPressed(char *buffer);
+
+/**
+ * @brief Establece el modo de juego del sistema
+ * @param enabled Estado del modo de juego (1 para activo, 0 para inactivo)
+ * @return void
+ */
+void sys_setGameMode(uint64_t enabled);
+
 #endif

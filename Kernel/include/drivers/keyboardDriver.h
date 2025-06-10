@@ -36,4 +36,12 @@ char * getBuffer();
  */
 char isCtrlPressed();
 
+#define KEYS 58
+
+extern char getKeyPressed[KEYS];
+char isKeyPressed(int scancode);
+
+extern int inGameMode;
+void setGameMode(int enabled);
+
 #endif

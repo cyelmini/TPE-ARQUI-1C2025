@@ -28,6 +28,8 @@
 #define PUT_RECTANGLE 18
 #define DRAW_CIRCLE 19
 #define SLEEP 20
+#define GET_KEY_PRESSED 21
+#define SET_GAME_MODE 22
 
 extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
 
@@ -112,8 +114,16 @@ uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2,
         return 0;
         
         case SLEEP:
-        sleep(arg1);
+        sleep_ms(arg1);
         return 0;
+
+        case GET_KEY_PRESSED:
+            sys_getKeyPressed((char *)arg1);
+            return 0;
+
+        case SET_GAME_MODE:
+            sys_setGameMode(arg1);
+            return 0;
 
         default:
         return -1;
@@ -167,4 +177,14 @@ void sys_sound(uint64_t time, uint64_t frequency){
     makeSound(frequency);
     sleep_ms(time);
     stopSound();
+}
+
+void sys_getKeyPressed(char *buffer) {
+    for (int i = 0; i < KEYS; i++) {
+        buffer[i] = getKeyPressed[i];
+    }
+}
+
+void sys_setGameMode(uint64_t enabled) {
+    setGameMode((int)enabled);
 }

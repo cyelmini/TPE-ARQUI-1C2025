@@ -41,3 +41,7 @@ extern void syscall_putRectangle(int x, int y, int height, int width, int color)
 extern void syscall_drawCircle(int x, int y, int radius, int color);
 
 extern void syscall_sleep(int seconds);
+
+extern void syscall_getKeyPressed(char *buffer);
+
+extern void syscall_setGameMode(int enabled);

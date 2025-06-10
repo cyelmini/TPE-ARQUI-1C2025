@@ -14,11 +14,51 @@
 
 static void gameLoop(int players);
 static void quitGame(int * end);
-static void processInput(char input, int dmove[]);
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players);
 static void changeBackscreen(int color);
 static void displayScores(TPongi pongis[], int players);
 static void playShortWinSound();
+
+
+static void handlePlayerInput(char *keyStates, int players, int dmove1[3], int dmove2[3]) {
+    // Player 1 (WASD)
+    dmove1[0] = dmove1[1] = dmove1[2] = 0;
+    if (keyStates[0x11]) { dmove1[1] = -1; dmove1[2] = 1; } // W
+    if (keyStates[0x1F]) { dmove1[1] = 1; dmove1[2] = 1; }  // S
+    if (keyStates[0x1E]) { dmove1[0] = -1; dmove1[2] = 1; } // A
+    if (keyStates[0x20]) { dmove1[0] = 1; dmove1[2] = 1; }  // D
+    // Player 2 (IJKL)
+    dmove2[0] = dmove2[1] = dmove2[2] = 0;
+    if (players == 2) {
+        if (keyStates[0x17]) { dmove2[1] = -1; dmove2[2] = 2; } // I
+        if (keyStates[0x25]) { dmove2[1] = 1; dmove2[2] = 2; }  // K
+        if (keyStates[0x24]) { dmove2[0] = -1; dmove2[2] = 2; } // J
+        if (keyStates[0x26]) { dmove2[0] = 1; dmove2[2] = 2; }  // L
+    }
+}
+
+static void handlePlayerMovement(TPongi pongis[], int players, int dmove1[3], int dmove2[3], TObstacle obstacles[], TBall ball, THole hole) {
+    if (dmove1[2] != 0) {
+        movePongis(pongis, dmove1, obstacles, ball, hole);
+    }
+    if (players == 2 && dmove2[2] != 0) {
+        movePongis(pongis, dmove2, obstacles, ball, hole);
+    }
+}
+
+static int handleLevelWin(TBall ball, THole hole, int players, int dmove1[3], int dmove2[3], TPongi pongis[]) {
+    if (wonLevel(ball, hole)) {
+        playShortWinSound();
+        if (dmove1[2] > 0 && dmove1[2] <= players) {
+            pongis[dmove1[2]-1]->points++;
+        }
+        if (dmove2[2] > 0 && dmove2[2] <= players) {
+            pongis[dmove2[2]-1]->points++;
+        }
+        return 1;
+    }
+    return 0;
+}
 
 void initializeGolf() {
     printf("Bienvenido a Pongi Golf\nIngrese cantidad de jugadores (1 o 2)\n");
@@ -40,103 +80,50 @@ void initializeGolf() {
 
 static void gameLoop(int players) {
 
+    syscall_setGameMode(1); 
+
     TPongi pongis[MAX_PLAYERS] = {0};
     pongis[0] = createPongi(50, 50);
+
     if(players == 2){
         pongis[1] = createPongi(50, 100);
     }
-    
+
     TBall ball = createBall(60, 50, WHITE);
-
     THole hole = createHole(1000, 700, 20);
-
     TObstacle obstacles[MAX_OBSTACLES];
 
-    int dmove[3] = {0,0,0};            
-
-    char input;
+    int dmove1[3] = {0,0,0};
+    int dmove2[3] = {0,0,0};
 
     int end = 0;
+    char keyStates[58];
     
     for(int level = 1 ; level <= MAX_LEVELS && !end; ) {
-
         setLevel(level, pongis, ball, hole, obstacles);
-    
         renderGame(ball, pongis, obstacles, hole, players);
-
         while (!end) {
-            input = readChar();
-            if (input == 'q') {
+            syscall_getKeyPressed(keyStates);
+            handlePlayerInput(keyStates, players, dmove1, dmove2);
+            if (keyStates[0x10]) { // Q
                 quitGame(&end);
                 break;
             }
-            processInput(input, dmove);
-
-            movePongis(pongis, dmove, obstacles, ball, hole);       // movePongis moves the ball if theres a collision
-        
-            if(wonLevel(ball, hole)){
-                playShortWinSound();
-                // Increment score for the player who last hit the ball
-                if(dmove[2] > 0 && dmove[2] <= players) {
-                    pongis[dmove[2]-1]->points++;
-                }
+            handlePlayerMovement(pongis, players, dmove1, dmove2, obstacles, ball, hole);
+            if (handleLevelWin(ball, hole, players, dmove1, dmove2, pongis)) {
                 level++;
                 break;
             }
+            syscall_sleep(50); 
         }
     }
+    syscall_setGameMode(0); 
 }
 
 static void quitGame(int * end) {
     *end = 1;
     printf("Juego finalizado\n");
     changeBackscreen(BLACK);
-}
-
-static void processInput(char input, int * dmove){
-    dmove[0] = 0;
-    dmove[1] = 0;
-    dmove[2] = 0;
-    switch(input){
-        // up
-        case 'w':
-            dmove[1] = -1;
-            dmove[2] = 1;
-            break;
-        case 'i':
-            dmove[1] = -1;
-            dmove[2] = 2;
-            break;
-        // down
-        case 's':
-            dmove[1] = 1;
-            dmove[2] = 1;
-            break;
-        case 'k':
-            dmove[1] = 1;
-            dmove[2] = 2;
-            break;
-        // left
-        case 'a':
-            dmove[0] = -1;
-            dmove[2] = 1;
-            break;
-        case 'j':
-            dmove[0] = -1;
-            dmove[2] = 2;
-            break;
-        // right
-        case 'd':
-            dmove[0] = 1;
-            dmove[2] = 1;
-            break;
-        case 'l':
-            dmove[0] = 1;
-            dmove[2] = 2;
-            break;
-        default:
-            break;
-    }
 }
 
 static void renderGame(TBall ball, TPongi pongis[], TObstacle obstacles[], THole hole, int players){

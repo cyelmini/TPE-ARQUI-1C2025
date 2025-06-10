@@ -19,6 +19,8 @@ GLOBAL syscall_colorWrite
 GLOBAL syscall_putRectangle
 GLOBAL syscall_drawCircle
 GLOBAL syscall_sleep
+GLOBAL syscall_getKeyPressed
+GLOBAL syscall_setGameMode
 
 section .text
 
@@ -124,5 +126,15 @@ syscall_drawCircle:
 
 syscall_sleep:
     mov rax, 0x14
+    int 0x80
+    ret
+
+syscall_getKeyPressed:
+    mov rax, 0x15
+    int 0x80
+    ret
+
+syscall_setGameMode:
+    mov rax, 0x16
     int 0x80
     ret

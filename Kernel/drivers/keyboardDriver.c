@@ -35,6 +35,18 @@ int write_index = 0;
 int read_index = 0;
 int remaining_chars = 0;    // variable used to control the characters that havent been read yet
 
+char getKeyPressed[KEYS] = {0};
+
+int inGameMode = 0;
+void setGameMode(int enabled) { inGameMode = enabled; }
+
+char isKeyPressed(int scancode) {
+    if (scancode < 0 || scancode >= KEYS) {
+        return 0;
+    } 
+    return getKeyPressed[scancode];
+}
+
 static unsigned char keyboard[KEYS][2] = {
     {0, 0}, {27, 27}, {'1', '!'}, {'2', '@'}, {'3', '#'}, {'4', '$'}, {'5', '%'}, {'6', '^'}, {'7', '&'}, {'8', '*'}, {'9', '('}, {'0', ')'}, {'-', '_'}, {'=', '+'}, {'\b', '\b'},
     {'\t', '\t'}, {'q', 'Q'}, {'w', 'W'}, {'e', 'E'}, {'r', 'R'}, {'t', 'T'}, {'y', 'Y'}, {'u', 'U'}, {'i', 'I'}, {'o', 'O'}, {'p', 'P'}, {'[', '{'}, {']', '}'}, {'\n', '\n'}, 
@@ -46,54 +58,59 @@ static unsigned char keyboard[KEYS][2] = {
 void keyboardHandler(){
     uint64_t scancode_key = getKey(); 
 
-    switch (scancode_key) {
-    case RSHIFT:
-    case LSHIFT:
-        shift_pressed = 1;
-        break;
-
-    case LSHIFT_RELEASED:
-    case RSHIFT_RELEASED:
-        shift_pressed = 0;
-        break;
-
-    case CAPS:
-        caps_pressed = !caps_pressed;
-        break;
-
-    case CTRL:
-        ctrl_pressed = 1;
-        break;
-    case CTRL_RELEASED:
-        ctrl_pressed = 0;
-        break;
-
-    case ALT:
-        alt_pressed = 1;
-        break;
-    case ALT_RELEASED:
-        alt_pressed = 0;
-        break;
-
-    case ESC:
-        break;
-
-    default:
-        if (scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
-            char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
-            buffer[write_index++] = key;
-            write_index %= BUFFER_SIZE;
-            remaining_chars++;
+    if (scancode_key & KEYRELEASE) {
+        int released = scancode_key & 0x7F;
+        if (released < KEYS) {
+            getKeyPressed[released] = 0;
         }
-        break;
+        switch (scancode_key) {
+            case LSHIFT_RELEASED:
+            case RSHIFT_RELEASED:
+                shift_pressed = 0;
+                break;
+            case CTRL_RELEASED:
+                ctrl_pressed = 0;
+                break;
+            case ALT_RELEASED:
+                alt_pressed = 0;
+                break;
+        }
+        return;
+    } else {
+        if (scancode_key < KEYS) {
+            getKeyPressed[scancode_key] = 1;
+        }
+        switch (scancode_key) {
+            case RSHIFT:
+            case LSHIFT:
+                shift_pressed = 1;
+                break;
+            case CAPS:
+                caps_pressed = !caps_pressed;
+                break;
+            case CTRL:
+                ctrl_pressed = 1;
+                break;
+            case ALT:
+                alt_pressed = 1;
+                break;
+            case ESC:
+                break;
+            default:
+                if (!inGameMode && scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
+                    char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
+                    buffer[write_index++] = key;
+                    write_index %= BUFFER_SIZE;
+                    remaining_chars++;
+                }
+                break;
+        }
     }
-
     int last = (write_index == 0) ? BUFFER_SIZE - 1 : write_index - 1;
     if(buffer[last] == 'r' && ctrl_pressed == 1){
         snapShotFlag = 1;
     }
 }
-
 
 char nextChar(){
     if(remaining_chars == 0) {

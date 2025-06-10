@@ -1,4 +1,4 @@
-#define MAX_OBSTACLES 5   /**< Número máximo de obstáculos por nivel */
+#define MAX_OBSTACLES 13   /**< Número máximo de obstáculos por nivel */
 
 /**
  * @brief Estructura que representa un obstáculo en el juego

@@ -42,36 +42,32 @@ static void movePongi(TPongi pongi, int dmove[3], TObstacle obstacles[], TBall b
     int nextX;
     int nextY;
 
-    for(int i = 0 ; i < PONGI_SPEED ; i++){
-        nextX = pongi->x + dmove[0];
-        nextY = pongi->y + dmove[1];
+    // Calculate final position
+    nextX = pongi->x + dmove[0] * PONGI_SPEED;
+    nextY = pongi->y + dmove[1] * PONGI_SPEED;
 
-        if (isOutOfBoundsPongi(nextX, nextY)) {
-            printPongi(pongi);
+    if (isOutOfBoundsPongi(nextX, nextY)) {
+        return;
+    }
+
+    if(!checkPongiObstacleCollision(pongi, dmove, obstacles)){
+        if(checkBallCollision(ball, pongi, dmove)){
+            moveBall(ball, dmove, obstacles, pongis, hole);
             return;
         }
 
-        if(!checkPongiObstacleCollision(pongi, dmove, obstacles)){
-
-            if(checkBallCollision(ball, pongi, dmove)){
-                moveBall(ball, dmove, obstacles, pongis, hole);
-                return;
-            }
-
-            //evitar que el pongi entre en el hoyo
-            if(checkCirclesCollision(hole->x, hole->y, hole->size, pongi->x +dmove[0], pongi->y + dmove[1], PONGI_RADIUS)){
-                return;
-            }
-
-
-            clearPongi(pongi);
-            pongi->x = nextX;
-            pongi->y = nextY;
-            printPongi(pongi);
-        } else {
-            printPongi(pongi);
-            printObstacles(obstacles);
+        //evitar que el pongi entre en el hoyo
+        if(checkCirclesCollision(hole->x, hole->y, hole->size, nextX, nextY, PONGI_RADIUS)){
+            return;
         }
+
+        clearPongi(pongi);
+        pongi->x = nextX;
+        pongi->y = nextY;
+        printPongi(pongi);
+    } else {
+        printPongi(pongi);
+        printObstacles(obstacles);
     }
 }
 

@@ -62,6 +62,7 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[], 
             ball->y = nextY;
             printBall(ball);
             printHole(hole);
+            printPongis(pongis);
         } else {
             clearBall(ball);
             bounceBallOnObstacle(ball, dmove, obstacles);

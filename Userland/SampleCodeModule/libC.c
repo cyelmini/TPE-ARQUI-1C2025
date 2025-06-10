@@ -7,10 +7,9 @@
 #define STDOUT 1
 #define USER_LENGTH 31
 
-void print(const char * string, va_list list);
-char* numToString(int num);
+static void print(const char * string, va_list list);
 
-// Lectura
+/*-------------------------------- Lectura -----------------------------------------------------*/
 
 char readChar(){
     char buffer[1] = {0};
@@ -25,7 +24,6 @@ int scanf(char * buffer){
         
         char c = readChar();
         if(c == '\b' && i== 0){
-            // if user is trying to erase the set text in the command line, continue
             continue;
         }
         putChar(c, STDOUT);
@@ -54,7 +52,7 @@ int atoi(char * string){
     return ans;
 }
 
-// Escritura
+/*-------------------------------- Escritura -----------------------------------------------------*/
 
 void putChar(char c, int fd){
     syscall_write(fd, &c, 1);
@@ -73,7 +71,7 @@ void puts(char * string){
     putChar('\n', STDOUT);
 }
 
-void print(const char * string, va_list list){
+static void print(const char * string, va_list list){
     for(int i = 0; string[i] != 0 ; i++){
         if(string[i] == '%' && string[i + 1] != 0){
             switch (string[i+1]){
@@ -121,7 +119,7 @@ void printColor(char * string, int color){
 }
 
 
-// Utilidad
+/*---------------------------- Utilidad ------------------------------------*/
 
 int getSecondsUser(){
     uint64_t seconds;

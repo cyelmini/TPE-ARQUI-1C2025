@@ -97,7 +97,10 @@ void keyboardHandler(){
             case ESC:
                 break;
             default:
-                if (!inGameMode && scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
+                if (ctrl_pressed && scancode_key == 0x13) { //ctrl + 'r'
+                    snapShotFlag = 1;
+                } 
+                else if (!inGameMode && scancode_key < KEYS && keyboard[scancode_key][0] != 0 && remaining_chars < BUFFER_SIZE) {
                     char key = keyboard[scancode_key][(caps_pressed + shift_pressed) % 2];
                     buffer[write_index++] = key;
                     write_index %= BUFFER_SIZE;

@@ -41,7 +41,6 @@ struct vbe_mode_info_structure {
     uint8_t bank_size;
     uint8_t image_pages;
     uint8_t reserved0;
-
     uint8_t red_mask;
     uint8_t red_position;
     uint8_t green_mask;
@@ -51,7 +50,6 @@ struct vbe_mode_info_structure {
     uint8_t reserved_mask;
     uint8_t reserved_position;
     uint8_t direct_color_attributes;
-
     uint32_t framebuffer;
     uint32_t off_screen_mem_off;
     uint16_t off_screen_mem_size;
@@ -59,12 +57,9 @@ struct vbe_mode_info_structure {
 } __attribute__ ((packed));
 
 typedef struct vbe_mode_info_structure * VBEInfoPtr;
-
 VBEInfoPtr VBE_mode_info = (VBEInfoPtr) 0x0000000000005C00;
 
-
-// Manejo de píxeles y pantalla
-
+// --- Manejo de píxeles y pantalla ---
 void putPixel(uint32_t hexColor, uint64_t x, uint64_t y) {
     uint8_t * framebuffer = (uint8_t *)(uintptr_t)VBE_mode_info->framebuffer;
     uint64_t offset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
@@ -105,69 +100,60 @@ void changeBackgroundColor(uint32_t hexColor){
     putRectangle(0, 0, VBE_mode_info->height, VBE_mode_info->width, hexColor);
 }
 
-
-// Manejo del cursor
-
+// --- Manejo del cursor ---
 uint64_t getCursorX(){ 
-	return cursor_x / CHAR_WIDTH; 
+    return cursor_x / CHAR_WIDTH; 
 }
 
 uint64_t getCursorY(){ 
-	return cursor_y / CHAR_HEIGHT; 
+    return cursor_y / CHAR_HEIGHT; 
 }
 
 void setCursor(uint64_t x, uint64_t y){ 
-	cursor_x = x; 
-	cursor_y = y; 
+    cursor_x = x; 
+    cursor_y = y; 
 }
 
 void drawCursor(){ 
-	putRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH, WHITE); 
+    putRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH, WHITE); 
 }
 
-
-// Dimensiones de pantalla y caracteres
-
+// --- Dimensiones de pantalla y caracteres ---
 uint64_t getScreenHeight(){ 
-	return VBE_mode_info->height; 
+    return VBE_mode_info->height; 
 }
 
 uint64_t getScreenWidth(){ 
-	return VBE_mode_info->width; 
+    return VBE_mode_info->width; 
 }
 
 void changeCharSize(int size){ 
- 
     int newHeight = CHAR_HEIGHT + size;
     int newWidth = CHAR_WIDTH + size;
-    
     int minHeight = 8; 
     int minWidth = 4;   
-    
     int maxHeight = DEFAULT_HEIGHT * 3;
     int maxWidth = DEFAULT_WIDTH * 3;    
-    
     if (newHeight < minHeight || newWidth < minWidth || 
         newHeight > maxHeight || newWidth > maxWidth) {
         return;
     }
-    
     CHAR_HEIGHT += size; 
     CHAR_WIDTH += size; 
-    
     CHAR_SIZE = (size >= 0) ? size : 1;
 }
 
 void defaultCharSize(){ 
-	CHAR_HEIGHT = DEFAULT_HEIGHT; 
-	CHAR_WIDTH = DEFAULT_WIDTH; 
-	CHAR_SIZE = 1; }
+    CHAR_HEIGHT = DEFAULT_HEIGHT; 
+    CHAR_WIDTH = DEFAULT_WIDTH; 
+    CHAR_SIZE = 1; 
+}
 
-uint64_t getCharHeight(){ return CHAR_HEIGHT; }
+uint64_t getCharHeight(){ 
+    return CHAR_HEIGHT; 
+}
 
-
-// Funciones de impresión
-
+// --- Funciones de impresión ---
 void putChar(char c, uint32_t hexcode){
     switch(c){
         case '\b': putBackspace(); return;
@@ -207,9 +193,39 @@ void print(const char * string, va_list list){
     }
 }
 
+// --- Funciones auxiliares ---
+char * numToString(uint64_t num) {
+    static char buffer[21]; 
+    char *ptr = buffer + sizeof(buffer) - 1;
+    unsigned long long n;
+    int isNegative = 0;
 
-// Control de caracteres especiales
+    *ptr = '\0';
 
+    if (num == 0) {
+        *(--ptr) = '0';
+        return ptr;
+    }
+
+    if (num < 0) {
+        isNegative = 1;
+        n = (unsigned long long)(-(long long)num);
+    } else {
+        n = (unsigned long long)num;
+    }
+
+    while (n != 0) {
+        *(--ptr) = (n % 10) + '0';
+        n /= 10;
+    }
+
+    if (isNegative)
+        *(--ptr) = '-';
+
+    return ptr;
+}
+
+// --- Control de caracteres especiales ---
 void drawChar(char c, uint32_t hexcode) {
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     int start = c - FIRST_CHAR;
@@ -249,7 +265,7 @@ void drawChar(char c, uint32_t hexcode) {
 }
 
 void putBackspace() {
-	clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
+    clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     if (cursor_x == 0 && cursor_y == 0) return;
     if (cursor_x == 0) {
         clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
@@ -265,8 +281,6 @@ void putNewLine(){
     clearRectangle(cursor_x, cursor_y, CHAR_HEIGHT, CHAR_WIDTH);
     cursor_x = 0;
     cursor_y += CHAR_HEIGHT;
-    
-
     if (cursor_y + CHAR_HEIGHT >= VBE_mode_info->height) {
         scrollScreen();
         cursor_y = VBE_mode_info->height - CHAR_HEIGHT;
@@ -281,55 +295,18 @@ void putTab(){
     cursor_x += TAB * DEFAULT_WIDTH;
 }
 
-
-// Funciones auxiliares
-
+// --- Funciones internas ---
 static void scrollScreen() {
     int scrollAmount = CHAR_HEIGHT;
-    
-    // Muevo la pantalla por copiar los píxeles hacia arriba
     for (int y = scrollAmount; y < VBE_mode_info->height; y++) {
         for (int x = 0; x < VBE_mode_info->width; x++) {
             uint8_t *framebuffer = (uint8_t *)(uintptr_t)VBE_mode_info->framebuffer;
             uint64_t srcOffset = (x * ((VBE_mode_info->bpp)/8)) + (y * VBE_mode_info->pitch);
             uint64_t destOffset = (x * ((VBE_mode_info->bpp)/8)) + ((y - scrollAmount) * VBE_mode_info->pitch);
-            
             framebuffer[destOffset] = framebuffer[srcOffset];
             framebuffer[destOffset+1] = framebuffer[srcOffset+1];
             framebuffer[destOffset+2] = framebuffer[srcOffset+2];
         }
     }
-    
     clearRectangle(0, VBE_mode_info->height - scrollAmount, scrollAmount, VBE_mode_info->width);
-}
-
-char * numToString(uint64_t num) {
-    static char buffer[21]; 
-    char *ptr = buffer + sizeof(buffer) - 1;
-    unsigned long long n;
-    int isNegative = 0;
-
-    *ptr = '\0';
-
-    if (num == 0) {
-        *(--ptr) = '0';
-        return ptr;
-    }
-
-    if (num < 0) {
-        isNegative = 1;
-        n = (unsigned long long)(-(long long)num);
-    } else {
-        n = (unsigned long long)num;
-    }
-
-    while (n != 0) {
-        *(--ptr) = (n % 10) + '0';
-        n /= 10;
-    }
-
-    if (isNegative)
-        *(--ptr) = '-';
-
-    return ptr;
 }

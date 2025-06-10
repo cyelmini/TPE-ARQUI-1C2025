@@ -8,29 +8,31 @@
 #define MAX_ARGS 10
 #define MAX_ARG_LEN 50
 
-// Colors
-#define GRASS_GREEN 0x62bc2f
+#define PURPLE 0xEE82EE
+#define USER_COLOR 0x00FFF0
 
+/**
+ * @brief Convierte un valor en formato BCD (Binary-Coded Decimal) a formato binario
+ * @param bcd El valor en formato BCD que se desea convertir
+ * @return El valor convertido a formato binario
+ */
 static int bcdToBinary(int bcd);
+
+/**
+ * @brief Limpia un buffer estableciendo todos sus elementos a cero
+ * @param buffer Puntero al buffer que se desea limpiar
+ */
 static void clearBuffer(char * buffer);
-void clearScreen();
-void executeCommand(char * command, char * arg);
 
-/*------------------------ exceptions ------------------------------------------*/
-
+/**
+ * @brief Genera una excepción de operación inválida
+ */
 static void invalidOpException();
+
+/**
+ * @brief Genera una excepción de división por cero
+ */
 static void divisionByZeroException();
-
-static void invalidOpException() {
-    invalidOpCode();
-    return;
-}
-
-static void divisionByZeroException() {
-    divisionByZero();
-    return;
-}
-/*-----------------------------------------------------------------------------*/
 
 
 void initializeShell(){
@@ -41,7 +43,8 @@ void initializeShell(){
 void scanEntry() {
     char buffer[BUFFER_SIZE] = {0};
     while(1){    
-        printColor("$USER@$DEVICE_NAME:/path/path$ ", GRASS_GREEN);
+        printColor("$USER@", USER_COLOR);
+        printColor(":/path/path$ ", PURPLE);
 
         int len = scanf(buffer);
 
@@ -86,16 +89,12 @@ void entryHandler(char * entry){
     executeCommand(command, arg);
 }
 
-/* ---------------------------------- command functions ------------------------------------- */
+/* ---------------------------------- Command Functions ------------------------------------- */
 
 void executeCommand(char * command, char * arg){
    
     if(strcmp(command, "help") == 0) {
         help(arg);
-        // syscall_putRectangle(0, 0, 100, 100, 0x00FF00); // Green
-        // syscall_putRectangle(120, 0, 100, 100, 0x0000FF); // Red (should appear blue if BGR)
-        // syscall_putRectangle(240, 0, 100, 100, 0xFF0000); // Blue (should appear red if BGR)
-        return;
     } else if(strcmp(command, "time") == 0) {
         time();
         return;
@@ -218,7 +217,17 @@ void time(){
     printf("Hora actual: %d:%d:%d\n", hours, minutes, seconds);
 }
 
-/* --------------------------------- auxiliar functions ------------------------------------ */
+static void invalidOpException() {
+    invalidOpCode();
+    return;
+}
+
+static void divisionByZeroException() {
+    divisionByZero();
+    return;
+}
+
+/* --------------------------------- Auxiliar Functions ------------------------------------ */
 
 static int bcdToBinary(int bcd) {
     return ((bcd >> 4) * 10) + (bcd & 0x0F);

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+// --- Funciones principales del driver de teclado ---
+
 /**
  * @brief Obtiene el código de escaneo de la última tecla presionada
  * @return uint8_t Código de escaneo de la tecla
@@ -35,6 +37,8 @@ char * getBuffer();
  * @return char 1 si Ctrl está presionado, 0 en caso contrario
  */
 char isCtrlPressed();
+
+// --- Funciones y variables auxiliares ---
 
 #define KEYS 58
 

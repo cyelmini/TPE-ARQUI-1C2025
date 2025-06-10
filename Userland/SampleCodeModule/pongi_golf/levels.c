@@ -23,7 +23,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
     ball->y = 400;
 
     switch(level) {
-        case 5: {
+        case 1: {
             // Un gran obstáculo vertical en el centro
             TObstacle obs1 = createObstacle(400, 200, MARRON, 400, 120); // vertical grande
             TObstacle obs2 = createObstacle(460, 125, MARRON, 550, 60); // vertical fino, pegado al grande
@@ -97,7 +97,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             obstacles[4] = NULL;
             break;
         }
-        case 1: {
+        case 5: {
             // Laberinto: pasillos y callejones, camino serpenteante (obstáculos más chicos, pasillos más anchos)
             TObstacle obs1 = createObstacle(100, 100, MARRON, 20, 600);    // vertical izquierda (estrecho)
             TObstacle obs2 = createObstacle(100, 100, MARRON, 800, 20);    // horizontal arriba (estrecho)

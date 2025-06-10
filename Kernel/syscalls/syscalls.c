@@ -31,34 +31,34 @@
 #define GET_KEY_PRESSED 21
 #define SET_GAME_MODE 22
 
-extern uint64_t registers[18]; // 18 son la cant de registros que se guardan 
+extern uint64_t registers[18];
 
 
 uint64_t sysCallDispatcher(uint64_t syscallNumber, uint64_t arg1, uint64_t arg2, uint64_t arg3, uint64_t arg4, uint64_t arg5, uint64_t arg6){
     switch (syscallNumber)
     {
         case READ:
-        sys_read(arg1, (char *)arg2, arg3);      // fd, buffer and count
+        sys_read(arg1, (char *)arg2, arg3);      
         return 0;
     
         case WRITE:
-        sys_write(arg1, (char*)arg2, arg3);     // fd, buffer and count
+        sys_write(arg1, (char*)arg2, arg3);
         return 0;
    
         case SECONDS:
-        sys_seconds((uint64_t *)arg1);          // seconds
+        sys_seconds((uint64_t *)arg1);
         return 0;
    
         case MINUTES:
-        sys_minutes((uint64_t *)arg1);        // minutes
+        sys_minutes((uint64_t *)arg1);
         return 0;
     
         case HOURS:
-        sys_hours((uint64_t *)arg1);       // hours
+        sys_hours((uint64_t *)arg1); 
         return 0;
     
         case SOUND:
-        sys_sound(arg1, arg2);       // time, frequency
+        sys_sound(arg1, arg2);
         return 0;
 
         case SET_CURSOR:

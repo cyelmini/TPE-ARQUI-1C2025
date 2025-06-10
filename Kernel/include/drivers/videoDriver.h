@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include <stdarg.h>
 
-// Manejo de píxeles y pantalla
+// --- Manejo de píxeles y pantalla ---
 
 /**
  * @brief Dibuja un píxel en la pantalla
@@ -59,7 +59,7 @@ void clearScreen();
  */
 void changeBackgroundColor(uint32_t hexColor);
 
-// Manejo del cursor
+// --- Manejo del cursor ---
 
 /**
  * @brief Obtiene la posición x actual del cursor (en unidades de caracteres)
@@ -87,7 +87,7 @@ void setCursor(uint64_t x, uint64_t y);
  */
 void drawCursor();
 
-// Dimensiones de pantalla y caracteres
+// --- Dimensiones de pantalla y caracteres ---
 
 /**
  * @brief Obtiene la altura total de la pantalla en píxeles
@@ -120,7 +120,7 @@ void defaultCharSize();
  */
 uint64_t getCharHeight();
 
-// Funciones de impresión
+// --- Funciones de impresión ---
 
 /**
  * @brief Imprime un carácter en la posición actual del cursor
@@ -153,7 +153,7 @@ void puts(char * string);
  */
 void print(const char * string, va_list list);
 
-// Funciones auxiliares
+// --- Funciones auxiliares ---
 
 /**
  * @brief Convierte un número entero a su representación en cadena de texto
@@ -162,7 +162,7 @@ void print(const char * string, va_list list);
  */
 char * numToString(uint64_t num);
 
-// Control de caracteres especiales
+// --- Control de caracteres especiales ---
 
 /**
  * @brief Dibuja un carácter en la posición actual del cursor

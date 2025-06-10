@@ -23,7 +23,6 @@ void sleep(int seconds) {
 	}
 }
 
-// New millisecond sleep function
 void sleep_ms(int milliseconds) {
     unsigned long start = ticks;
     // 18 ticks per second = 0.018 ticks per millisecond

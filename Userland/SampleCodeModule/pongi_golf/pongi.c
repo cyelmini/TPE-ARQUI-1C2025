@@ -69,7 +69,7 @@ static int isInScoreSignArea(int x);
 
 
 // ---- Funciones principales ----
-TPongi createPongi(int x, int y){
+TPongi createPongi(int x, int y, int color){
     static unsigned long next_addr = PONGI_BASE_ADDR;
     TPongi pongi = (TPongi)next_addr;
     next_addr += PONGI_SIZE;
@@ -77,7 +77,7 @@ TPongi createPongi(int x, int y){
     pongi->x = x;
     pongi->y = y;
     pongi->points = 0;
-    pongi->color = PONGI_BLUE;
+    pongi->color = color;
     return pongi;
 }
 

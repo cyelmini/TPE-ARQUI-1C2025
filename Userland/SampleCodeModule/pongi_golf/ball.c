@@ -24,15 +24,6 @@
 static void clearBall(TBall ball);
 
 /**
- * @brief Verifica si la pelota se encuentra fuera de los límites permitidos de la pantalla.
- * 
- * @param x Coordenada X del centro de la pelota.
- * @param y Coordenada Y del centro de la pelota.
- * @return int 1 si está fuera de los límites, 0 en caso contrario.
- */
-static int isOutOfBoundsBall(int x, int y);
-
-/**
  * @brief Verifica si la pelota está en una zona especial reservada para los puntajes (score sign).
  * 
  * @param x Coordenada X del centro de la pelota.
@@ -68,21 +59,21 @@ void moveBall(TBall ball, int dmove[3], TObstacle obstacles[], TPongi pongis[], 
         int nextX = ball->x + dmove[0];
         int nextY = ball->y + dmove[1];
         
-        if (isOutOfBoundsBall(nextX, nextY)) {
-            if (nextX - BALL_RADIUS < 0 || nextX + BALL_RADIUS > SCREEN_WIDTH) {
-                dmove[0] = -dmove[0];
-            }
-            if (isInScoreSignAreaBall(nextX) && (nextY - BALL_RADIUS < SCORE_AREA_HEIGHT)) {
-                dmove[1] = -dmove[1];
-                nextY = SCORE_AREA_HEIGHT + BALL_RADIUS + 5;
-            } else if (nextY - BALL_RADIUS < 0) {
-                dmove[1] = -dmove[1];
-                nextY = BALL_RADIUS + 5;
-            } else if (nextY + BALL_RADIUS > SCREEN_HEIGHT) {
-                dmove[1] = -dmove[1];
-            }
+        if (nextX - BALL_RADIUS < 0 || nextX + BALL_RADIUS > SCREEN_WIDTH) {
+            dmove[0] = -dmove[0];
             nextX = ball->x + dmove[0];
-            nextY = ball->y + dmove[1];
+        }
+        if (isInScoreSignAreaBall(nextX) && (nextY - BALL_RADIUS < SCORE_AREA_HEIGHT)) {
+            dmove[1] = -dmove[1];
+            nextY = SCORE_AREA_HEIGHT + BALL_RADIUS + 5; 
+        } else if (nextY - BALL_RADIUS < 0) {
+            dmove[1] = -dmove[1];
+            nextY = BALL_RADIUS + 5;
+        } else if (nextY + BALL_RADIUS > SCREEN_HEIGHT) {
+            dmove[1] = -dmove[1];
+            nextY = SCREEN_HEIGHT - BALL_RADIUS - 5;
+        } else {
+            nextY = ball->y + dmove[1]; 
         }
 
         if(!checkBallObstacleCollision(ball, dmove, obstacles)){
@@ -126,20 +117,6 @@ void printBall(TBall ball) {
 }
 
 // ---- Helpers de límites ----
-static int isOutOfBoundsBall(int x, int y) {
-    if (y - BALL_RADIUS < 0) {
-        return 1;
-    }
-    if (isInScoreSignAreaBall(x) && (y - BALL_RADIUS < SCORE_AREA_HEIGHT)) {
-        return 1;
-    }
-    if (x - BALL_RADIUS < 0 || x + BALL_RADIUS > SCREEN_WIDTH ||
-        y + BALL_RADIUS > SCREEN_HEIGHT) {
-        return 1;
-    }
-    return 0;
-}
-
 static int isInScoreSignAreaBall(int x) {
     if (x - BALL_RADIUS < SCORE_SIGN_WIDTH) {
         return 1;

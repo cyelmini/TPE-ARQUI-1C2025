@@ -23,8 +23,8 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
     switch (level) {
 
         case 1: {
-            TObstacle obs1 = createObstacle(400, 200, MARRON, 400, 120);
-            TObstacle obs2 = createObstacle(460, 125, MARRON, 550, 60);
+            TObstacle obs1 = createObstacle(400, 200, BROWN, 400, 120);
+            TObstacle obs2 = createObstacle(460, 125, BROWN, 550, 60);
 
             hole->x = 900;
             hole->y = 400;
@@ -37,10 +37,10 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
         }
 
         case 2: {
-            TObstacle obs1 = createObstacle(150, 150, MARRON, 80, 700);
-            TObstacle obs2 = createObstacle(150, 500, MARRON, 80, 700);
-            TObstacle obs3 = createObstacle(300, 250, MARRON, 75, 75);
-            TObstacle obs4 = createObstacle(600, 400, MARRON, 75, 75);
+            TObstacle obs1 = createObstacle(150, 150, BROWN, 80, 700);
+            TObstacle obs2 = createObstacle(150, 500, BROWN, 80, 700);
+            TObstacle obs3 = createObstacle(300, 250, BROWN, 75, 75);
+            TObstacle obs4 = createObstacle(600, 400, BROWN, 75, 75);
 
             hole->x = 900;
             hole->y = 350;
@@ -55,9 +55,9 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
         }
 
         case 3: {
-            TObstacle obs1 = createObstacle(400, 200, MARRON, 400, 120);
-            TObstacle obs2 = createObstacle(300, 350, MARRON, 120, 400);
-            TObstacle obs3 = createObstacle(100, 650, MARRON, 80, 800);
+            TObstacle obs1 = createObstacle(400, 200, BROWN, 400, 120);
+            TObstacle obs2 = createObstacle(300, 350, BROWN, 120, 400);
+            TObstacle obs3 = createObstacle(100, 650, BROWN, 80, 800);
 
             pongi[0]->x = 80;
             pongi[0]->y = 580;
@@ -80,16 +80,16 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
         }
 
         case 4: {
-            TObstacle obs1 = createObstacle(200, 100, MARRON, 600, 80);
-            TObstacle obs2 = createObstacle(200, 100, MARRON, 80, 600);
-            TObstacle obs4 = createObstacle(200, 620, MARRON, 80, 600);
-            TObstacle obs3 = createObstacle(720, 100, MARRON, 450, 80);
+            TObstacle obs1 = createObstacle(200, 100, BROWN, 600, 80);
+            TObstacle obs2 = createObstacle(200, 100, BROWN, 80, 600);
+            TObstacle obs4 = createObstacle(200, 620, BROWN, 80, 600);
+            TObstacle obs3 = createObstacle(720, 100, BROWN, 450, 80);
 
-            pongi[0]->x = 100;
+            pongi[0]->x = 800;
             pongi[0]->y = 120;
             if (pongi[1] != NULL) {
                 pongi[1]->x = pongi[0]->x + 40;
-                pongi[1]->y = pongi[0]->y + 40;
+                pongi[1]->y = pongi[0]->y;
             }
             ball->x = 150;
             ball->y = 180;
@@ -107,19 +107,19 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
         }
 
         case 5: {
-            TObstacle obs1 = createObstacle(100, 100, MARRON, 20, 600);
-            TObstacle obs2 = createObstacle(100, 100, MARRON, 800, 20);
-            TObstacle obs3 = createObstacle(900, 100, MARRON, 20, 600);
-            TObstacle obs4 = createObstacle(100, 680, MARRON, 800, 20);
+            TObstacle obs1 = createObstacle(100, 100, BROWN, 20, 600);
+            TObstacle obs2 = createObstacle(100, 100, BROWN, 800, 20);
+            TObstacle obs3 = createObstacle(900, 100, BROWN, 20, 600);
+            TObstacle obs4 = createObstacle(100, 680, BROWN, 800, 20);
 
-            TObstacle obs5 = createObstacle(200, 200, MARRON, 20, 300);
-            TObstacle obs6 = createObstacle(200, 200, MARRON, 300, 20);
-            TObstacle obs7 = createObstacle(500, 200, MARRON, 20, 200);
-            TObstacle obs8 = createObstacle(500, 380, MARRON, 200, 20);
-            TObstacle obs9 = createObstacle(700, 380, MARRON, 20, 200);
-            TObstacle obs10 = createObstacle(400, 550, MARRON, 300, 20);
-            TObstacle obs11 = createObstacle(400, 420, MARRON, 20, 130);
-            TObstacle obs12 = createObstacle(650, 420, MARRON, 20, 130);
+            TObstacle obs5 = createObstacle(200, 200, BROWN, 20, 300);
+            TObstacle obs6 = createObstacle(200, 200, BROWN, 300, 20);
+            TObstacle obs7 = createObstacle(500, 200, BROWN, 20, 200);
+            TObstacle obs8 = createObstacle(500, 380, BROWN, 200, 20);
+            TObstacle obs9 = createObstacle(700, 380, BROWN, 20, 200);
+            TObstacle obs10 = createObstacle(400, 550, BROWN, 300, 20);
+            TObstacle obs11 = createObstacle(400, 420, BROWN, 20, 130);
+            TObstacle obs12 = createObstacle(650, 420, BROWN, 20, 130);
 
             pongi[0]->x = 170;
             pongi[0]->y = 70;

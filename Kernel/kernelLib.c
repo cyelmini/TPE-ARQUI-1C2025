@@ -12,7 +12,7 @@ static char * strRegisters[] = {"RAX", "RBX", "RCX", "RDX", "RSI", "RDI", "RBP",
 
 void printRegisters(uint64_t * registers){
     if (snapShotFlag == 0){
-        printf("Para ver los registros, presione ctrl + r\n", WHITE);
+        printf("Para ver los registros, presione ctrl + r.\n", WHITE);
         return;
     }
     if(getCursorY() + 19 * getCharHeight() >= getScreenHeight()){

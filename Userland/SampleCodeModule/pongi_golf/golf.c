@@ -120,7 +120,7 @@ void initializeGolf() {
         printf("El Jugador 2 se mueve con I, J, K, L.\n");
     }
     printf("El juego esta cargando...\n");
-    syscall_sleep(5000);
+    syscall_sleep(2500);
     changeBackscreen(GREEN);
     gameLoop(players);
     syscall_setGameMode(0); // Salida del modo juego
@@ -131,10 +131,10 @@ static void gameLoop(int players) {
     syscall_setGameMode(1); // Modo juego activo
 
     TPongi pongis[MAX_PLAYERS] = {0};
-    pongis[0] = createPongi(50, 50);
+    pongis[0] = createPongi(50, 50, PONGI_BLUE);
 
     if(players == 2){
-        pongis[1] = createPongi(50, 100);
+        pongis[1] = createPongi(50, 100, PONGI_RED);
     }
 
     TBall ball = createBall(60, 50, WHITE);
@@ -168,6 +168,7 @@ static void gameLoop(int players) {
     }
 
     changeBackscreen(BLACK);
+    syscall_setCursor(10, 10);
     printf("Ganaste!!!!!! Nos vemos en la proxima version.\n");
 
 }
@@ -178,6 +179,7 @@ static void gameLoop(int players) {
 static void quitGame(int * end) {
     *end = 1;
     changeBackscreen(BLACK);
+    syscall_setCursor(10, 10);
     printf("Juego finalizado\n");
 }
 

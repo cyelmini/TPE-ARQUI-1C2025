@@ -21,9 +21,10 @@ typedef struct Pongi * TPongi;
  * @brief Crea un nuevo pongi (jugador)
  * @param x Coordenada x inicial del pongi
  * @param y Coordenada y inicial del pongi
+ * @param color Color del pongi en formato RGB
  * @return TPongi Puntero al nuevo pongi creado
  */
-TPongi createPongi(int x, int y);
+TPongi createPongi(int x, int y, int color);
 
 /**
  * @brief Mueve los pongis según la dirección especificada

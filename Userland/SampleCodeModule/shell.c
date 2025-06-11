@@ -39,7 +39,7 @@ static void divisionByZeroException();
 // ---- Inicio de la shell ----
 
 void initializeShell(){
-    printf("Bienvenido al mejor Sistema Operativo del mundo :)\nIngrese 'help' para conocer los comandos disponibles.\n");
+    printf("Bienvenido al mejor sistema operativo del mundo :)\nIngrese 'help' para conocer los comandos disponibles.\n");
     scanEntry();
 }
 
@@ -130,7 +130,7 @@ void executeCommand(char * command, char * arg){
         return;
     } else {
         printf("El comando '%s' no es valido\n", command);
-        printf("Escribe 'help' para conocer la lista de comandos disponibles.\n");
+        printf("Ingrese 'help' para conocer la lista de comandos disponibles.\n");
     }
 }
 
@@ -183,18 +183,18 @@ void help(char *command){
 
     } else if (strcmp(command, "fontUp") == 0) {
         printf("Comando: fontUp\n");
-        printf("Aumenta el tamaño de fuente.\n");
+        printf("Aumenta la medida de la fuente.\n");
 
     } else if (strcmp(command, "fontDown") == 0) {
         printf("Comando: fontDown\n");
-        printf("Disminuye el tamaño de fuente.\n");
+        printf("Disminuye la medida de la fuente.\n");
 
     } else if (strcmp(command, "fontDefault") == 0) {
         printf("Comando: fontDefault\n");
-        printf("Restablece el tamaño de fuente al valor por defecto.\n");
+        printf("Restablece la medida de la fuente al valor por defecto.\n");
 
     } else {
-        printf("El comando '%s' no es valido\n", command);
+        printf("El comando '%s' no es valido.\n", command);
     }
 }
 

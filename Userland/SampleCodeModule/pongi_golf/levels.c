@@ -85,7 +85,7 @@ void setLevel(int level, TPongi pongi[], TBall ball, THole hole, TObstacle obsta
             TObstacle obs4 = createObstacle(200, 620, BROWN, 80, 600);
             TObstacle obs3 = createObstacle(720, 100, BROWN, 450, 80);
 
-            pongi[0]->x = 800;
+            pongi[0]->x = 80;
             pongi[0]->y = 120;
             if (pongi[1] != NULL) {
                 pongi[1]->x = pongi[0]->x + 40;

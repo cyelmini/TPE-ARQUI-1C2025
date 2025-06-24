@@ -106,15 +106,14 @@ SECTION .text
     mov [registers+8*13],   r14
     mov [registers+8*14],   r15
 
-    mov rax, rsp
-    add rax, 8*20
-
+    
+    mov rax, [rsp+8*15]      ; RIP
     mov [registers+8*15], rax
-    mov rax, [rsp+8*15]
+    mov rax, [rsp+8*16]      ; CS
     mov [registers+8*16], rax
-    mov rax, [rsp+8*17]
+    mov rax, [rsp+8*17]      ; RFLAGS
     mov [registers+8*17], rax
-    mov rax, [rsp+8*18]
+    mov rax, [rsp+8*18]      ; RSP
     mov [registers+8*18], rax
 %endmacro
 

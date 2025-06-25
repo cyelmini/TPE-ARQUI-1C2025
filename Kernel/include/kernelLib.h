@@ -5,7 +5,7 @@
 
 /**
  * @brief Bandera que indica si se debe realizar una captura del estado actual del sistema
- * @details Esta variable se activa cuando el usuario presiona Ctrl+R, provocando que el sistema
+ * @details Esta variable se activa cuando el usuario presiona ctrl+r, provocando que el sistema
  *          genere un volcado de los registros y del estado actual
  */
 extern char snapShotFlag;

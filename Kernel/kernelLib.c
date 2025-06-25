@@ -27,7 +27,6 @@ void printRegisters(uint64_t * registers){
         printf("\n", WHITE);
     }
     snapShotFlag = 0;
-    
 }
 
 static void decimalToHex(uint64_t value, char * buffer){

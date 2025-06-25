@@ -39,7 +39,7 @@ static void divisionByZeroException();
 // ---- Inicio de la shell ----
 
 void initializeShell(){
-    printf("Bienvenido al mejor sistema operativo del mundo :)\nIngrese 'help' para conocer los comandos disponibles.\n");
+    printf("Bienvenido a un sistema operativo promedio :/\nIngrese 'help' para conocer los comandos disponibles.\n");
     scanEntry();
 }
 

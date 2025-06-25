@@ -76,7 +76,6 @@ SECTION .text
     saveRegs
 
 .next:
-    mov rsi, rsp
     mov rdi, %1
     call irqDispatcher
 
@@ -88,31 +87,33 @@ SECTION .text
 %endmacro
 
 %macro saveRegs 0
-    mov [registers+8*0],    rax
-    mov [registers+8*1],    rbx
-    mov [registers+8*2],    rcx
-    mov [registers+8*3],    rdx
-    mov [registers+8*4],    rsi
-    mov [registers+8*5],    rdi
-    mov [registers+8*6],    rbp
-    mov [registers+8*7],    r8
-    mov [registers+8*8],    r9
-    mov [registers+8*9],    r10
-    mov [registers+8*10],   r11
-    mov [registers+8*11],   r12
-    mov [registers+8*12],   r13
-    mov [registers+8*13],   r14
-    mov [registers+8*14],   r15
+    mov [registers + 8*0], rax
+    mov [registers + 8*1], rbx
+    mov [registers + 8*2], rcx
+    mov [registers + 8*3], rdx
+    mov [registers + 8*4], rsi
+    mov [registers + 8*5], rdi
+    mov [registers + 8*6], rbp
+    mov [registers + 8*7], r8
+    mov [registers + 8*8], r9
+    mov [registers + 8*9], r10
+    mov [registers + 8*10], r11
+    mov [registers + 8*11], r12
+    mov [registers + 8*12], r13
+    mov [registers + 8*13], r14
+    mov [registers + 8*14], r15
 
-    
-    mov rax, [rsp+8*15]      ; RIP
-    mov [registers+8*15], rax
-    mov rax, [rsp+8*16]      ; CS
-    mov [registers+8*16], rax
-    mov rax, [rsp+8*17]      ; RFLAGS
-    mov [registers+8*17], rax
-    mov rax, [rsp+8*18]      ; RSP
-    mov [registers+8*18], rax
+    mov rax, [rsp + 8*15]              ; RIP
+    mov [registers + 8*15], rax
+
+    mov rax, [rsp + 8*16]               ; CS
+    mov [registers + 8*16], rax
+
+    mov rax, [rsp + 8*17]              ; RFLAGS
+    mov [registers + 8*17], rax
+
+    mov rax, [rsp + 8*18]             ; RSP
+    mov [registers + 8*18], rax
 %endmacro
 
 %macro exceptionHandler 1
@@ -125,14 +126,14 @@ SECTION .text
     popState
     call getStackBase
     sub rax, 20h
-    mov qword [rsp+8*3], rax
+    mov qword [rsp + 8*3], rax
     call retUserland
     mov qword [rsp], rax
     iretq
 %endmacro
 
 printRegs:
-    mov qword rdi, registers
+    mov rdi, registers
     call printRegisters
     ret
 

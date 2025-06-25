@@ -26,10 +26,7 @@ EXTERN sysCallDispatcher
 EXTERN printf
 EXTERN printRegisters
 EXTERN getStackBase
-ExTERN retUserland
-
-SECTION .data
-print_fmt_regs: db "rax=%d rbx=%d rcx=%d rdx=%d rsi=%d rdi=%d", 10, 0
+EXTERN retUserland
 
 SECTION .text
 

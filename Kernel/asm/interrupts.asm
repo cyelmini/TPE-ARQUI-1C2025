@@ -73,6 +73,7 @@ SECTION .text
     pushState
 
     mov rdi, %1
+    cmp rdi, 1
     jne .next
 
     saveRegs
